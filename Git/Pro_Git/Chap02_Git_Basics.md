@@ -50,7 +50,7 @@ Git支持多种数据传输协议：
 
 编辑过某些文件之后，由于自上次提交后你对它们做了修改，Git 将它们标记为已修改文件。 在工作时，你可以选择性地将这些修改过的文件放入暂存区，然后提交所有已暂存的修改，如此反复。
 
-![Git Life Cycle](./images/GitLifeCycle.png)
+![Git Life Cycle](./../images/GitLifeCycle.png)
 
 
 ### 2.2.1. 检查当前文件状态
