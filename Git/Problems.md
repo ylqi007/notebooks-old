@@ -1,0 +1,1 @@
+[src refspec master does not match any error when pushing to repository](https://confluence.atlassian.com/bitbucketserverkb/src-refspec-master-does-not-match-any-error-when-pushing-to-repository-788727186.html)
