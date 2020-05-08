@@ -81,3 +81,166 @@ index.html |    1 +
 ![unmerged](./../images/unmerged.png)
 出现冲突的文件会如下图所示，`=======` 的上下两个半部分分别属于不同的分支，用户需要自己决定保留哪一个，删掉哪一个。
 ![conflict](./../images/conflict.png)
+
+
+## 3.3. 分支管理
+`git branch` 命令不只是可以创建与删除分支。 如果不加任何参数运行它，会得到当前所有分支的一个列表：
+```bash
+$ git branch
+  iss53
+* master
+  testing
+```
+`*`字符代表当前`HEAD`指向的分支。
+
+如果需要查看每一个分支的最后一次提交，可以运行 `git branch -v` 命令。
+
+`--merged` 与 `--no-merged` 这两个有用的选项可以过滤这个列表中已经合并或尚未合并到当前分支的分支。
+
+
+### 3.4. 分支开发工作流
+常见的利用分支进行开发的工作流程。
+
+
+### 3.4.1 长期分支
+在整个项目开发周期的不同阶段，你可以同时拥有多个开放的分支；你可以定期地把某些主题分支合并入其他分支中。
+许多使用 Git 的开发者都喜欢使用这种方式来工作，比如只在 master 分支上保留完全稳定的代码——有可能仅仅是已经发布或即将发布的代码。 他们还有一些名为 develop 或者 next 的平行分支，被用来做后续开发或者测试稳定性——这些分支不必保持绝对稳定，但是一旦达到稳定状态，它们就可以被合并入 master 分支了。
+![lr-branches](./../images/lr-branches-2.png)
+
+
+### 3.4.2. 主题分支
+主题分支对任何规模的项目都适用。 主题分支是一种短期分支，它被用来实现单一特性或其相关工作。
+
+![topic-branches](./../images/topic-branches-1.png)
+
+
+## 3.5. 远程分支
+远程引用是对远程仓库的引用（指针），包括分支、标签等等。 你可以通过 `git ls-remote <remote>` 来显式地获得远程引用的完整列表， 或者通过 `git remote show <remote>` 获得远程分支的更多信息。 然而，一个更常见的做法是**利用远程跟踪分支**。
+![remote-branch](./../images/remote-branches-1.png)
+
+如果你在本地的 master 分支做了一些工作，在同一段时间内有其他人推送提交到 `git.ourcompany.com` 并且更新了它的 `master` 分支，这就是说你们的提交历史已走向不同的方向。 即便这样，只要你保持不与 `origin` 服务器连接（并拉取数据），你的 `origin/master` 指针就不会移动。
+
+
+### 3.5.1. 推送
+当你想要公开分享一个分支时，需要将其推送到有写入权限的远程仓库上。 本地的分支并不会自动与远程仓库同步——你必须显式地推送想要分享的分支。 这样，你就可以把不愿意分享的内容放到私人分支上，而将需要和别人协作的内容推送到公开分支。
+
+
+**Note:** 如何避免每次输入密码
+
+如果你正在使用 `HTTPS URL` 来推送，Git 服务器会询问用户名与密码。 默认情况下它会在终端中提示服务器是否允许你进行推送。
+
+如果不想在每一次推送时都输入用户名与密码，你可以设置一个 “credential cache”。 最简单的方式就是将其保存在内存中几分钟，可以简单地运行 `git config --global credential.helper cache` 来设置它。
+
+
+### 3.5.2. 跟踪分支
+
+
+### 3.5.3. 拉取
+当 `git fetch` 命令从服务器上抓取本地没有的数据时，它并不会修改工作目录中的内容。它只会获取数据然后让你自己去合并。
+
+`git pull` 命令在大多数情况下的含义是 `git fetch` 紧接着一个 `git merge` 命令。
+
+由于 git pull 的魔法经常令人困惑所以通常单独显式地使用 fetch 与 merge 命令会更好一些。
+
+
+### 3.5.4. 删除远程分支
+假设你已经通过远程分支做完所有的工作了——也就是说**你和你的协作者已经完成了一个特性**， 并且将其合并到了远程仓库的 `master` 分支（或任何其他稳定代码分支）。 可以运行带有 `--delete` 选项的 `git push` 命令来删除一个远程分支。 如果想要从服务器上删除 serverfix 分支，运行下面的命令：
+```bash
+$ git push origin --delete serverfix
+To https://github.com/schacon/simplegit
+ - [deleted]         serverfix
+```
+基本上这个命令做的只是从服务器上移除这个指针。 Git 服务器通常会保留数据一段时间直到垃圾回收运行，所以如果不小心删除掉了，通常是很容易恢复的。
+
+
+---
+## 3.6. 变基
+在 Git 中整合来自不同分支的修改主要有两种方法： `merge` 和 `rebase` 。
+
+### 3.6.1. 变基的基本操作
+当开发任务分叉到两个不同的分支，有各自提交了更新时，如下图所示：
+
+![basic rebase 1](./../images/basic-rebase-1.png)
+
+根据简单的 `merge` 命令。它会把两个分支的最新快照（C3 和 C4）以及二者最近的共同祖先（C2）进行三方合并，合并的结果是生成一个新的快照（并提交）。
+
+![basic rebase 2](./../images/basic-rebase-2.png)
+
+其实，还有一种方法：你可以提取在 C4 中引入的补丁和修改，然后在 C3 的基础上应用一次。 在 Git 中，这种操作就叫做 变基（`rebase`）。 你可以使用 rebase 命令将提交到某一分支上的所有修改都移至另一分支上，就好像“重新播放”一样。  ==> 提取 C4 的变化，添加到 C3 上。
+即从 `experiment` 分支上 `checkout`，停在 `master` 分支，然后 `rebase`，代码如下所示：
+```bash
+$ git checkout experiment
+$ git rebase master
+First, rewinding head to replay your work on top of it...
+Applying: added staged command
+```
+
+![basic rebase 3](./../images/basic-rebase-3.png)
+
+此时，C4' 指向的快照就和 the merge example 中 C5 指向的快照一模一样了。 这两种整合方法的最终结果没有任何区别，但是变基使得提交历史更加整洁。 你在查看一个经过变基的分支的历史记录时会发现，尽管实际的开发工作是并行的， 但它们看上去就像是串行的一样，提交历史是一条直线没有分叉。  ==> 即 `merge` 和 `rebase` 的结果是一致的，但是 `rebase` 的最终结果更简洁。
+
+请注意，无论是通过变基，还是通过三方合并，整合的最终结果所指向的快照始终是一样的，只不过提交历史不同罢了。 变基是将一系列提交按照原有次序依次应用到另一分支上，而合并是把最终结果合在一起。
+
+
+### 3.6.2. 更有趣的变基例子
+![interesting rebase 1](./../images/interesting-rebase-1.png)
+
+目标：希望将 `client` 分支中的修改合并到 `master` 分支并发布，但是暂时不想合并 `server` 中的修改，因为它们还要经过更全面的测试。这时候可以使用 `git rebase` 命令的 `--onto` 选项，选中在 `client` 分支里，但不在 `server` 分支里的修改，将它们在 `master` 分支上重放：
+
+```bash
+$ git rebase --onto master server client
+```
+
+以上命令的意思是：“取出 client 分支，找出它从 server 分支分歧之后的补丁， 然后把这些补丁在 master 分支上重放一遍，让 client 看起来像直接基于 master 修改一样”。这理解起来有一点复杂，不过效果非常酷。
+
+![interesting rebase 2](./../images/interesting-rebase-2.png)
+
+然后可以进行快速合并 `master` 分支：
+```bash
+$ git checkout master
+$ git merge client
+```
+
+![interesting rebase 3](./../images/interesting-rebase-3.png)
+
+然后再用 `git rebase <bash-branch> <topic-branch>` 将 `server` 分支变基到 `master` 分支：
+
+```bash
+$ git rebase master server
+```
+![interesting rebase 4](./../images/interesting-rebase-4.png)
+
+然后再进行快速合并到分支 `master`，最后删除 `client` 和 `server` 分支：
+
+```bash
+$ git checkout master
+$ git merge server
+
+$ git branch -d client
+$ git branch -d server
+```
+![interesting rebase 5](./../images/interesting-rebase-5.png)
+
+
+### 3.6.3. 变基的风险
+奇妙的变基也并非完美无缺，要用它得遵守一条准则：
+
+**如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。（Do not rebase commits that exist outside your repository and that people may have based work on.）**
+
+*例子让我很晕*
+
+
+### 3.6.4. 用变基解决变基
+？？？
+
+
+### 3.6.5. 变基 v.s. 合并
+`merge`： **记录实际发生过什么**
+
+`rebase`：**项目过程中发生的事**
+
+总的原则是，**只对**尚未推送或分享给别人的**本地修改**执行变基操作清理历史，从不对已推送至别处的提交执行变基操作，这样，才能享受两种方式带来的便利。
+
+
+
+--20200508
