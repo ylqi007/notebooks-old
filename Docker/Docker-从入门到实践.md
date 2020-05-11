@@ -147,8 +147,9 @@ $ docker container prune
 
 
 # 5. 数据管理
-![data management](./images/data_management.png)
-从上图中可以看出：
+| Data management               |
+|:-----------------------------------------:|
+| ![data management](./images/data_management.png) |  
 1. bind mount，即 Container 与本地主机的一个 `Filesystem` 挂载。`Bind mounts`的数据可以存放在宿主机的任何地方。数据甚至可以是重要的系统文件或目录。**非Docker应用程序可以改变这些数据。**
 2. volume，即在本地主机创建一个 `volume`，作为要挂载的地方。`Volumes` 由 Docker 管理，存储在宿主机的某个地方（在linux上是``/var/lib/docker/volumes/``）。**非Docker应用程序不能改动这一位置的数据。Volumes是Docker最好的数据持久化方法。**
 3. tmpfs，`tmpfs mounts`的数据只存储在宿主机的内存中，不会写入到宿主机的文件系统。
