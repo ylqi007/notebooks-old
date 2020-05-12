@@ -92,18 +92,22 @@ The problem is often framed as predicting an integer value, where each class is 
 [模型会预测 integer value，每一个 class 是 [0,...,n-1] 之间的一个整数。 Problem 要建模成预测 example 属于每一个 class 的probabilities。]
 
 ### 3.1 Multi-Class Cross-Entropy Loss
-Cross-entropy is the default loss function to use for multi-class classification problems.
+Cross-entropy is the default loss function to use for multi-class classification problems. 
+[对于 Multi-Class problem, 默认的 loss 也是 `cross-entropy`.]      
 In this case, it is intended for use with multi-class classification where the target values are in the set {0, 1, 3, …, n}, where each class is assigned a unique integer value.
 Mathematically, it is the preferred loss function under the inference framework of maximum likelihood. It is the loss function to be evaluated first and only changed if you have a good reason.
 Cross-entropy will calculate a score that summarizes the average difference between the actual and predicted probability distributions for all classes in the problem. The score is minimized and a perfect cross-entropy value is 0.
 
 ### 3.2 Sparse Multiclass Cross-Entropy Loss
 A possible cause of frustration when using cross-entropy with classification problems with a large number of labels is the one hot encoding process.
-For example, predicting words in a vocabulary may have tens or hundreds of thousands of categories, one for each label. This can mean that the target element of each training example may require a one hot encoded vector with tens or hundreds of thousands of zero values, requiring significant memory.
+[当 class 的类别很多的时候，如果用 one-hot 的形式来表示 true-label 的时候，会造成很大的资源浪费。]      
+For example, predicting words in a vocabulary may have tens or hundreds of thousands of categories, one for each label. This can mean that the target element of each training example may require a one hot encoded vector with tens or hundreds of thousands of zero values, requiring significant memory.        
 Sparse cross-entropy addresses this by performing the same cross-entropy calculation of error, without requiring that the target variable be one hot encoded prior to training.
+[`Sparse cross-entropy` 是同样的计算 `cross-entropy loss`，但是不会要求 label 必须用 `one-hot` 的标记形式。]
 
 ### 3.3 Kullback Leibler Divergence Loss
 Kullback Leibler Divergence, or KL Divergence for short, is a measure of how one probability distribution differs from a baseline distribution.
+[KL 散度是对两种分布之间距离的度量。]          
 A KL divergence loss of 0 suggests the distributions are identical. In practice, the behavior of KL Divergence is very similar to cross-entropy. It calculates how much information is lost (in terms of bits) if the predicted probability distribution is used to approximate the desired target probability distribution.
 As such, the KL divergence loss function is more commonly used when using models that learn to approximate a more complex function than simply multi-class classification, such as in the case of an autoencoder used for learning a dense feature representation under a model that must reconstruct the original input. In this case, KL divergence loss would be preferred. Nevertheless, it can be used for multi-class classification, in which case it is functionally equivalent to multi-class cross-entropy.
 
