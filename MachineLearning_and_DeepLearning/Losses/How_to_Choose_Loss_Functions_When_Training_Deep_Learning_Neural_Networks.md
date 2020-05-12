@@ -17,7 +17,7 @@ The `Mean Squared Error, or MSE`, loss is the default loss to use for regression
 [用 实际值-预测值，然后平方之后，求平均值的和。] 
 
 
-### 1.2 Mean Squared Logarithmic Error Loss
+### 1.2 Mean Squared Logarithmic Error Loss (L2 Loss, 均方误差)
 There may be regression problems in which the target value has a spread of values and when predicting a large value, you may not want to punish a model as heavily as mean squared error.     
 [可能存在回归问题，其中目标值具有分散的值，并且在预测大值时，您可能不希望像均方误差那样对模型进行严厉的惩罚。]
 
@@ -28,7 +28,7 @@ It has the effect of relaxing the punishing effect of large differences in large
 As a loss measure, it may be more appropriate when the model is predicting unscaled quantities directly. Nevertheless, we can demonstrate this loss function using our simple regression problem.     
 [它具有缓解较大预测值中较大差异的惩罚效果的作用。作为一种损失度量，当模型直接预测未缩放的数量时，它可能更合适。 但是，我们可以使用简单的回归问题来证明这种损失函数。]
 
-### 1.3 Mean Absolute Error Loss
+### 1.3 Mean Absolute Error Loss (L1 Loss, 平均绝对误差)
 On some regression problems, the distribution of the target variable may be mostly Gaussian, but may have outliers, e.g. large or small values far from the mean value.
 The Mean Absolute Error, or MAE, loss is an appropriate loss function in this case as it is more robust to outliers. It is calculated as the average of the absolute difference between the actual and predicted values.    
 [在某些回归问题上，目标变量的分布可能大部分是高斯分布，但可能有离群值，例如 远离平均值的大或小值。
@@ -41,6 +41,16 @@ The Mean Absolute Error, or MAE, loss is an appropriate loss function in this ca
 1. `Mean Squared Error Loss`: 是 regression problem 的默认 loss 函数。
 2. `Mean Squared Logarithmic Loss`： 当预测给出一个较大的值，但是并不像严厉惩罚的话，可以考虑先将预测值做对数处理，然后再求解 MSE。
 3. `Mean Absolute Error Loss`： 对异常值更健壮(it is more robust to outliers)。
+
+* 简而言之， 使用平方误差更容易求解，但使用绝对误差对离群点更加鲁棒。
+* 和以MAE为损失的模型相比，以MSE为损失的模型会赋予更高的权重给离群点。
+* L1损失对异常值更加稳健，但其导数并不连续，因此求解效率很低。L2损失对异常值敏感，但给出了更稳定的闭式解（closed form solution）（通过将其导数设置为0）
+* 如果`L1`和`L2`都不能很好的满足需求呢？ ==> Huber Loss
+* Since, the difference between `an incorrectly predicted target value` and `original target value` will be quite large and squaring it will make it even larger.
+As a result, L1 loss function is more robust and is generally not affected by outliers.
+
+[如何选择合适的损失函数，请看......](https://blog.csdn.net/dQCFKyQDXYm3F8rB0/article/details/80730722)        
+[L1 vs. L2 Loss function](http://rishy.github.io/ml/2015/07/28/l1-vs-l2-loss/)
 
 ## 2. Binary Classification Loss Functions
 Binary Classification are those predictive modeling problems where examples are assigned one of two labels.
