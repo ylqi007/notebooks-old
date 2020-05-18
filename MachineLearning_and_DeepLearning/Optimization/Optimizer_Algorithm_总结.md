@@ -130,9 +130,79 @@ Adagrad 的优点是减少了对learning rate的手动调节。
 超参数设定值：一般η选取0.01
 
 
+## 5. Adadelta
+这个算法是对 Adagrad 的改进。和 Adagrad 相比，就是分母的 G 换成了过去的梯度平方的衰减平均值，指数**衰减平均值**
+
+| #  | Adedelta Equation  |
+|:---:|:----------------------------:|
+| 5-1 | ![5-1](./images/Adedelta_1.png) |
+| 5-2 | ![5-2](./images/Adedelta_2.png) |
+| 5-3 | ![5-3](./images/Adedelta_3.png) |
+| 5-4 | ![5-4](./images/Adedelta_4.png) |
+
+和 Adagrad 相比，就是分母的 G 换成了过去的梯度平方的衰减平均值，指数衰减平均值。
+这个分母相当于梯度的均方根 root mean squared (RMS)，在数据统计分析中，将所有值平方求和，求其均值，再开平方，就得到均方根值，
+所以可以用 RMS 简写 [equation 5-2]
+
+超参数设定值:  γ 一般设定为 0.9
+
+
+## 6. RMSProp
+RMSprop 是 Geoff Hinton 提出的一种自适应学习率方法。 
+**RMSprop 和 Adadelta 都是为了解决 Adagrad 学习率急剧下降问题的.**
+
+| #  | Adedelta Equation  |
+|:---:|:----------------------------:|
+| 6-1 | ![6-1](./images/RMSProp_equation.png) |
+
+* 与 Momentum 的处理方式类似，采用**指数加权平均**
+* 某一维度的导数比较大，则指数加权平均就大，某一维度的导数比较小，则其指数加权平均就小，这样就保证了各维度导数都在一个量级，进而减少了摆动。
+* 允许使用一个更大的学习率η
+
+* 超参数设定值: Hinton 建议设定 γ 为 0.9, 学习率 η 为 0.001。
+
+
+## 7. Adaptive Moment Estimation (Adam)
+这个算法是另一种计算**每个参数**的自适应学习率的方法。相当于 RMSprop + Momentum。        
+除了像 Adadelta 和 RMSprop 一样存储了过去梯度的平方 vt 的指数衰减平均值 ，也像 momentum 一样保持了过去梯度 mt 的指数衰减平均值：
+
+| #  | Adam Equation  |
+|:---:|:----------------------------:|
+| 7-1 | ![7-1](./images/Adam_1.png) |
+| 7-2 | ![7-2](./images/Adam_2.png) |
+| 7-3 | ![7-3](./images/Adam_3.png) |
+
+* 超参数设定值: 建议 β1 ＝ 0.9，β2 ＝ 0.999，ϵ ＝ 10e−8
+
+实践表明，Adam 比其他适应性学习方法效果要好。
+
+## 8. Performance Comparasion
+![optimization on saddle point](https://images2018.cnblogs.com/blog/1192699/201803/1192699-20180311105558593-251578131.gif)
+* 可以看出红色的点(SGD)最终停留在鞍点上；
+* 绿色的(Momentum)和淡紫色的(NAG)在初期震荡比较厉害，但是最终也找到了正确的方向；
+* 基于 Adaptive 的几种算法(Adagrad, Adedelta, RMSProp)都能很快找到正确方向并且收敛速度较快。
+
+![optimization on loss surface contours](https://images2018.cnblogs.com/blog/1192699/201803/1192699-20180311110108768-2113908893.gif)
+
+* 上面两种情况都可以看出，Adagrad, Adadelta, RMSprop 几乎很快就找到了正确的方向并前进，收敛速度也相当快，而其它方法要么很慢，要么走了很多弯路才找到。
+* 由图可知自适应学习率方法即 Adagrad, Adadelta, RMSprop, Adam 在这种情景下会更合适而且收敛性更好。
+
+
+## 9. How to choose optimization algorithm
+* 如果数据是稀疏的，就用自适用方法，即 Adagrad, Adadelta, RMSprop, Adam。
+* RMSprop, Adadelta, Adam 在很多情况下的效果是相似的。
+* Adam 就是在 RMSprop 的基础上加了 bias-correction 和 momentum，
+* 随着梯度变的稀疏，Adam 比 RMSprop 效果会好。
+* 整体来讲，Adam 是最好的选择。
+* 很多论文里都会用 SGD，没有 momentum 等。SGD 虽然能达到极小值，但是比其它算法用的时间长，而且可能会被困在鞍点。
+* 如果需要更快的收敛，或者是训练更深更复杂的神经网络，需要用一种自适应的算法。
+
 
 ## References
 1. [深度学习——优化器算法Optimizer详解（BGD、SGD、MBGD、Momentum、NAG、Adagrad、Adadelta、RMSprop、Adam）](https://www.cnblogs.com/guoyaohua/p/8542554.html)
 2. [Sebastian Ruder](https://arxiv.org/pdf/1609.04747.pdf)
 3. [为什么数学概念中，将凸起的函数称为凹函数？](https://www.zhihu.com/question/20014186)
 4. [什么是指数加权平均、偏差修正？](https://www.cnblogs.com/guoyaohua/p/8544835.html)
+5. [An overview of gradient descent optimization algorithms](http://sebastianruder.com/optimizing-gradient-descent/index.html#fn:24)
+6. http://www.redcedartech.com/pdfs/Select_Optimization_Method.pdf
+7. https://stats.stackexchange.com/questions/55247/how-to-choose-the-right-optimization-algorithm
