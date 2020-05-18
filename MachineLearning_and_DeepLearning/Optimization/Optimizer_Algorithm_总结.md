@@ -42,7 +42,7 @@ SGD是基于dataset中的每个sample的loss进行参数更新，也就是整体
 
 |  SGD update equation  |
 |:---------------------:|
-| ![1-1](./images/SGD_equation.png) |
+| ![1-2](./images/SGD_equation.png) |
 
 冗余：对于很大的dataset而言，其中可能有相似、甚至一样的sample，那么相似的或一样的sample的loss就重复出现，也就是冗余。[有疑问？对于相同的dataset，SGD不也有吗？]
 
@@ -61,7 +61,7 @@ SGD 和 BGD 是两个极端，SGD 每次是用一个sample，BGD 每次是用整
 
 |  MBGD update equation  |
 |:---------------------:|
-| ![1-1](./images/MBGD_equation.png) |
+| ![1-3](./images/MBGD_equation.png) |
 
 每个batch中样本的个数n，是个超参数，一般取值在50～256。
 
@@ -72,7 +72,67 @@ SGD 和 BGD 是两个极端，SGD 每次是用一个sample，BGD 每次是用整
 
 * 鞍点就是：一个光滑函数的鞍点邻域的曲线，曲面，或超曲面，都位于这点的切线的不同边。
 
+
+## 2. Momentum
+|  SGD with and without momentum  |
+|:-------------------------------:|
+| ![2-1](./images/SGD_without_and_with_momentum.png) |
+
+SGD 在 ravines 的情况下容易被困住， ravines 就是曲面的一个方向比另一个方向更陡，这时 SGD 会发生震荡而迟迟不能接近极小值。
+从上图中可以看出，沿着椭圆长轴的方向，梯度下降比较慢；而短轴方向梯度下降比较快，也就是梯度更陡。
+
+|  Momentum Equation  |
+|:-------------------------------:|
+| ![2-2](./images/momentum_equation.png) |
+
+Momentum 通过引入`v_t-1`，既可以加速SGD，也可以一直震荡。
+因为这一项，1.可以使得梯度方向不变的方向上加速（正加正会越快），2.可以使梯度方向改变的方向更新速度变慢，从而抑制震荡。从而既可以加快收敛，也可以减小震荡。
+
+其中，超参数`gama`一般取值为`0.9`。
+
+缺点：
+
+
+## 3. Nesterov Accelerated Gradient (NAG)
+在计算梯度的时候，不是在**当前的**位置`J(theta)`，而是在**未来的**位置上`J(theta-\game x v_t-1)`。
+
+|  Nesterov Accelaerated Equation  |
+|:-------------------------------:|
+| ![3](./images/Nesterov_Accelerated_Gradient_equation.png) |
+
+其中，超参数`gama`一般取值为`0.9`。
+
+* 在 SGD 的基础上，考虑调整速度，对 SGD 进行加速和调整，也就是`Momentum`和`Nesterov Acceleraed Gradient(NAG)`。
+* 如果想要根据**参数重要性**而对不同的参数进行不同程度的更新呢？该怎么做？
+
+
+## 4. Adaptive Graident Algorithm (Adagrad)
+该算法可以做到：
+* 对低频的参数做较大的更新；对高频的参数做较小的更新。因此对稀疏的数据的表现会更好，也因此提高了 SGD 的鲁棒性。
+
+| #  | Adagrad Equation  |
+|:---:|:----------------------------:|
+| 4-1 | ![4-1](./images/Adagrad_1.png) |
+| 4-2 | ![4-2](./images/Adagrad_2.png) |
+| 4-3 | ![4-3](./images/Adagrad_3.png) |
+| 4-4 | ![4-4](./images/Adagrad_4.png) |
+
+* `g_t,i` 是t时刻，参数`theta_i`的梯度；
+* `4-3` 普通 SGD 的`theta`更新方式；
+* 其中 G_t 是个对角矩阵， (i,i) 元素就是 t 时刻参数 θ_i 的梯度平方和。
+
+优点：
+Adagrad 的优点是减少了对learning rate的手动调节。
+
+缺点：
+分母会不断积累，最终learning rate会收缩并变得非常小。
+
+超参数设定值：一般η选取0.01
+
+
+
 ## References
 1. [深度学习——优化器算法Optimizer详解（BGD、SGD、MBGD、Momentum、NAG、Adagrad、Adadelta、RMSprop、Adam）](https://www.cnblogs.com/guoyaohua/p/8542554.html)
 2. [Sebastian Ruder](https://arxiv.org/pdf/1609.04747.pdf)
 3. [为什么数学概念中，将凸起的函数称为凹函数？](https://www.zhihu.com/question/20014186)
+4. [什么是指数加权平均、偏差修正？](https://www.cnblogs.com/guoyaohua/p/8544835.html)
