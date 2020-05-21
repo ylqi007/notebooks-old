@@ -16,7 +16,7 @@ dataset = tf.data.Dataset.range(10)
 dataset = dataset.map(lambda x: fun(x, my_arg))
 print(dataset)
 
-iterator = dataset.make_initializable_iterator()
+iterator = dataset.make_initializable_iterator()    # Need sess.run(iterator.initializer)
 next_element = iterator.get_next()
 
 with tf.Session() as sess:
