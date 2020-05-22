@@ -5,3 +5,15 @@
 
 ![Git_Config_Remote_Origin](./images/Git_Config_Remote_Origin.png)
 如 `git config remote.origin.url <...>` 前后的 `remote.origin.url` 所示。
+
+
+3. [Untrack files already added to git repository based on .gitignore](http://www.codeblocq.com/2016/01/Untrack-files-already-added-to-git-repository-based-on-gitignore/)
+
+如果不小心 track 了一些文件或目录，想要将其从**暂存区**移除，但是依然在本地保留，则可以考虑下面命令：
+```bash
+git rm -r --cached .
+```
+* `rm` is the remove command
+* `-r` will allow recursive removal
+* `--cached` will only remove files from index, but the files will still be there
+* `.` indicates that all files will be untracked. You want to untrack a specific file with `git rm --cached <file>`.
