@@ -46,6 +46,53 @@ TensorFlow 提供了 `tf.train.Saver` 类。使用 `tf.train.Saver` 保存模型
 [convert_variables_to_constants](codes/demo_3.py)
 
 
+### 1.2 持久化原理及数据格式
+调用 `tf.train.Saver` 会生成 4 个文件。TF 模型的持久化就是通过这四个文件实现的。 
+> TensorFlow是一个通过图的形式来表述计算的编程系统，TensorFlow程序中所有计算都会被表达为计算图上的节点。
+> TensorFlow通过元图(MetaGraph)来记录计算图中节点的信息以及运行计算图中节点所需要的元数据。
+> TensorFlow中元图是由 `MetaGraphDef Protocol Buffer` 定义的。`MetaGraphDef` 中的内容就构成了 TensorFlow 持久化的第一个文件.
+```metadata json
+message MetaGraphDef {
+    MeatInfoDef meta_info_def = 1;
+    GraphDef graph_def = 2;
+    SaverDef saver_def = 3;
+    map<string,CollectionDef> collection_def = 4;
+    map<string,SignatureDef> signature_def = 5;
+}
+```
+[MetaGraphDef](codes/demo_4.py) <br>
+从上述的例子的输出中，可以看出 json 文件中确实有五类信息。
+
+#### 1.2.1 `meta_info_def` 属性
+> `meta_info_def` 属性是通过 `MetaInfoDef` 定义的。它记录了 TensorFlow 计算图中的元数据以及 TensorFlow 程序中所有使用到的运算方法的信息，
+
+#### 1.2.2 `graph_def` 属性
+> `graph_def` 属性主要记录了 TensorFlow 计算图上的节点信息。TensorFlow 计算图的每一个节点对应了 TensorFlow 程序中一个运算，
+> 因为在 `meta_info_def` 属性中已经包含了所有运算的具体信息，所以 `graph_def` 属性只关注运算的连接结构。`graph_def` 属性是通过 `GraphDef Protocol Buffer` 定义的，`graph_def` 主要包含了一个 `NodeDef` 类型的列表。
+
+#### 1.2.3 `saver_def` 属性
+> `saver_def` 属性中记录了持久化模型时需要用到的一些参数，比如保存到文件的文件名，保存操作和加载操作的名称以及保存频率，清理历史记录等。
+> `saver_def` 属性的类型为 `SaverDef`
+
+####  1.2.4 `collection_def` 属性
+> 在 TensorFlow 的计算图(tf.Graph)中可以维护不同集合，而维护这些集合的底层实现就是通过 `collection_def` 这个属性。
+> `collection_def` 属性是一个从集合名称到集合内容的映射，其中集合名称为字符串，而集合内容为 `CollectionDef Protocol Buffer`。
+
+####  1.2.5 `signature_def` 属性
+
+
+> 最后一个文件的名字是固定的，叫 `checkpoint`。这个文件是 `tf.train.Saver` 类自动生成且自动维护的。
+> 在 `checkpoint` 文件中维护了由一个 `tf.train.Saver` 类持久化的所有 TensorFlow 模型文件的文件名。
+> 当某个保存的 TensorFlow 模型文件被删除的，这个模型所对应的文件名也会从 `checkpoint` 文件中删除。
+> `checkpoint` 中内容格式为 `CheckpointState Protocol Buffer`，下面给出了 CheckpointState 类型的定义。
+```metadata json
+message CheckpointState {
+    string model_checkpoint_path = 1,   # 保存了最新的TensorFlow模型文件的文件名。
+    repeated string all_model_checkpoint_paths = 2; # 列表了当前还没有被删除的所有TensorFlow模型文件的文件名。
+}
+```
+> `model_checkpoint_path` 属性保存了最新的 TensorFlow 模型文件的文件名。 `all_model_checkpoint_paths` 属性列表了当前还没有被删除的所有 TensorFlow 模型文件的文件名。
+
 
 
 
