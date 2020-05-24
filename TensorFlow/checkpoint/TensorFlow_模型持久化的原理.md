@@ -41,11 +41,13 @@ TensorFlow 提供了 `tf.train.Saver` 类。使用 `tf.train.Saver` 保存模型
 > 比如在测试或者离线预测时，只需要知道如何从神经网络的输出层经过前向传播计算得到输出层即可，而不需要类似于变量初始化，模型保存等辅助接点的信息。
 > 而且，将变量取值和计算图结构分成不同的文件存储有时候也不方便，于是 TensorFlow 提供了 `convert_variables_to_constants` 函数，
 > 通过这个函数可以将计算图中的变量及其取值通过常量的方式保存，这样整个 TensorFlow 计算图可以统一存放在一个文件中，该方法可以固化模型结构，而且保存的模型可以移植到Android平台。 <br>
-> [简单来说，就是只保存会用的变量，而一些辅助节点则不需要。]
+> [简单来说，就是只保存会用的变量，而一些辅助节点则不需要。] <br>
+
+[convert_variables_to_constants](codes/demo_3.py)
 
 
 
 
 
-
-
+## Reference:
+1. [tensorflow学习笔记——模型持久化的原理，将CKPT转为pb文件，使用pb模型预测](https://www.cnblogs.com/wj-1314/p/11289619.html)
