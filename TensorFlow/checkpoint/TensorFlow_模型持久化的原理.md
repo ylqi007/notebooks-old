@@ -24,6 +24,7 @@ TensorFlow 提供了 `tf.train.Saver` 类。使用 `tf.train.Saver` 保存模型
 1. 先要重新引入 graph 的结构。`model.ckpt.meta` 文件保存了 TensorFlow 计算图的结构(可以简单理解为神经网络的网络结构)，
 该文件可以被 `tf.train.import_meta_graph` 加载到当前默认的图来使用；
 2. 然后加载相应的数据。也就是 `saver.restore(sess, "model.ckpt")`    <br>
+
 [Restore the model 2](codes/demo_1.py)
 
 上述给出的例子中，默认保存和加载 TF 计算图上定义的**所有**变量。但是有时候只需要保存或加载**部分**变量。
@@ -33,6 +34,15 @@ TensorFlow 提供了 `tf.train.Saver` 类。使用 `tf.train.Saver` 保存模型
 这样做的主要目的之一就是方便使用**变量的滑动平均值**。(什么是**变量的滑动平均值**)
 
 #### 1.1.1 变量的滑动平均值 ？
+[Exponential average](codes/demo_2.py)
+
+#### 1.1.2 `convert_variables_to_constants` 固化模型结构
+> 使用 `tf.train.Saver` 会保存进行 TensorFlow 程序所需要的全部信息，然后有时并不需要某些信息。
+> 比如在测试或者离线预测时，只需要知道如何从神经网络的输出层经过前向传播计算得到输出层即可，而不需要类似于变量初始化，模型保存等辅助接点的信息。
+> 而且，将变量取值和计算图结构分成不同的文件存储有时候也不方便，于是 TensorFlow 提供了 `convert_variables_to_constants` 函数，
+> 通过这个函数可以将计算图中的变量及其取值通过常量的方式保存，这样整个 TensorFlow 计算图可以统一存放在一个文件中，该方法可以固化模型结构，而且保存的模型可以移植到Android平台。 <br>
+> [简单来说，就是只保存会用的变量，而一些辅助节点则不需要。]
+
 
 
 
