@@ -94,7 +94,40 @@ message CheckpointState {
 > `model_checkpoint_path` 属性保存了最新的 TensorFlow 模型文件的文件名。 `all_model_checkpoint_paths` 属性列表了当前还没有被删除的所有 TensorFlow 模型文件的文件名。
 
 
+## 2. 将 CKPT 文件转化为 pb 格式
+> 很多时候，我们需要将 TensorFlow 的模型导出为单个文件（同时包含模型结构的定义与权重），方便在其他地方使用（如在Android中部署网络）。
+> 利用 `tf.train.write_graph()` 默认情况下只能导出了网络的定义（没有权重），
+> 而利用 `tf.train.Saver().save()` 导出的文件 `graph_def` 与权重时分离的，因此需要采用别的方法。
+> 我们知道，`graph_def` 文件中没有包含网络中的 Variable 值（通常情况存储了权重），但是却包含了constant 值，所以如果我们能把Variable 转换为 constant，即可达到使用一个文件同时存储网络架构与权重的目标。 <br>
+> （PS：利用tf.train.write_graph() 保存模型，该方法只是保存了模型的结构，并不保存训练完毕的参数值。）
+
+> 将CKPT转换成 PB格式的文件的过程如下：
+> 1. 通过传入 CKPT模型的路径得到模型的图和变量数据
+> 2. 通过 import_meta_graph 导入模型中的图
+> 3. 通过saver.restore 从模型中恢复图中各个变量的数据
+> 4. 通过 graph_util.convert_variables_to_constants 将模型持久化
+
+[ckpt to pb](codes/demo_5.py)
+
+### 2.1 对指定输出的节点名称的理解
+
+#### 2.1.1 那最后输出的节点名称到底是什么呢？怎么样可以直接高效的找出呢？
+
+### 2.2 查看ckpt网络的输入输出张量名称
+
+### 2.3 查看生成的pb文件的输入输出节点
+
+
+## 3. 使用pb模型预测
+
+
+## 4. h5转pb，转tfile
+
+
+
 
 
 ## Reference:
 1. [tensorflow学习笔记——模型持久化的原理，将CKPT转为pb文件，使用pb模型预测](https://www.cnblogs.com/wj-1314/p/11289619.html)
+2. [tensorflow实现将ckpt转pb文件](https://blog.csdn.net/guyuealian/article/details/82218092)
+3. [将ckpt文件生成pb文件的详细过程,并调用pb文件进行模型预测.](https://blog.csdn.net/weixin_42535742/article/details/93657397)

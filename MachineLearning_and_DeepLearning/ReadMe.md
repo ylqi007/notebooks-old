@@ -3,6 +3,8 @@
     * [How to choose loss functions](./Losses/How_to_Choose_Loss_Functions_When_Training_Deep_Learning_Neural_Networks.md)
 2. [Activations](./Activations/)
     * [Activations_总结](./Activations/Activations_总结.md)
+3. [Optimization](./Optimization/)
+    * [Optimizer_Algorithm_总结](./Optimization/Optimizer_Algorithm_总结.md)
 
 <!-- | ID  | Topic           | References  |
 |:---:|:---------------:|:------:|
