@@ -5,6 +5,7 @@
     * [Activations_总结](./Activations/Activations_总结.md)
 3. [Optimization](./Optimization/)
     * [Optimizer_Algorithm_总结](./Optimization/Optimizer_Algorithm_总结.md)
+4. [Transfer Learning](./Transfer_Learning/)
 
 <!-- | ID  | Topic           | References  |
 |:---:|:---------------:|:------:|
