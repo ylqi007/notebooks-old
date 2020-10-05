@@ -4,3 +4,10 @@
 
 * [磁盘的开机自动挂载(Correct way to mount a hard drive)](Correct_way_to_mount_a_hard_drive.md)
 * [Commands_with_Examples](Commands_with_Examples.md)
+
+
+## Usful Points
+* 全角与半角切换：`Shift + Space`
+
+## Reference:
+1. [What is /dev/loopx?](https://askubuntu.com/questions/906581/what-is-dev-loopx)

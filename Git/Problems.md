@@ -27,3 +27,7 @@ git reset HEAD <file>...
 5). [There is no tracking information for the current branch](https://stackoverflow.com/questions/32056324/there-is-no-tracking-information-for-the-current-branch)
 [git branch --set-upstream 本地关联远程分支](https://blog.csdn.net/z1137730824/article/details/78254564)
 
+6). Errors of `git pull fatal`: 
+* `refusing to merge unrelated histories` and `fatal: Couldn't find remote ref master`
+
+* [The “fatal: refusing to merge unrelated histories” Git error](https://www.educative.io/edpresso/the-fatal-refusing-to-merge-unrelated-histories-git-error)

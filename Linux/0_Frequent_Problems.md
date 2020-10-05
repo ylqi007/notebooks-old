@@ -7,6 +7,8 @@
 4. [How to Fix the No Sound Issue in Ubuntu](https://www.maketecheasier.com/fix-no-sound-issue-ubuntu/)
 5. [ubuntu - 如何最大化左/右半屏窗口？ ](https://www.coder.work/article/4057137)
 6. [Setting up permissions on a script](https://bash.cyberciti.biz/guide/Setting_up_permissions_on_a_script)
+7. [Fcitx Chinese Input Setup on Ubuntu for Gaming](https://leimao.github.io/blog/Ubuntu-Gaming-Chinese-Input/)
+[Ln Command in Linux (Create Symbolic Links)](https://linuxize.com/post/how-to-create-symbolic-links-in-linux-using-the-ln-command/)
 
 
 
