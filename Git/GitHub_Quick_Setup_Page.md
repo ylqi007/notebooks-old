@@ -10,6 +10,7 @@ git commit -a -m "Created README"
 git push -u origin master
 ```
 
+* The following figure is the GitHub Quick Setup Page for new Github            
 ![Link local repo to remote repo](images/Github_Remote_Repo_Quick_Setup.png)
 
 
