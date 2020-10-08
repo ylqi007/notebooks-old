@@ -1,4 +1,4 @@
-
+[TOC]
 
 ## High-Level Summary
 > **Cross-correlation** and **convolution** are both operations applied to images. 

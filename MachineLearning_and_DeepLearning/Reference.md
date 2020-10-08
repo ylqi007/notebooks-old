@@ -1,3 +1,5 @@
+[TOC]
+
 ## 1. [Introduction to Neural Networks](https://glassboxmedicine.com/2019/01/17/introduction-to-neural-networks/)
 * Feedforward neural network, meaning that information only flows forwards through the neurons. 
 * [input layer, [hidden layer(s)], output layer]
