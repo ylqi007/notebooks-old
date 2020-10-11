@@ -31,3 +31,14 @@ git reset HEAD <file>...
 * `refusing to merge unrelated histories` and `fatal: Couldn't find remote ref master`
 
 * [The “fatal: refusing to merge unrelated histories” Git error](https://www.educative.io/edpresso/the-fatal-refusing-to-merge-unrelated-histories-git-error)
+
+7). error: Your local changes to the following files would be overwritten by merge:
+* [How do I ignore an error on 'git pull' about my local changes would be overwritten by merge?](https://stackoverflow.com/questions/14318234/how-do-i-ignore-an-error-on-git-pull-about-my-local-changes-would-be-overwritt)
+* [How do I resolve git saying “Commit your changes or stash them before you can merge”?](https://stackoverflow.com/questions/15745045/how-do-i-resolve-git-saying-commit-your-changes-or-stash-them-before-you-can-me)
+    1. Option 1: **Commit the change using:** `git commit -m "commit info"`
+    2. Option 2: **Stash it:** Stashing acts as a stack, where you can push changes, and you pop them in reverse order.
+        * `git stash` --> merge --> `git stash pop`.
+        * You can use `git stash -u` to stash uncommitted files too.
+    3. Option 3: **Discard the local changes:**
+        * Using `git reset --hard` or `git checkout -t -f remote/branch`
+        * Discard local changes for a specific file: `git checkout filename`
