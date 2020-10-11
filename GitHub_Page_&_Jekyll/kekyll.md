@@ -149,7 +149,10 @@ Jekyll 是静态网站生成器，在要看 site 之前，我们需要 Jekyll �
 
 
 ### 9. Collections
-> Collections are similar to posts except the content doesn’t have to be grouped by date.
+> * Let’s look at fleshing out authors so each author has their own page with a blurb and the posts they’ve published.
+> 充实每个 author 的页面，使每个 author 都有一个单独的页面，包含 author 的基本信息和发布文章的列表。
+> * Collections are similar to posts except the content doesn’t have to be grouped by date.
+> Collections 与 posts 相似，但是不用按照 date 分组。
 
 #### Configuration
 > To set up a collection you need to tell Jekyll about it. Jekyll configuration happens in a file called `_config.yml` (by default).
@@ -168,12 +171,22 @@ Jekyll 是静态网站生成器，在要看 site 之前，我们需要 Jekyll �
 #### Front matter defaults
 > Using *front matter defaults* in `_config.yml`. You set a scope of what the default applies to, then the default front matter you'd like.
 
+#### List autho's posts
+
 
 ### 10. Gemfile
 
+#### Gemfile
 
+#### Plugins
+> Jekyll plugins allow you to create custom generated content specific to your site.
+> * `jekyll-sitemap` - Creates a sitemap file to help search engines index content
+> * `jekyll-feed` - Creates an RSS feed for your posts
+> * `jekyll-seo-tag` - Adds meta tags to help with SEO
 
-
+#### Environments
+> Sometimes you might want to output something in production but not in development. **Analytics** scripts are the most common example of this. 有时候需要在 production 的过程中进行调试，而不是直接 development。
+> To do this you can use environments. You can set the environment by using the `JEKYLL_ENV` environment variable when running a command.
 
 ---
 ## Themes
@@ -181,4 +194,15 @@ Jekyll 是静态网站生成器，在要看 site 之前，我们需要 Jekyll �
 
 ### 2. Understanding gem-based themes
 
+
+---
+# Other Related Problems
+## 1. 多个 GitHub Pages
+### Questions
+1. 每个 GitHub 帐号除了可以有一个 `username.github.io` 的 GitHub Pages 的项目之外，是否可以创建多个 GitHub Pages 项目。
+2. GitHub Pages site 的域名设置。
+
+
+## Reference
+1. [Working with GitHub Pages](https://docs.github.com/en/free-pro-team@latest/github/working-with-github-pages)
 
