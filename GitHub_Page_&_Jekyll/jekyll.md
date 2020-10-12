@@ -1,6 +1,17 @@
 [TOC]
 
+## TODO
+
+- [ ] 什么是 plugins，该如何使用？
+- [ ] `jekyll-sitemap` ?
+- [ ] `jekyll-feed` ?
+- [ ] `jekyll-seo-tag` ?
+- [ ] 如何更换 theme？
+- [ ] 如何使用 Environment？如何使用？
+- [ ] `site.url` vs `site.baseurl`?
+
 # Transform your plain text into static websites and blogs 将静态文本转换成静态网站和博客
+
 * Simple: 不需要数据库，评论模块，或者复杂的更新，仅仅需要关注内容就好。
 * Static: 可以引入 Markdown, Liquid, HTML & CSS，静态网页一旦准备好就可以部署。
 * Blog-aware: 
@@ -208,41 +219,111 @@ Jekyll makes posts available at `site.posts`. 目前没有直接的方法访问 
   Collections 与 posts 相似，但是不用按照 date 分组。
 
 #### Configuration
-> To set up a collection you need to tell Jekyll about it. Jekyll configuration happens in a file called `_config.yml` (by default).
+To set up a collection you need to tell Jekyll about it. Jekyll configuration happens in a file called `_config.yml` (by default).
 
 #### Add authors
-> Documents (the items in a collection) live in a folder in the root of the site named `_*collection_name*`. In this case, `_authors`.
+Documents (the items in a collection) live in a folder in the root of the site named `_*collection_name*`. In this case, `_authors`.
 
 #### Staff page
->Let’s add a page which lists all the authors on the site. Jekyll makes the collection available at `site.authors`.
-> Create `staff.html` and iterate over `site.authors` to output all the staff.
+Let’s add a page which lists all the authors on the site. Jekyll makes the collection available at `site.authors`.
+Create `staff.html` and iterate over `site.authors` to output all the staff.
 
 #### Output a page
-> By default, collections do not output a page for documents. In this case we want each author to have their own page so let’s tweak the collection configuration.
-> Open `_config.yml` and add `output: true` to the author collection configuration.
+By default, collections do not output a page for documents. In this case we want each author to have their own page so let’s tweak the collection configuration.
+Open `_config.yml` and add `output: true` to the author collection configuration.
+
+要设置 `output: true` 并重新 restart serve 才可以是这个 configuration 生效。
 
 #### Front matter defaults
-> Using *front matter defaults* in `_config.yml`. You set a scope of what the default applies to, then the default front matter you'd like.
+
+如果我们想要所有的 posts 都自动地带有 post layout，authors 都自动带有 author layout，其他的所有的都使用 default layout。要如何实现呢？
+
+**You can achieve this by using `front matter defaults` in `_config.yml`. ** You can set a scope of what the default applies to, then the default front matter you'd like.
+
+Using *front matter defaults* in `_config.yml`. You set a scope of what the default applies to, then the default front matter you'd like.
 
 #### List autho's posts
+
+列出每个 author 发表的所有文章。为实现这个，要将作者的 `short_name` 与发布作者 `author` 匹配。所以我们需要使用 filter 过滤与 `author` 匹配的 `post`。
+
+```gem
+{% assign filtered_posts = site.posts | where: 'author', page.short_name %}
+```
+
+在 `_layout/post.html` 中为每个 author 添加 link，指向相应作者的页面。
 
 
 ### 10. Gemfile
 
 #### Gemfile
 
+It's good practice to have a `Gemfile` for site. This ensures the version of Jekyll and other gems remains consistent across different environments. 最好有一个 `Gemfile` 文件记录所需要的 gems 的版本。
+
+When using a `Gemfile`, you'll run commands like `jekyll serve` with `bundle exec` prefixed. So the full command is: `bundle exec jekyll serve`. 当使用 Gemfile 时，运行 `jekyll serve` 命令默认添加了前置 `bundle exec`，所以完整的命令就是 `bundle exec jekyll serve`。 
+
+This restricts your Ruby environment to only use gems set in your `Gemfile`。
+
 #### Plugins
-> Jekyll plugins allow you to create custom generated content specific to your site.
-> * `jekyll-sitemap` - Creates a sitemap file to help search engines index content
-> * `jekyll-feed` - Creates an RSS feed for your posts
-> * `jekyll-seo-tag` - Adds meta tags to help with SEO
+Jekyll plugins allow you to create custom generated content specific to your site. Jekyll 插件可以定制生成不同的内容。比如，
+* `jekyll-sitemap` - Creates a sitemap file to help search engines index content
+
+* `jekyll-feed` - Creates an RSS feed for your posts
+
+* `jekyll-seo-tag` - Adds meta tags to help with SEO
+
+要使用 plugins，分别要在 `Gemfile` 和 `_config.yml` 中作出修改。
 
 #### Environments
-> Sometimes you might want to output something in production but not in development. **Analytics** scripts are the most common example of this. 有时候需要在 production 的过程中进行调试，而不是直接 development。
-> To do this you can use environments. You can set the environment by using the `JEKYLL_ENV` environment variable when running a command.
+Sometimes you might want to output something in production but not in development. **Analytics** scripts are the most common example of this. 有时候需要在 production 的过程中进行调试，而不是直接 development。Analytics 脚本常常用于这种目的。
+To do this you can use environments. You can set the environment by using the `JEKYLL_ENV` environment variable when running a command. 可以在运行一个命令的时候，添加上 `JEKYLL_ENV` 环境变量。比如
+
+```bash
+JEKYLL_ENV=production bundle exec jekyll build
+```
+
+By default `JEKYLL_ENV` is **development**. The `JEKYLL_ENV` is available to you in liquid using `jekyll.environment`(默认的时候，也就是在运行命令的时候不指定 `JEKYLL_ENV` 的时候，默认是 `development`。). So to only output the analytics script on production you would do the following (如果仅仅想要分析的脚本文件出现在 production 过程中，则可以添加以下代码片段):
+
+```
+{% if jekyll.environment == "production" %}
+  <script src="my-analytics-script.js"></script>
+{% endif %}
+```
+
+#### Deployment
+
+The final step is to get the site onto a *production server*. The most basic way to do this is to run a production build:
+
+```bash
+JEKYLL_ENV=production bundle exec jekyll build
+```
+
+And copy the contents of `_site` to your server. 在 build 完成之后，把生成的 `_site/` 的内容放置到服务器上就可以了。
+
+##### Development and Production
+
+* **Development:**  在开发过程中，我们需要在本地打开网页查看，此时默认的 `site.url = http://localhost:4000` and `site.baseurl=/jekyll-demo`
+* **Production:** 在开发完成后，需要部署的时候，此时要设置 `site.url=https://ylqi007.github.io` and `site.baseurl=/jekyll-demo`
+* 可以参考 [ref 8](https://stackoverflow.com/questions/27386169/change-site-url-to-localhost-during-jekyll-local-development), 为 development 和 production 设置不同的 config file。
+
+#### Wrap up
+
+
 
 ---
-## Themes
+
+# Environments
+
+In the `build` or `sever` arguments, you can specify a Jekyll environment and value. The build will then apply this value in any conditional statements in your content. 我们可以在 `build` or `serve` 的时候，设置 Jekyll environment 变量，然后在 `build/serve` 的时候，环境变量的参数值可以用于 statement 中。
+
+We need to understand `site.url` and `site.baseurl` and in which situation we need them. Those variables don't serve the same purpose.
+
+* `site.url` By default, this variable is only used in page head for the `canonical` header and the `RSS link`.
+* `site.baseurl` This variable indicates the root folder of your Jekyll site. By default it is set to `""`(empty string). That means that your Jekyll site is at the root of `http://example.com`. If your Jekyll site lives in `http://example.com/blog`, you have to set `site.baseurl` to `/blog` (**note the slash**).
+
+---
+
+# Themes
+
 ### 1. Pickup a theme
 
 ### 2. Understanding gem-based themes
@@ -264,5 +345,9 @@ Jekyll makes posts available at `site.posts`. 目前没有直接的方法访问 
 5. [[Gemfile中新块"git_source(:github)"的含义](https://qa.1r1g.com/sf/ask/2901803341/#)](https://qa.1r1g.com/sf/ask/2901803341/)
 6. [Liquid语言(jekyll所需)](https://gohom.win/2015/11/28/Liquid-jekyll/)
 7. [《Jekyll使用教程笔记 五：合集、数据文件》](https://juejin.im/post/6844903630001160199)
-8. 
+8. [Change site.url to localhost during jekyll local development](https://stackoverflow.com/questions/27386169/change-site-url-to-localhost-during-jekyll-local-development)
+9. [Jekyll简单总结](http://zhaoxuhui.top/blog/2017/03/21/Jekyll%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93.html)
+10. [Jekyll 中的配置和模板语法](https://gist.github.com/biezhi/f88be58ef4ae0f3741bb36ab8daa53c5)
+11. [Jekyll/Liquid API 语法文档](https://kang000feng.github.io/blog/2015/01/10/jekyll-liquid-syntax-documentation/)
+12. [Jekyll Cheat Sheet](https://learn.cloudcannon.com/jekyll-cheat-sheet/)
 
