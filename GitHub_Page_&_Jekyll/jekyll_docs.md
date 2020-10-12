@@ -77,3 +77,4 @@ Here are some of the most common commands:
 3. [簡介 Bundler](https://openhome.cc/Gossip/Rails/Bundler.html)
 4. [Offical Liquid Document](https://shopify.github.io/liquid/)
 5. [Ruby 101](https://jekyllrb.com/docs/ruby-101/)
+6. [How do I upgrade to Ruby 2.2 on my Ubuntu system?](https://askubuntu.com/questions/839775/how-do-i-upgrade-to-ruby-2-2-on-my-ubuntu-system)
