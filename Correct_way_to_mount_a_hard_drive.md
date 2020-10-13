@@ -6,9 +6,9 @@ Problem: 电脑上只有一块 256G 的 SDD 硬盘，需要分区给 `/`,`/home/
 * `lsblk` 列出系统上的所有磁盘列表，可以看成“list block device”，就是列出所有存储设备的意思。
 ![output of lsblk](./images/lsblk_res.png)
     * 从图中的输出结果可以看出，现在有三块磁盘，`sda`, `sdb` and `sdc`。
-    其中 `sda` 是最初的 256G 的 SDD 硬盘，可以看出分别有 `/`, `/home/`, `/swap/`, `/boot/`等分区；
-    `sdb` 是 8T 的移动硬盘，没有特别指定挂载的目录，因此默认挂载到 `/media/<user>/`；
-    `sdc` 是 1T 的移动硬盘，因对其进行了特别的挂载处理，所以其挂载在了 `/home/<user>/work/` 目录上。
+      其中 `sda` 是最初的 256G 的 SDD 硬盘，可以看出分别有 `/`, `/home/`, `/swap/`, `/boot/`等分区；
+      `sdb` 是 8T 的移动硬盘，没有特别指定挂载的目录，因此默认挂载到 `/media/<user>/`；
+      `sdc` 是 1T 的移动硬盘，因对其进行了特别的挂载处理，所以其挂载在了 `/home/<user>/work/` 目录上。
     * 每个栏目的具体含义如下：
         * `NAME` 表示设备的文件名，会省略 `/dev/` 等前导目录；
         * `MAJ:MIN` 分别是主要：次要设备代码，还未深入了解；
@@ -20,7 +20,7 @@ Problem: 电脑上只有一块 256G 的 SDD 硬盘，需要分区给 `/`,`/home/
 * `blkid` 列出设备的UUID等参数
 ![output of blkid](./images/blkid_res.png)
     * 一块磁盘可以被分成多个分区，而`blkid` 给出了磁盘的每个分区的一些信息，比如 UUID，TYPE等。
-    其中 UUID 在设置开机自动挂载的时候会用到；TYPE 列出了磁盘的格式。
+      其中 UUID 在设置开机自动挂载的时候会用到；TYPE 列出了磁盘的格式。
     * UUID (Universally Unique Identifier，通用唯一识别码)，目的是让分布式系统中的所有元素都能有唯一的辨识信息。
     * TYPE
 * `parted` 列出磁盘的分区表类型与分区信息
@@ -31,7 +31,8 @@ Problem: 电脑上只有一块 256G 的 SDD 硬盘，需要分区给 `/`,`/home/
     * `Sector size`，磁盘的每个逻辑/物理扇区的容量
     * `Partition Table`，分区表的格式（MBR/GPT等），此时为 MSDOS
     * `Disk Flags`，每个分区的信息。
-    
+  
+
 综上，通过 `lsblk` 可以获知所有的存储设备，通过 `blkid` 可以知道所有的文件系统，最后可以通过 `parted` 可以获知磁盘的分区类型。
 下面就可以进行挂载，或是开机自动挂载。
 

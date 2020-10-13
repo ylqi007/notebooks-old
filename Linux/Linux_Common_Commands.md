@@ -1,4 +1,9 @@
+[TOC]
+
+---
+
 ## 1. `mv`
+
 * `mv` is a UNIX and Linux command to **move** and **rename** files.
 The `mv` command is a command line utility that moves files or directories from one place to another. 
 It supports moving single files, multiple files and directories.

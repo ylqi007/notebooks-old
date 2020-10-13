@@ -1,4 +1,6 @@
+[TOC]
 
+---
 ## 1. 文件系统(File System)
 
 ### 1.1 访问原理
@@ -12,7 +14,7 @@
 * 安装和卸载程序 firefox:
     * Windows
     * Linux
-    
+
 ### 1.4 优缺点
 * Windows
 * Linux
@@ -23,7 +25,7 @@
         * 结构清晰避免逻辑混乱这样的目录结构，有助于我们以一种高效的方式组织自己的数据，分类清晰并且不会对系统运行有任何影响，规定了最开始每个目录的功能，并没有限制我们的自由，因为我们知道我们可以在哪里创建自己的子目录并且在子目录中任意创建自己的文件。
         * 组织规范便于共享由于目录具有统一的组织结构，所以 Linux 上面的用户在共享数据的时候，能够很容易地猜测出他所需要的数据大致存放在什么位置，同时也不会影响到私有数据的保密性，毕竟具体来说，怎么存放自己的私有数据，那是用户自己决定的。
         
-
+---
 ## 2. Linux 上面的虚拟文件系统目录组织
 在 Linux 文件系统中的每一个子目录都有特定的目的和用途。
 
@@ -205,6 +207,130 @@ uucp(1) 的缓冲文件
 ```
 
 
-## Reference:
-1. [比起Windows，怎样解读Linux的文件系统与目录结构？](https://www.techug.com/post/how-to-read-linux-file-system-and-directory-structure.html)
+* [比起Windows，怎样解读Linux的文件系统与目录结构？](https://www.techug.com/post/how-to-read-linux-file-system-and-directory-structure.html)
 
+---
+## 3. 逻辑卷管理 -- LVM: Logical Volume Manager
+* 所有数据放在一个分区，如果该分区的 File System 发生了损坏，则所有数据都可能丢失；
+* 如果划分了多个分区，则会为分区的大小而伤神；
+* 有了 LVM 之后，则可以使用 LVM 创建**逻辑分区**。如果某个逻辑分区不够用，则可以对逻辑分区进行**动态扩容**(原有数据不受影响)。
+
+* 用两块 500GB 的硬盘，却想搞一个 1TB 的分区。可以通过 LVM 实现。
+* 用两块 500GB 的硬盘，却想搞三个 300GB 的分区。可以通过 LVM 实现。
+
+* 综上，LVM 可以提高**空间利用率**。
+
+### LVM 与 Linux 的关系
+LVM 包含两部分：内核模块 & 命令行工具
+
+软件包名称：`lvm2`
+
+### LVM 的三个基本概念
+* 物理卷 -- PV (Physical Volume)       
+在 LVM 的术语中，“物理卷”（PV）用来对应【底层】的“物理硬盘 or 物理分区”。
+
+* 卷组 -- GV (Volume Group)           
+通过 LVM 的命令行工具，还可以把多个 PV 纳入到一个 VG（卷组）中。你不妨把 VG 想象成一个【存储池】，这个池子的容量也就是加入其中的所有 PV 的容量总和。
+
+* 逻辑卷 -- LV (Logical Volume)
+在 LVM 的术语中，“逻辑卷”（LV）用来对应【上层】的“逻辑分区”。
+你可以从 VG 中创建多个 LV。每次创建 LV 都如同从这个存储池中分配空间，直到所有存储空间都被分配完。
+创建好 LV 之后，你可以对这个 LV 进行格式化，就得到一个可用的逻辑分区。
+
+![tab](images/LVM.png)
+
+* [扫盲 Linux 逻辑卷管理（LVM）——兼谈 RAID 以及“磁盘加密工具的整合”](https://program-think.blogspot.com/2020/06/Linux-Logical-Volume-Manager.html)
+
+
+---
+## 4. 挂载额外硬盘(Correct Way to Mount a Hard Drive)
+### Problem:
+电脑上只有一块 256G 的 SDD 硬盘，需要分区给 `/`,`/home/`,`/boot/` 等必要的目录。导致最终分给 `/home/` 的空间不够用。
+我的习惯是在 `/home/<user>/` 目录下另设一个 `work/` 目录存放工作文件。由于训练的时候，训练记录文件比ijao大，常常空间不够用。
+因此，我想另添加一块硬盘，单独挂载到 `/home/<user>/work/`。
+
+### 前期准备
+* `lsblk` 列出系统上的所有磁盘列表，可以看成“list block device”，就是列出所有存储设备的意思。
+![output of lsblk](./images/lsblk_res.png)
+    * 从图中的输出结果可以看出，现在有三块磁盘，`sda`, `sdb` and `sdc`。
+      其中 `sda` 是最初的 256G 的 SDD 硬盘，可以看出分别有 `/`, `/home/`, `/swap/`, `/boot/`等分区；
+      `sdb` 是 8T 的移动硬盘，没有特别指定挂载的目录，因此默认挂载到 `/media/<user>/`；
+      `sdc` 是 1T 的移动硬盘，因对其进行了特别的挂载处理，所以其挂载在了 `/home/<user>/work/` 目录上。
+    * 每个栏目的具体含义如下：
+        * `NAME` 表示设备的文件名，会省略 `/dev/` 等前导目录；
+        * `MAJ:MIN` 分别是主要：次要设备代码，还未深入了解；
+        * `RM` 表示是否为可卸载设备(removeable device)，如管盘、USB磁盘等等；
+        * `SIZE` 给出了磁盘的大小信息；
+        * `RO` 表示是否为只读设备；
+        * `TYPE` 表示是磁盘(disk)，分区(part)还是只读存储器(rom)等输出。
+        * `MOUNTPOINT` 给出了磁盘的挂在点。比如 `sdc1` 是个 1T 的分区，挂载在 `/home/<user>/work/`；`sda6` 是个 60G 的分区并挂载在 `/`，也就是根目录；`sda7` 是个 150G 左右的分区，挂载在 `/home/` 目录。 
+* `blkid` 列出设备的UUID等参数
+![output of blkid](./images/blkid_res.png)
+    * 一块磁盘可以被分成多个分区，而`blkid` 给出了磁盘的每个分区的一些信息，比如 UUID，TYPE等。
+      其中 UUID 在设置开机自动挂载的时候会用到；TYPE 列出了磁盘的格式。
+    * UUID (Universally Unique Identifier，通用唯一识别码)，目的是让分布式系统中的所有元素都能有唯一的辨识信息。
+    * TYPE
+* `parted` 列出磁盘的分区表类型与分区信息
+![output of parted](./images/parted_res.png)
+    * `parted device_name print`，可以获知磁盘的分区类型。
+    * `Model`，磁盘的模块名称（厂商）
+    * `Disk`，磁盘的总容量
+    * `Sector size`，磁盘的每个逻辑/物理扇区的容量
+    * `Partition Table`，分区表的格式（MBR/GPT等），此时为 MSDOS
+    * `Disk Flags`，每个分区的信息。
+  
+
+综上，通过 `lsblk` 可以获知所有的存储设备，通过 `blkid` 可以知道所有的文件系统，最后可以通过 `parted` 可以获知磁盘的分区类型。
+
+### 挂载
+下面就可以进行挂载，或是开机自动挂载。
+
+
+进行挂载前，先要确定几件事：
+* 单一文件系统不应该被重复挂载在不同的挂载点(目录)中;
+* 单一目录不应该重复挂载多个文件系统;
+* 要作为挂载点的目录,理论上应该都是空目录才是。
+
+进行简单挂载（关于 mount 的命令实际更复杂，可以指定各种参数，此处仅是简单的挂载）：
+```bash
+mount device_name mountpoint
+```
+
+进行简单的卸载
+```bash
+umount [-fn] device_name/mountpoint
+
+umount /dev/vda4    # 用设备文件名(device_name)进行卸载
+umount /data/ext4   # 用挂载点(mountpoint)进行卸载
+```
+
+如果每次开机后都要进行手动挂载就太不人性了，所以我们需要让系统**自动**在开机的时候进行挂载。
+那就需要直接到 `/etc/fstab` 进行设置。
+系统挂载有一些限制：
+* 根目录	`/` 是必须挂载的,而且一定要先于其它	`mount point` 被挂载进来。
+* 其它 `mount point` 必须为已创建的目录,可任意指定,但一定要遵守必须的系统目录架构原则(FHS)
+* 所有 `mount point` 在同一时间之内,只能挂载一次。
+* 所有 `partition` 在同一时间之内,只能挂载一次。
+* 如若进行卸载,您必须先将**工作目录(pwd)**移到 `mount point(及其子目录)`之外。
+
+下面查看写 `/etc/fstab` 文件：
+![content of /est/fstab](./images/fstab_result.png)
+`/etc/fstab`文件中的信息:
+
+| 设备/UUID等(Filesystem) | 挂载点(Mount Point) | 文件系统(type) | 文件系统参数(options) | dump | pass |
+| ----------------------- | ------------------- | -------------- | --------------------- | ---- | ---- |
+| 1                       | 2                   | 3              | 4                     | 5    | 6    |
+
+* 第一栏: 第一栏:磁盘设备文件名/UUID/LABEL name,
+* 第二栏: 挂载点(mount point),挂载点一定是目录.
+* 第三栏: 磁盘分区的文件系统,在手动挂载时可以让系统自动测试挂载,但在这个文件当中我们必须要手动写入文件系统才行! 包括	xfs, ext4, vfat, reiserfs, nfs等等。
+* 第四栏:文件系统参数:
+* 第五栏:能否被	dump	备份指令作用
+* 第六栏:是否以	fsck	检验扇区
+
+`/etc/fastab` 的最后一行就是我的进行开机自动挂载的设置命令。
+
+---
+## References
+* [比起Windows，怎样解读Linux的文件系统与目录结构？](https://www.techug.com/post/how-to-read-linux-file-system-and-directory-structure.html)
+* [扫盲 Linux 逻辑卷管理（LVM）——兼谈 RAID 以及“磁盘加密工具的整合”](https://program-think.blogspot.com/2020/06/Linux-Logical-Volume-Manager.html)
