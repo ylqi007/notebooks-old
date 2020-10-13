@@ -324,40 +324,9 @@ We need to understand `site.url` and `site.baseurl` and in which situation we ne
 
 # Themes
 
-## 1. Pickup a theme
+### 1. Pickup a theme
 
-## 2. Understanding gem-based themes
-
-When you create a new Jekyll site (by running the `jekyll new <PATH>` command), Jekyll installs a site that uses a gem-based theme called **Minima**.
-
-With gem-based themes, some of the site's directories (such as the `assets`, `_layout`, `_includes`, and `_sass` directories) are stored in the theme's gem, hidden from your immediate view. Yet all of the necessary directories will be read and processed during Jekyll's build process.
-
-The `Gemfile` and `Gemfile.lock` files are used by Bundler to keep track of the required gems and gem versions you need to build your Jekyll site.
-
-If you have the theme gem, you can (if you desire) run `bundle update` to update all gems in your project. Or you can run `bundle update <THEME>`, to just update the theme gem.  
-如果你使用的是 gem-based theme，则如果 theme 更新的话，进通过 `bundle update <THEME>` 就可以更新本地的 theme。
-
-## 3. Overriding theme defaults
-
-Jekyll themes set default layouts, includes, and stylesheets. However, you can override any of the theme defaults with your own site content.
-
-To replace layouts or includes in your theme, make a copy in your `_layouts` or `_includes` directory of the specific file you wish to modify, or create the file from scratch giving it the same name as the file you wish to override.
-
-## 4. Converting gem-based themes to regular themes
-
-Suppose you want to get rid of the gem-based theme and convert it to a regular theme, where all files are present in your Jekyll site directory, with nothing stored in the theme gem. 
-如果不想用 gem-based theme，而是想把所有的文件放在 Jekyll site 目录下，没有什么内容保存在 theme gem 中。
-
-To do this, copy the files from the theme gem's directory into your Jekyll site directory.
-
-Then you must tell Jekyll about the plugins that were referenced by the theme. You can find these plugins in the theme's gemspec file as runtime dependencies. You should include these references in the `Gemfile` and `_config.yml`. And then, don't forget to `bundle update'.
-
-If you're publishing on GitHub Pages, you should update only your `_config.yml` as GitHub Pages doesn't load plugins via Bundler. 
-如果要将网页用 GitHub Pages 发布，则只可以更新 `_config.yml`, 因为 GitHub Pages 不会通过 Bundler 安装插件。
-
-Finally, remove references to the theme gem in `Gemfile` and configuration.
-
-
+### 2. Understanding gem-based themes
 
 
 ---
