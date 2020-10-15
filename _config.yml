@@ -1,0 +1,8 @@
+url: https://ylqi007.github.io
+baseurl: /Tutorials
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"

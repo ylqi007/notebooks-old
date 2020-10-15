@@ -59,3 +59,12 @@ This will create a backup file with the tilde character appended to it. To chang
 被覆盖的文件会创建一个备份文件，备份文件名会在在后面添加一个 `~`。如果想要修改备份文件的后缀名，可以使用 `-S` 选项。
 
 [Linux and Unix mv command tutorial with examples](https://shapeshed.com/unix-mv/)
+
+
+## 2. [`ln`](https://linuxize.com/post/how-to-create-symbolic-links-in-linux-using-the-ln-command/)
+```bash
+ln -s [OPTIONS] FILE LINK
+```
+
+## Reference
+* [Bash Guide for Beginners](https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html)
