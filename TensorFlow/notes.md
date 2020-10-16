@@ -1,5 +1,10 @@
 [TOC]
 
+## 1. TF function notes
+* [tf.global_variables或者tf.all_variables的用法](https://blog.csdn.net/UESTC_C2_403/article/details/72356235)
+* [Tensorflow小技巧整理：tf.trainable_variables(), tf.all_variables(), tf.global_variables()的使用](https://blog.csdn.net/Cerisier/article/details/86523446?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.edu_weight&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.edu_weight)
+* [what is the difference between var.op.name and var.name in tensorflow?](https://stackoverflow.com/questions/38240050/what-is-the-difference-between-var-op-name-and-var-name-in-tensorflow)
+
 ## 1. Protocol Buffer
 
 ### 1.1 Protocol Buffer 是什么
@@ -16,11 +21,17 @@ Protobuf中最基本的数据单元是message，是类似Go语言中结构体的
 
 ## References:
 
-1. [Protobuf语言指南](https://juejin.im/post/6844903942170624008)
-2. [高效的数据压缩编码方式 Protobuf](https://halfrost.com/protobuf_encode/)
-3. [Explore in every moment of the hard thinking](https://halfrost.com/)
-4. [Language Guide](https://developers.google.com/protocol-buffers/docs/overview)
-5. [eishay/jvm-serializers](https://github.com/eishay/jvm-serializers/wiki)
-6. [protocol buffers 文档(一)-语法指导](https://www.cnblogs.com/WindSun/p/12536229.html)
-7. [Protocol Buffers 开发者指南](https://phenix3443.github.io/notebook/protobuf/proto2-language-guide.html)
-8. 
+* [Protobuf语言指南](https://juejin.im/post/6844903942170624008)
+* [高效的数据压缩编码方式 Protobuf](https://halfrost.com/protobuf_encode/)
+* [Explore in every moment of the hard thinking](https://halfrost.com/)
+* [Language Guide](https://developers.google.com/protocol-buffers/docs/overview)
+* [eishay/jvm-serializers](https://github.com/eishay/jvm-serializers/wiki)
+* [protocol buffers 文档(一)-语法指导](https://www.cnblogs.com/WindSun/p/12536229.html)
+* [Protocol Buffers 开发者指南](https://phenix3443.github.io/notebook/protobuf/proto2-language-guide.html)
+* [以线性回归为例，深入理解tensorflow的Operation、Tensor、Node的区别](https://www.codenong.com/cs105854164/)
+* [Tensorflow 模型保存与恢复（1）使用tf.train.Saver()](https://blog.csdn.net/JerryZhang__/article/details/85042426)
+* [Tensorflow 模型保存与恢复（2）使用SavedModel](https://blog.csdn.net/JerryZhang__/article/details/85058005)
+* [Tensorflow 模型保存与恢复（3）保存模型到单个文件中](https://blog.csdn.net/JerryZhang__/article/details/85082169)
+* []()
+
+
