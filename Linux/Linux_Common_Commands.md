@@ -66,5 +66,23 @@ This will create a backup file with the tilde character appended to it. To chang
 ln -s [OPTIONS] FILE LINK
 ```
 
+---
+## 3. 解压
+
+## tar
+
+
+## rar
+
+
+## 7z
+```bash
+7z x <filename.7z>
+```
+
+
+## Reference:
+1. [Linux下解压：tar、rar、7z命令简单易懂的教程（含实例）](https://blog.csdn.net/AC_huang/article/details/23279641)
+
 ## Reference
 * [Bash Guide for Beginners](https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html)
