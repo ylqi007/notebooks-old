@@ -2,6 +2,7 @@
 
 ## TODO
 
+- [ ] What is **Covariate Shift?**
 - [ ] What is **Internal Covariate Shift?**
 - [ ] 
 
@@ -14,6 +15,14 @@
 
 
 
+
+---
+
+## Conclusion
+
+
+
+---
 
 ## Reference
 
