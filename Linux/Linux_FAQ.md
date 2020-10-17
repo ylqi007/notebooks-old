@@ -1,6 +1,10 @@
 [TOC]
 
 ---
+## TODO
+- [ ] 下次需要重新装系统的时候，好好研究、记录分区安装的问题。 GPT + UEFI
+
+---
 ## Linux FAQ
 
 * [How can I check if a directory exists in a Bash shell script?](https://stackoverflow.com/questions/59838/how-can-i-check-if-a-directory-exists-in-a-bash-shell-script)
@@ -44,11 +48,31 @@
 
 4. **MBR+BIOS** 该退出历史舞台了。**GPT+UEFI** 拥有更好的性能与更高的安全性。
 
-5. Convert a Ubuntu MBR drive to a GPT, and make Ubuntu boot from EFI
+5. If you have already installed Linux system such as Ubuntu and you want to check if it's MBR, you the `gdisk -l` command:
 
-6. 
+   ![](https://linoxide.com/wp-content/uploads/2019/09/02-check-mbr-partition.png)
 
+6. With GPT there is no need for primary, extended partitions or logical drives, which means all of the partitions are the same.
 
+7. Convert a Ubuntu MBR drive to a GPT, and make Ubuntu boot from EFI
+
+8. 
+
+### Linux 磁盘管理
+1. Linux 分区建议：
+    * `swap`分区，即虚拟内存；该分区没有对应的目录，故用户无法访问。Linux下的 swap 分区即为虚拟内存.虚拟内存用于当系统内存空间不足时，
+    先将临时数据存放在swap分区，等待一段时间后，然后再将数据调入到内存中执行.所以说，**虚拟内存只是暂时存放数据，在该空间内并没有执行。**
+    **Ps 虚拟内存:** 虚拟内存是指将硬盘上某个区域模拟为内存.因此虚拟内存的实际物理地址仍然在硬盘上.虚拟内存，
+    或者说swap分区只能由系统访问，其大小为物理内存的2倍。
+    * `boot`分区，存放操作系统的内核该分区。对应于`/boot`目录，约100MB.该分区存放Linux的Grub(bootloader)和内核源码。
+    用户可通过访问`/boot`目录来访问该分区.换句话说，用户对`/boot`目录的操作就是操作该分区。
+    * `/` 根分区，整个操作系统的根目录；在Linux操作系统中，除`/boot`目录外的其它所有目录都对应于该分区.因此，用户可通过访问除`/boot`目录外的其它所有目录来访问该分区。
+    * `/var`分区，可以避免日志文件的大小失控；
+    * `/home`分区，控制用户占用的空间大小。
+
+* [Linux系统分区认识总结](https://blog.csdn.net/lxlong89940101/article/details/84643480)
+* [5.1. 系统分区](https://gtcsq.readthedocs.io/en/latest/linux_tools/disk_note.html#id2)
+* [Linux磁盘管理之常用命令](https://blog.csdn.net/Leichelle/article/details/8763823)
 
 ### References:
 
@@ -91,12 +115,5 @@
 ---
 ## References 
 
-
-
-
-
-
-
-
 * [Grub2/Installing](https://help.ubuntu.com/community/Grub2/Installing)
-Reinstalling GRUB2 from a Working System
+    * Reinstalling GRUB2 from a Working System
