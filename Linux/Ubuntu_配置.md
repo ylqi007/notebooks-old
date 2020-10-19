@@ -104,6 +104,12 @@ sudo apt-get install typora
 * Currently the option to right click an app and "Launch using Dedicated Graphics Card" is only available
 **when using grapics drivers**, as it reliefs of the detection of switcheroo for power management. 
 
+### Install Mendeley
+* [How to install a deb file, by dpkg -i or by apt?](https://unix.stackexchange.com/questions/159094/how-to-install-a-deb-file-by-dpkg-i-or-by-apt)
+* Downlonad `deb` file.
+* `sudo apt install ./mendeley*.deb`
+
+
 ---
 ## References
 * [The Ubuntu lifecycle and release cadence](https://ubuntu.com/about/release-cycle)
