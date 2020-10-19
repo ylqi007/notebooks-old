@@ -1,5 +1,113 @@
+[TOC]
+
+## Common Configuration
+### Chinese Input
+* [Fcitx (简体中文)](https://www.linuxsecrets.com/archlinux-wiki/wiki.archlinux.org/index.php/Fcitx_%28%E7%AE%2580%E4%BD%2593%E4%B8%AD%E6%2596%2587%29.html)
+* [Fcibutx Chinese Input Setup on Ubuntu for Gaming](https://leimao.github.io/blog/Ubuntu-Gaming-Chinese-Input/)
+* [How To Uninstall ibus On Ubuntu 16.04 LTS](https://installlion.com/ubuntu/xenial/main/i/ibus/uninstall/index.html)
+* 在安装 `fictx` 后，系统默认有两种输入法，`fixtx` and `ibux`。此时 `Ctrl + Shift` 无法切换 `fictx` 的中英文。此时应该删掉
+`Settings -> Region & Language -> Input Sources` 中加入的中文输入，只留下 `English(US)` 就好了。
+    * ![](images/Input_Sources.png)
+* [Can't change from iBus to fcitx](https://askubuntu.com/a/1194876)
+* [ubuntu设置fcitx快捷键实现中英文输入法切换](https://blog.csdn.net/jumpingpig/article/details/104743917)
+* [禁用 fcitx 额外键切换输入法 ](http://einverne.github.io/post/2019/08/disable-fcitx-extra-key-for-trigger-input-method.html)
+* fcitx 无法在 firefox 使用 googlepinyin
+* ![](images/fcitx_input_method_configuration.png)
+    * `Trigger Input Method = Ctrl + Space`, 按下 `Ctrl + Spce` 的时候，会启动中文输入，随后可以通过 `Shift` 切换中英文输入。
+    * 如果没有提前按过 `Ctrl + Space` 启动的话，单独按下 `Shift` 是没有反映的。
+* [Ubuntu安装搜狗输入法后修改默认英文输入状态的方法](https://blog.csdn.net/ameyume/article/details/87091652)
+
+### Ubuntu Shell 命令行路径缩短
+* [Ubuntu shell 命令行路径缩短](https://blog.csdn.net/aiqianqi1796/article/details/101835940)
+* [To change it for the current terminal instance only](https://askubuntu.com/a/145626)
+    * 将 `\w` 改为 `\W`;
+    * 删除 `@\h`.
+
+### Install VS Code
+* [Visual Studio Code on Linux](https://code.visualstudio.com/docs/setup/linux)
+    * Once installed, the `Snap` daemon will take care of automatically updating S Code in the background.
+    ```bash
+    sudo snap install --classic code
+    ```
+
+### [Install Typora](https://typora.io/#linux)
+```bash
+# or run:
+# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA300B7755AFCFAE
+wget -qO - https://typora.io/linux/public-key.asc | sudo apt-key add -
+
+# add Typora's repository
+sudo add-apt-repository 'deb https://typora.io/linux ./'
+sudo apt-get update
+
+# install typora
+sudo apt-get install typora
+```
+
+## Copy and Paste in Terminal
+* [为什么Ctrl + V不能粘贴在Bash（Linux Shell）中？](https://qastack.cn/superuser/421463/why-does-ctrl-v-not-paste-in-bash-linux-shell)
+* [Gnome-Terminal - How do I reset keyboard shortcuts?](https://askubuntu.com/a/891203)
+  ```
+  dconf reset -f /org/gnome/terminal/legacy/keybindings/
+  ```
+
+### Ubuntu 20.04 Press ctrl c to cancel all filesystem checks in progress
 
 
+### Install Git
+* Install
+    ```bash
+    sudo apt install -y git
+    ```
+* [廖雪峰 - Git - 远程仓库](https://www.liaoxuefeng.com/wiki/896043488029600/896954117292416)
+    * 因为 GitHub 需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而 Git 支持 SSH 协议，所以，GitHub 只要
+    知道了你的公钥，就可以确认只有你自己推送。
+    * GitHub 允许添加多个 Key。可以把公司和家里的每台电脑都添加到 GitHub，就可以在每台电脑上往 GitHub 推送。
+    * 在 GitHub 上免费托管的 Git 仓库，任何人都可以看到（但是只有自己才能修改），所以不要把敏感信息放上去。
+    * 如果不想让别人看到自己的 Git 仓库，有两个方法：1.交钱购买 private 仓库，这样别人就不可读，更不可写；2.自己
+    手动搭建 Git 服务器。
+* [Connecting to GitHub with SSH](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/connecting-to-github-with-ssh)
+    * Using the SSH protocol, you can connect and authenticate to remote servers and services. With SSH keys,
+    you can connect to GitHub without supplying your username or password at each visit.
+    * Checking for existing SSH keys.
+    * Generating and adding a new SSH key to your GitHub account. 
+* [Adding a new SSH key to your GitHub account](https://docs.github.com/en/enterprise-server@2.20/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
 
+### Reset Shortcuts
+* [Gnome-Terminal - How do I reset keyboard shortcuts?](https://askubuntu.com/questions/891199/gnome-terminal-how-do-i-reset-keyboard-shortcuts)
+
+### snap 安装
+* [Ubuntu 中 snap 包的安装、删除，更新使用入门教程](https://m.linuxidc.com/Linux/2018-05/152385.htm)
+* [Ubuntu 推出的Snap应用架构有什么深远意义?](https://www.zhihu.com/question/47514122)
+* [How Microsoft Lost the API War](https://www.joelonsoftware.com/2004/06/13/how-microsoft-lost-the-api-war/)
+
+### Firefox
+* 不同用户使用不同配置文件的 Firefox 安装：[如何使用两个Firefox配置文件？](https://qastack.cn/ubuntu/660147/how-can-i-use-two-firefox-profiles)
+* [How To Install Firefox ESR In Ubuntu Or Linux Mint (PPA Or Snap) ](https://www.linuxuprising.com/2018/11/how-to-install-firefox-esr-in-ubuntu-or.html)
+* `sudo apt install firefox-esr --fix-missing`
+* firefox versions
+    ```bash
+    ylqi007:~$ ll /usr/bin/firefox*
+    lrwxrwxrwx 1 root root 25 Oct 13 12:42 /usr/bin/firefox -> ../lib/firefox/firefox.sh*
+    lrwxrwxrwx 1 root root 29 Oct 13 08:14 /usr/bin/firefox-esr -> ../lib/firefox-esr/firefox.sh*
+    ```
+* 此时我的电脑上有两个版本的 firefox (firefox, i.e. normal version 81; firefox-esr, i.e. 78.4 esr version).
+* Set `firefox-esr` as the default `firefox` and development firefox version as `firefox-dev`.
+此时将 firefox 添加到 dock 后，点击打开 firefox 就是 firefox-esr。
+  ```bash
+  sudo mv /usr/bin/firefox /usr/bin/firefox-dev     # Alias normal firefox as firefox-dev
+  sudo mv /usr/bin/firefox-esr /usr/bin/firefox     # Alias firefox esr as default firefox
+  ``` 
+
+### Launch using Dedicated Graphics Card
+* [Add "Launch using Dedicated Graphics Card" option when using proprietary Nvidia Graphics](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/280)
+* Currently the option to right click an app and "Launch using Dedicated Graphics Card" is only available
+**when using grapics drivers**, as it reliefs of the detection of switcheroo for power management. 
+
+---
+## References
 * [The Ubuntu lifecycle and release cadence](https://ubuntu.com/about/release-cycle)
 * [在 Linux 环境下能用 Homebrew 吗？](https://www.zhihu.com/question/20022687)
+* [廖雪峰 - Git教程](https://www.liaoxuefeng.com/wiki/896043488029600)
+* [Here’s How to Find Out Which Desktop Environment You are Using](https://itsfoss.com/find-desktop-environment/)
+
