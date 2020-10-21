@@ -58,3 +58,41 @@ git reset HEAD <file>...
 起初觉得不能简单改变名字，事后发现只需要两步就好：
 1. Rename local repository: `mv Tutorials/ noteboots/`
 2. Rename remote repository: Change the repository name in `Settings` of this repository.
+
+问题：查看 remote 信息的时候，发现结果如下：
+```bash
+ylqi007:notebooks$ git remote -v
+origin  git@github.com:ylqi007/Tutorials.git (fetch)
+origin  git@github.com:ylqi007/Tutorials.git (push)
+```
+
+解决：修改本地仓库信息
+```bash
+ylqi007:notebooks$ git remote -v
+origin  git@github.com:ylqi007/Tutorials.git (fetch)
+origin  git@github.com:ylqi007/Tutorials.git (push)
+ylqi007:notebooks$ git remote set-url origin git@github.com:ylqi007/notebooks.git
+ylqi007:notebooks$ git remote -v
+origin  git@github.com:ylqi007/notebooks.git (fetch)
+origin  git@github.com:ylqi007/notebooks.git (push)
+```
+
+**总结：**
+1. 修改本地仓库的名称：
+    `mv Tutorials notebooks`
+2. 修改远程仓库名称：
+    在 GitHub 仓库的 settings 中修改仓库名称。
+    其实此时本地仓库依然可以进行 `git pull` and `git push`，但是 `git remote -v` 中的信息没有发生改变。
+3. 修改本地仓库的远程信息：
+    ```
+    cd notebooks/
+    git remote set-url origin git@github.com:ylqi007/notebooks.git
+    git remote -v
+    ```
+    此时 `git remote -v` 就可以看到远程仓库的名称已经改变了。
+
+
+* [Github:重命名仓库](https://gohom.win/2015/12/17/git-rename-repo/)
+* [git修改本地和远程仓库名称的解决方法](https://www.cnblogs.com/zlting/p/9620259.html)
+
+
