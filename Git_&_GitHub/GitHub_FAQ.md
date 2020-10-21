@@ -52,3 +52,9 @@ git reset HEAD <file>...
 * [Git冲突：commit your changes or stash them before you can merge.](https://blog.csdn.net/lincyang/article/details/21519333)
 * [【Git学习笔记】Git冲突：commit your changes or stash them before you can merge.](https://blog.csdn.net/liuchunming033/article/details/45368237)
 * [How to remove a directory from git repository?](https://stackoverflow.com/questions/6313126/how-to-remove-a-directory-from-git-repository)
+
+#### 8. Rename Repository
+起因：我想把原有的 `Tutorials/` 改为 `notebooks/`，但是 `Tutorials/` 是一个 Git reposioty，与 Github 中 的 `Tutorials/` 相关连。
+起初觉得不能简单改变名字，事后发现只需要两步就好：
+1. Rename local repository: `mv Tutorials/ noteboots/`
+2. Rename remote repository: Change the repository name in `Settings` of this repository.
