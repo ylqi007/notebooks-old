@@ -121,6 +121,25 @@ In Python, a `decorator` is the implementation of a pattern that allows adding a
 or a class. It is usually expressed with the `@decorator` syntax prefixing a function. 
 
 
+## Appropriate Uses of Lambda Expressions
+### Classic Functional Constructs
+* Lambda functions are regularly used with the built-in functions `map()` and `filter()`, as well as 
+`functools.reduce()`, exposed in the module functools.
+
+### Key Functions
+* Key functions in Python are higher-order functions that take a parameter key as a named argument. 
+key receives a function that can be a `lambda`.
+    * `sort()`
+    * `sorted()`, `min()`, `max()`
+    * `nlargest()` and `nsmallest()`
+
+## Alternatives to Lambdas
+### Map
+
+### Filter
+
+### Reduce
+
 
 ## Note:
 * In the interactive interpreter, the single underscore(`_`) is bound to the last expression evaluated.
