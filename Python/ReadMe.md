@@ -3,6 +3,16 @@
 | 20201005 | [matplotlib.md](matplotlib.md) | `matplotlib.plotpy` |
 
 
+
+## Syntax Reference
+* [Python's map(): Processing Iterables Without a Loop](https://realpython.com/python-map-function/)
+* [Python值传递还是引用传递](https://blog.csdn.net/hohaizx/article/details/78427406)
+* [Python的函数参数传递：传值？引用？](http://winterttr.me/2015/10/24/python-passing-arguments-as-value-or-reference/)
+* [第112天：Python 到底是值传递还是引用传递](http://www.ityouknow.com/python/2020/01/07/python-function_parameter-112.html)
+* [python函数的四种参数传递方式](http://lazybios.com/2013/04/four-kinds-of-function-argment-pass-in-python/)
+* [Python函数参数传递机制（超级详细）](http://c.biancheng.net/view/2258.html)
+* [Python函数值传递和引用传递（包括形式参数和实际参数的区别）](http://c.biancheng.net/view/4471.html)
+
 ## Reference
 * [PyCharm创建.py自动添加文件头注释](https://blog.csdn.net/qq_36482772/article/details/67218214)
 * [Ubuntu 20.04 Python version switch manager](https://linuxconfig.org/ubuntu-20-04-python-version-switch-manager)
@@ -14,3 +24,4 @@
 * [使用anaconda创建虚拟环境，并安装各类软件](https://blog.csdn.net/weixin_40533355/article/details/95069105)
 * [Conda - User guide](https://docs.conda.io/projects/conda/en/latest/user-guide/index.html)
 * []()
+

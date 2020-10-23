@@ -120,6 +120,21 @@
 * [ubuntu系统，anaconda3安装后，命令行界面打开默认进入base环境解决办法](https://blog.csdn.net/jy1023408440/article/details/95211921?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase) 
 
 ---
+## Get the size of a directory:
+Use command: `du -sh file_path`:        
+Explanation:
+* `du` (disk usage) command estimates file_path space usage;
+* The options `-sh` are (from `man du`):
+  ```
+    -s, --summarize
+         display only a total for each argument
+    -h, --human-readable
+         print sizes in human readable format (e.g., 1K 234M 2G)
+  ```
+* `df -h .; du -sh -- * | sort -hr`
+* [How do I get the size of a directory on the command line?](https://unix.stackexchange.com/questions/185764/how-do-i-get-the-size-of-a-directory-on-the-command-line)
+
+---
 ## References 
 
 * [Grub2/Installing](https://help.ubuntu.com/community/Grub2/Installing)

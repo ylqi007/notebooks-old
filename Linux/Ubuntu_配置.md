@@ -44,7 +44,7 @@ sudo apt-get update
 sudo apt-get install typora
 ```
 
-## Copy and Paste in Terminal
+### Copy and Paste in Terminal
 * [为什么Ctrl + V不能粘贴在Bash（Linux Shell）中？](https://qastack.cn/superuser/421463/why-does-ctrl-v-not-paste-in-bash-linux-shell)
 * [Gnome-Terminal - How do I reset keyboard shortcuts?](https://askubuntu.com/a/891203)
   ```
@@ -52,7 +52,7 @@ sudo apt-get install typora
   ```
 
 ### Ubuntu 20.04 Press ctrl c to cancel all filesystem checks in progress
-
+* [How to skip filesystem checks during boot](https://askubuntu.com/questions/1250119/how-to-skip-filesystem-checks-during-boot)
 
 ### Install Git
 * Install
@@ -81,7 +81,7 @@ sudo apt-get install typora
 * [Ubuntu 推出的Snap应用架构有什么深远意义?](https://www.zhihu.com/question/47514122)
 * [How Microsoft Lost the API War](https://www.joelonsoftware.com/2004/06/13/how-microsoft-lost-the-api-war/)
 
-### Firefox
+### Install Firefox-ESR
 * 不同用户使用不同配置文件的 Firefox 安装：[如何使用两个Firefox配置文件？](https://qastack.cn/ubuntu/660147/how-can-i-use-two-firefox-profiles)
 * [How To Install Firefox ESR In Ubuntu Or Linux Mint (PPA Or Snap) ](https://www.linuxuprising.com/2018/11/how-to-install-firefox-esr-in-ubuntu-or.html)
 * `sudo apt install firefox-esr --fix-missing`
@@ -99,6 +99,11 @@ sudo apt-get install typora
   sudo mv /usr/bin/firefox-esr /usr/bin/firefox     # Alias firefox esr as default firefox
   ``` 
 
+### Install Anaconda
+* [Installing on Linux](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
+* Reopen terminal
+* [Conda command not found](https://stackoverflow.com/questions/35246386/conda-command-not-found/44319368)
+
 ### Launch using Dedicated Graphics Card
 * [Add "Launch using Dedicated Graphics Card" option when using proprietary Nvidia Graphics](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/280)
 * Currently the option to right click an app and "Launch using Dedicated Graphics Card" is only available
@@ -109,11 +114,13 @@ sudo apt-get install typora
 * Downlonad `deb` file.
 * `sudo apt install ./mendeley*.deb`
 
-
 ---
 ## References
 * [The Ubuntu lifecycle and release cadence](https://ubuntu.com/about/release-cycle)
 * [在 Linux 环境下能用 Homebrew 吗？](https://www.zhihu.com/question/20022687)
 * [廖雪峰 - Git教程](https://www.liaoxuefeng.com/wiki/896043488029600)
 * [Here’s How to Find Out Which Desktop Environment You are Using](https://itsfoss.com/find-desktop-environment/)
+* [Fish shell 入门教程](http://www.ruanyifeng.com/blog/2017/05/fish_shell.html)
+* [rsync 用法教程](http://www.ruanyifeng.com/blog/2020/08/rsync.html)
+
 
