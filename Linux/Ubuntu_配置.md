@@ -114,6 +114,12 @@ sudo apt-get install typora
 * Downlonad `deb` file.
 * `sudo apt install ./mendeley*.deb`
 
+### Install 
+* Todoist
+    `sudo snap install todoist`
+* GitKraken
+    `sudo snap install gitkraken --classic`
+
 ---
 ## References
 * [The Ubuntu lifecycle and release cadence](https://ubuntu.com/about/release-cycle)

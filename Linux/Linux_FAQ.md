@@ -134,6 +134,11 @@ Explanation:
 * `df -h .; du -sh -- * | sort -hr`
 * [How do I get the size of a directory on the command line?](https://unix.stackexchange.com/questions/185764/how-do-i-get-the-size-of-a-directory-on-the-command-line)
 
+
+## Restart a wifi connection without rebooting
+* [Restarting a wifi connection without rebooting](http://www.aupcgroup.com/blog/index.php?/archives/16-Ubuntu-restart-wifi-connection-without-rebooting.html)
+
+
 ---
 ## References 
 

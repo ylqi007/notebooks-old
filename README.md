@@ -1,6 +1,6 @@
 # README
 
-### 不积跬步，无以至千里; 不积小流，无以成江海。
+## 不积跬步，无以至千里; 不积小流，无以成江海。
 
 | ID  | 项目           | 子项目  |  ReadME   |
 |:---:|:-----------------------------------------:|:-----------------------------------------------:|:-----------------------------:|
@@ -13,3 +13,10 @@
 |  7  | Python/matplotlib                         | [Python/matplotlib](./Python/)                  | [matplotlib](./Pythong/matplotlib.md)  |
 
 * 在每个子文件夹下(比如，Linux/，Docker/...)建立 ReadMe.md 文件，用于整体的解释说明、目录大纲等。
+
+## TODO
+20201023
+- [ ] [Python 画图总结](Python/python_plot_conclusion.md)
+- [ ] Python numpy, scipy, 
+- [ ] Machine Learning Algorithms + Actions
+- [ ] Deep Learning + Auto-drive

@@ -23,6 +23,15 @@
     `start` and `stop` are swapped. This becomes a convenient way to reverse an array.
     * `x[::-1]` reverse array `x`.
 * [The Basics of NumPy Arrays](https://jakevdp.github.io/PythonDataScienceHandbook/02.02-the-basics-of-numpy-arrays.html)
+* [numpy.histogram](https://numpy.org/doc/stable/reference/generated/numpy.histogram.html)
+* [NumPy - Histogram Using Matplotlib](https://www.tutorialspoint.com/numpy/numpy_histogram_using_matplotlib.htm)
+
+
+---
+# Matplotlib
+* [Adding value labels on a matplotlib bar chart](https://stackoverflow.com/questions/28931224/adding-value-labels-on-a-matplotlib-bar-chart)
+
+
 
 
 ---    
