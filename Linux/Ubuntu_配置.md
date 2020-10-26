@@ -54,6 +54,16 @@ sudo apt-get install typora
 ### Ubuntu 20.04 Press ctrl c to cancel all filesystem checks in progress
 * [How to skip filesystem checks during boot](https://askubuntu.com/questions/1250119/how-to-skip-filesystem-checks-during-boot)
 
+### Linux `/boot` 分区是否需要？
+下次学习 UEFI 系统安装。
+
+References:
+* [Linux / boot分区的建议大小是多少？](https://qastack.cn/server/334663/what-is-the-recommended-size-for-a-linux-boot-partition)
+* [Installing ubuntu do I really need a boot partition?](https://superuser.com/questions/66015/installing-ubuntu-do-i-really-need-a-boot-partition)
+* [Linux分区方案不要划分/boot分区](https://blog.csdn.net/gao_yu_long/article/details/54783476)
+* [GRUB (简体中文)](https://wiki.archlinux.org/index.php/GRUB_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#UEFI_%E7%B3%BB%E7%BB%9F)
+
+
 ### Install Git
 * Install
     ```bash

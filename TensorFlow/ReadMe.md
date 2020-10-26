@@ -1,3 +1,10 @@
+| 日期 |文件 | 解释 |
+| :------------- | :------------- |:------------- |
+| 20201025 | [tf_Variables](tf_Variables.md) |  |
+| 20201025 | [tf_Sharing_Variables](tf_Sharing_Variables.md) |  |
+
+
+---
 * `tf.data.Dataset.map()` use function with additional argument
     * [demo2_map_func_with_argument.py](./data/codes/demo2_map_func_with_argument.py)
     * [demo3_dataset_with_map_flat_map.py](./data/codes/demo3_dataset_with_map_flat_map.py)
@@ -5,6 +12,8 @@
 * [TensorBoard](TensorBoard/)
     * [Displaying_Image_Data_in_TensorBoar](TensorBoard/Displaying_Image_Data_in_TensorBoard.md)
     * [Inroduction_to_TensorBoard](TensorBoard/Inroduction_to_TensorBoard.md)
+
+
 
 To Read:
 - [ ] [Difference between `tf.data.Dataset.map()` and `tf.data.Dataset.apply()`](https://stackoverflow.com/questions/47091726/difference-between-tf-data-dataset-map-and-tf-data-dataset-apply)

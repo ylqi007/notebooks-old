@@ -16,3 +16,6 @@
 * [Unpack a tuple / list in Python](https://note.nkmk.me/en/python-tuple-list-unpack/)
 
 
+## PyCharm
+* [PyCharm设置每行最大长度限制](https://blog.csdn.net/weixin_42122355/article/details/83373889?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase)
+
