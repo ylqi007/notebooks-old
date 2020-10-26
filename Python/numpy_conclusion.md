@@ -1,8 +1,92 @@
+[TOC]
+
 ## [NumPy v1.19 Manual](https://numpy.org/doc/stable/index.html)
 
+---
 ### NumPy - Index
-* [NumPy - Index](https://numpy.org/doc/stable/genindex.html)
+NumPy 中的数组称为 N-dimensions array 或者 ndarray，即 NumPy 的数组是一种多维数组。[axis 的复数形式是 axes]
 
+* 通过 `.ndim` 查看数组的**维度**，通过 `numpy.ndarray.ndim` 查看数组的**维度**。
+* 通过 `.shape` 查看数组的**形状**，**形状**是指数组每个维度有多少个元素。
+* 在 Interpreter 中 `print(a)` 和 `a`，两种方法的输出结果是不一样的。
+    * `print(a)` 是给人类看得结果，显示的是数组的内部内容；
+    * 直接敲 `a` 可以理解为是给计算机看的，显示的数组本身的内容。 
+
+![1D ndarray](images/ndarray_1D.jpg)
+
+![2D ndarray](images/ndarray_2D.jpg)
+
+![3D ndarray](images/ndarray_3D.jpg)
+
+* Creating Arrays: NumPy 提供了一些初始化数组的方法：`np.ones()`, `np.zeros()`, and `random.random()`
+* Array Arithmetic:
+    * array & array
+    * array & scalar
+    * Aggregation (聚合)
+        * In addition to `min`, `max`, and `sum`, you get all the greats like `mean` to get the average,
+        `prod` to get the result of multiplying all the elements together, `std` to get standard deviation,
+        and [plenty of others](https://jakevdp.github.io/PythonDataScienceHandbook/02.04-computation-on-arrays-aggregates.html).
+* Creating Matrices: 可以传递一个 python 列表（多维列表）创建一个矩阵，也可以用初始化方法创建矩阵。
+* Matrices Arithmetic:
+    * 如果两个矩阵的**行列数相同**，我们可以使用运算符（+ - * /）对矩阵进行运算。NumPy 也是基于位置来进行操作
+    * 这些运算符也可以在不同的行列数的矩阵上使用只要不同维度的矩阵是一个一维矩阵（例如，只有一行或一列），在这种形式上， NumPy 使用了 **broadcast** 规则来进行计算。
+    * **Dot Product** `dot()`，线性代数中的矩阵乘法，i.e. `(m,n)x(n,l) => (m,l)`
+    * Aggregation (聚合): 既可以对所有值进行聚合，也可以在指定维度上。
+* Transposing and Reshaping (置换和变形)
+    * `ndarray.reshape()`
+* NumPy: Slice & Index
+    * 我们也可以通过冒号分隔切片参数 `start:stop:step` 来进行切片操作
+* 冒号 `:` 的解释
+    * 如果只放置一个参数，如 `[2]`，将返回与该索引相对应的单个元素;
+    * 如果为 `[2:]`，表示**从该索引开始以后的所有项**都将被提取。
+    * 如果使用了两个参数，如 `[2:7]`，那么则提取两个索引(不包括停止索引)之间的项。
+* 省略号 `...` 的解释
+    * 切片还可以包括省略号 `...`，来使选择元组的长度与数组的维度相同。 如果在行位置使用省略号，它将返回包含行中元素的 ndarray。
+* 可以借助切片 `:` 或 `...` 与**索引数组**组合:
+    * 对于维数超过 3 的多维数组，还可以通过 `...` 来简化操作 
+    ```python
+    import numpy as np
+    a = np.array([[1,2,3], [4,5,6],[7,8,9]])
+    b = a[1:3, 1:3]
+    c = a[1:3,[1,2]]
+    d = a[...,1:]
+    print(b)
+    print(c)
+    print(d)
+  
+    arr = np.arange(24).reshape((2, 3, 4))
+    print(arr[1, ...])               # 等价于 arr[1, :, :]
+    print(arr[..., 1])               # 等价于 arr[:, :, 1]
+    ```
+* 双冒号 `::`
+    * `x[::2]`  # every other element
+    * `x[1::2]` # every other element, starting at index 1
+    * A potentially confusing case is when the `step` value is negative. In this case, the defaults for
+    `start` and `stop` are swapped. This becomes a convenient way to reverse an array.
+    * `x[::-1]` reverse array `x`.
+* 布尔索引   
+* 切片和索引的同异
+    * 切片和索引都是访问多维数组中元素的方法，这是两者的共同点，不同之处有:
+        1. 切片得到的是原多维数组的一个 视图(view) ，修改切片中的内容会导致原多维数组的内容也发生变化；
+        2. 切片得到在多维数组中连续(或按特定步长连续)排列的值，而索引可以得到任意位置的值，自由度更大一些。   
+             
+      不考虑第一点的话，切片的操作是可以用索引操作来实现的，不过这没有必要就是了。 
+
+References:
+* [NumPy - Index](https://numpy.org/doc/stable/genindex.html)
+* [A Visual Intro to NumPy and Data Representation](https://jalammar.github.io/visual-numpy/)
+* [Numpy和数据展示的可视化介绍](http://www.junphy.com/wordpress/index.php/2019/10/24/visual-numpy/)
+* [通过画图彻底理解 NumPy 数组的 dimensions (axes) 和 Index](https://zhuanlan.zhihu.com/p/37099920)
+* [Aggregations: Min, Max, and Everything In Between](https://jakevdp.github.io/PythonDataScienceHandbook/02.04-computation-on-arrays-aggregates.html)
+* [NumPy 切片和索引](https://www.runoob.com/numpy/numpy-ndexing-and-slicing.html)
+* [NumPy 高级索引](https://www.runoob.com/numpy/numpy-advanced-indexing.html)
+* [NumPy之四：高级索引和索引技巧](https://blog.csdn.net/wangwenzhi276/article/details/53436694)
+* [Numpy 数组基础操作--索引、组合、分割、复制、遍历、转换、序列化（四）](https://blog.csdn.net/mokeding/article/details/17476979)
+* [Numpy 笔记(二): 多维数组的切片(slicing)和索引(indexing)](https://www.zmonster.me/2016/03/09/numpy-slicing-and-indexing.html)
+* [The Basics of NumPy Arrays](https://jakevdp.github.io/PythonDataScienceHandbook/02.02-the-basics-of-numpy-arrays.html)
+* [The Basics of NumPy Arrays](https://jakevdp.github.io/PythonDataScienceHandbook/02.02-the-basics-of-numpy-arrays.html)
+
+---
 ### Numpy - Copy
 Copying array **means**, a new instance in created, and the contents of the original array is copied into this array.
 
@@ -90,6 +174,7 @@ References:
 
 
 ---
+### NumPy - Trick
 * [numpy.empty](https://numpy.org/doc/stable/reference/generated/numpy.empty.html)
 * [Random sampling (numpy.random)](https://numpy.org/doc/stable/reference/random/index.html#module-numpy.random)
 * `numpy.unuque()`
@@ -111,6 +196,33 @@ References:
     * 对简单的二维数组，通过不同的axis，numpy会沿着不同的方向进行操作：如果不设置，那么对所有的元素操作；如果axis=0，则沿着纵轴进行操作；axis=1，则沿着横轴进行操作。
     * 可以总结为一句话：设axis=i，则numpy沿着第i个下标变化的方向进行操作。
     * **假设axis = i，则numpy沿着第 i 个下标变化的方向进行操作。**
+    
+
+---
+### `np.mgrid` 用法
+```python
+np.mgrid[ 第1维，第2维 ，第3维 ， …] 
+# dimention 1
+a:b:c   # [a,b) with step = c
+# dimention 2
+a:b:cj  # [a,b] with c points
+```
+Example
+```python
+import numpy as np
+a = np.mgrid[-2:5:2]
+# array([-2,  0,  2,  4])
+b = np.mgrid[-4:4:5j]
+# array([-4., -2.,  0.,  2.,  4.])
+```
+
+Reference:
+* [Python的 numpy中 meshgrid 和 mgrid 的区别和使用](https://www.cnblogs.com/shenxiaolin/p/8854197.html)        
+* [Ref1](https://www.cnblogs.com/wanghui-garcia/p/10763103.html)  
+ 
+---
+* [numpy.histogram](https://numpy.org/doc/stable/reference/generated/numpy.histogram.html)
+* [NumPy - Histogram Using Matplotlib](https://www.tutorialspoint.com/numpy/numpy_histogram_using_matplotlib.htm)
 * []()
 * []()
 * []()

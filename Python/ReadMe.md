@@ -1,7 +1,9 @@
 | 日期 |文件 | 解释 |
 | :------------- | :------------- |:------------- |
-| 20201005 | [matplotlib.md](matplotlib.md) | `matplotlib.plotpy` |
-
+| 20201025 | [Python - FAQ](Python_FAQ.md) |  |
+| 20201005 | [matplotlib](matplotlib_conclusion.md) | `matplotlib.plotpy` |
+| 20201025 | [numpy](numpy_conclusion.md) |  |
+| 20201025 | [cv2_conclusion](cv2_conclusion.md) |  |
 
 
 ## Syntax Reference
@@ -13,6 +15,7 @@
 * [Python函数参数传递机制（超级详细）](http://c.biancheng.net/view/2258.html)
 * [Python函数值传递和引用传递（包括形式参数和实际参数的区别）](http://c.biancheng.net/view/4471.html)
 
+
 ## Reference
 * [PyCharm创建.py自动添加文件头注释](https://blog.csdn.net/qq_36482772/article/details/67218214)
 * [Ubuntu 20.04 Python version switch manager](https://linuxconfig.org/ubuntu-20-04-python-version-switch-manager)
@@ -23,5 +26,5 @@
 * [使用Anaconda进行环境和包的管理](https://blog.csdn.net/u012343179/article/details/76146815)
 * [使用anaconda创建虚拟环境，并安装各类软件](https://blog.csdn.net/weixin_40533355/article/details/95069105)
 * [Conda - User guide](https://docs.conda.io/projects/conda/en/latest/user-guide/index.html)
-* []()
+
 

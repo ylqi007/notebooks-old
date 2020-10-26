@@ -114,7 +114,7 @@ sudo apt-get install typora
 * Downlonad `deb` file.
 * `sudo apt install ./mendeley*.deb`
 
-### Install 
+### Snap - Install 
 * Todoist
     `sudo snap install todoist`
 * GitKraken
@@ -129,4 +129,4 @@ sudo apt-get install typora
 * [Fish shell 入门教程](http://www.ruanyifeng.com/blog/2017/05/fish_shell.html)
 * [rsync 用法教程](http://www.ruanyifeng.com/blog/2020/08/rsync.html)
 
-
+* [「固态科普」M.2接口、SATA接口有啥区别？](https://zhuanlan.zhihu.com/p/142976857)
