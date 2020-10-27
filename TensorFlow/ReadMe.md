@@ -1,8 +1,11 @@
+## Menu
 | 日期 |文件 | 解释 |
 | :------------- | :------------- |:------------- |
 | 20201025 | [tf_Variables](tf_Variables.md) |  |
 | 20201025 | [tf_Sharing_Variables](tf_Sharing_Variables.md) |  |
 
+## TODO
+* tmux, 目前而言 terminal 已经够用
 
 ---
 * `tf.data.Dataset.map()` use function with additional argument

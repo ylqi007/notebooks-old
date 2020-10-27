@@ -139,8 +139,14 @@ Explanation:
 * [Restarting a wifi connection without rebooting](http://www.aupcgroup.com/blog/index.php?/archives/16-Ubuntu-restart-wifi-connection-without-rebooting.html)
 
 
+
 ---
 ## References 
 
 * [Grub2/Installing](https://help.ubuntu.com/community/Grub2/Installing)
     * Reinstalling GRUB2 from a Working System
+* [Why are all snaps being mounted and listed as block devices or partitions for Ubuntu 18.04?](https://askubuntu.com/questions/1047456/why-are-all-snaps-being-mounted-and-listed-as-block-devices-or-partitions-for-ub)
+* [How do I hide the loop partitions in Nautilus created by Snap app?](https://askubuntu.com/questions/912538/how-do-i-hide-the-loop-partitions-in-nautilus-created-by-snap-app)
+* [Why does mounted drive show a “prohibited” sign?](https://askubuntu.com/questions/1208213/why-does-mounted-drive-show-a-prohibited-sign)
+
+
