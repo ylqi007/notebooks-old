@@ -7,9 +7,16 @@
 * [磁盘的开机自动挂载(Correct way to mount a hard drive)](Correct_way_to_mount_a_hard_drive.md)
 * [Commands_with_Examples](Commands_with_Examples.md)
 
+## TODO
+- [ ] linux 磁盘管理
+- [ ] tmux, 目前而言 terminal 已经够用
+
+
 
 ## Usful Points
 * 全角与半角切换：`Shift + Space`
 
 ## Reference:
 1. [What is /dev/loopx?](https://askubuntu.com/questions/906581/what-is-dev-loopx)
+2. [初学者Linux生存指南](https://blog.csdn.net/dfsgwe1231/article/details/105995193)
+

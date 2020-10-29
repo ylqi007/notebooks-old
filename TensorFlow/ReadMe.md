@@ -5,7 +5,7 @@
 | 20201025 | [tf_Sharing_Variables](tf_Sharing_Variables.md) |  |
 
 ## TODO
-* tmux, 目前而言 terminal 已经够用
+
 
 ---
 * `tf.data.Dataset.map()` use function with additional argument
