@@ -54,6 +54,10 @@ sudo apt-get install typora
 ### Ubuntu 20.04 Press ctrl c to cancel all filesystem checks in progress
 * [How to skip filesystem checks during boot](https://askubuntu.com/questions/1250119/how-to-skip-filesystem-checks-during-boot)
 
+### Ubuntu Hot Corners
+* [How to Enable Hot Corners in Ubuntu 18.04, 19.04](http://ubuntuhandbook.org/index.php/2019/07/enable-hot-corners-ubuntu-18-04-19-04/)
+
+
 ### Linux `/boot` 分区是否需要？
 下次学习 UEFI 系统安装。
 
@@ -113,6 +117,8 @@ References:
 * [Installing on Linux](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
 * Reopen terminal
 * [Conda command not found](https://stackoverflow.com/questions/35246386/conda-command-not-found/44319368)
+* [How do I prevent Conda from activating the base environment by default?](https://stackoverflow.com/questions/54429210/how-do-i-prevent-conda-from-activating-the-base-environment-by-default)
+    * `conda config --set auto_activate_base false`
 
 ### Launch using Dedicated Graphics Card
 * [Add "Launch using Dedicated Graphics Card" option when using proprietary Nvidia Graphics](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/280)
