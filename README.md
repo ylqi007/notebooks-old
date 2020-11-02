@@ -20,3 +20,7 @@
 - [ ] Python numpy, scipy, 
 - [ ] Machine Learning Algorithms + Actions
 - [ ] Deep Learning + Auto-drive
+
+20201102
+- [ ] Ubuntu_配置
+- [ ] 装机指南
