@@ -205,19 +205,27 @@ References:
     ```bash
     sudo apt install -y git
     ```
+    
 * [廖雪峰 - Git - 远程仓库](https://www.liaoxuefeng.com/wiki/896043488029600/896954117292416)
+    
     * 因为 GitHub 需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而 Git 支持 SSH 协议，所以，GitHub 只要
     知道了你的公钥，就可以确认只有你自己推送。
     * GitHub 允许添加多个 Key。可以把公司和家里的每台电脑都添加到 GitHub，就可以在每台电脑上往 GitHub 推送。
     * 在 GitHub 上免费托管的 Git 仓库，任何人都可以看到（但是只有自己才能修改），所以不要把敏感信息放上去。
     * 如果不想让别人看到自己的 Git 仓库，有两个方法：1.交钱购买 private 仓库，这样别人就不可读，更不可写；2.自己
     手动搭建 Git 服务器。
+    
 * [Connecting to GitHub with SSH](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/connecting-to-github-with-ssh)
     * Using the SSH protocol, you can connect and authenticate to remote servers and services. With SSH keys,
     you can connect to GitHub without supplying your username or password at each visit.
     * Checking for existing SSH keys.
     * Generating and adding a new SSH key to your GitHub account. 
+    
 * [Adding a new SSH key to your GitHub account](https://docs.github.com/en/enterprise-server@2.20/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
+
+* [Git push requires username and password](https://stackoverflow.com/questions/6565357/git-push-requires-username-and-password)
+
+* 
 
 ### Reset Shortcuts
 * [Gnome-Terminal - How do I reset keyboard shortcuts?](https://askubuntu.com/questions/891199/gnome-terminal-how-do-i-reset-keyboard-shortcuts)
