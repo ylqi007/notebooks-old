@@ -243,7 +243,7 @@ References:
   ```bash
   sudo mv /usr/bin/firefox /usr/bin/firefox-dev     # Alias normal firefox as firefox-dev
   sudo mv /usr/bin/firefox-esr /usr/bin/firefox     # Alias firefox esr as default firefox
-  ``` 
+  ```
 
 ### Install Anaconda
 * [Installing on Linux](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
@@ -267,6 +267,23 @@ References:
     `sudo snap install todoist`
 * GitKraken
     `sudo snap install gitkraken --classic`
+
+
+## Ubuntu Config
+### Tweak Tool Installation
+```bash
+$ sudo apt install gnome-tweak-tool
+```
+
+### Extensions
+* Dash to dock
+* Lock screen background
+    * [Ubuntu 18.04 - Preferences not opening](https://github.com/paradoxxxzero/gnome-shell-system-monitor-applet/issues/456) 	`sudo apt install gir1.2-clutter-1.0`
+
+### Ubuntu 18.04 Desktop – How to set ‘view items as a list’ as default
+
+`gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view'`
+
 
 ---
 ## References
