@@ -163,7 +163,7 @@ packages, though useless, remains in the system.
     * `apt list --installed`
     * `apt list --all-versions`
 
-## Reference:
+## Reference
 * [软件安装指南](https://wiki.ubuntu.org.cn/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97)
 * [How To Install And Remove Software In Ubuntu [Complete Guide]](https://itsfoss.com/remove-install-software-ubuntu/)
 * [Ubuntu PPA 使用指南](https://zhuanlan.zhihu.com/p/55250294)

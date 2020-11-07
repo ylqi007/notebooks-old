@@ -74,7 +74,7 @@ GPT 全称是 Globally Unique Identifier Partition Table Format (GUID 分区表)
 3. GPT 分区磁盘有备份分区表来提高分区数据结构的完整性。
 4. UEFI + GPT 开机启动更快，开机时跳过外设检测，搭载固态硬盘开机时间更短。
 5. UEFI + GPT 支持 Secure Boot。通过保护预启动或预引导进程，抵御 bootkit 攻击，从而提高安全性。所有在开机时
-  比 Windows 内核更早加载，实现内核劫持的技术，都可以称之为 Bootkit。
+    比 Windows 内核更早加载，实现内核劫持的技术，都可以称之为 Bootkit。
 
 **结论：UEFI + GPT，未来趋势！**
 
@@ -127,6 +127,10 @@ Ext4 是大多数 Linux 发行版上的默认文件系统，因为它是旧版 E
 |        | ext4 | /home       | the rest  |
 
 
+
+### 6. FAQ
+
+1. [Removing Disk Check From 20.04 Boot](https://askubuntu.com/a/1237427)
 
 ### Reference
 

@@ -16,13 +16,40 @@
     * 如果没有提前按过 `Ctrl + Space` 启动的话，单独按下 `Shift` 是没有反映的。
 * [Ubuntu安装搜狗输入法后修改默认英文输入状态的方法](https://blog.csdn.net/ameyume/article/details/87091652)
 
-### Ubuntu Shell 命令行路径缩短
-* [Ubuntu shell 命令行路径缩短](https://blog.csdn.net/aiqianqi1796/article/details/101835940)
-* [To change it for the current terminal instance only](https://askubuntu.com/a/145626)
-    * 将 `\w` 改为 `\W`;
-    * 删除 `@\h`.
+
+
+### Install Firefox-ESR
+
+* 不同用户使用不同配置文件的 Firefox 安装：[如何使用两个Firefox配置文件？](https://qastack.cn/ubuntu/660147/how-can-i-use-two-firefox-profiles)
+
+* [How To Install Firefox ESR In Ubuntu Or Linux Mint (PPA Or Snap) ](https://www.linuxuprising.com/2018/11/how-to-install-firefox-esr-in-ubuntu-or.html)
+
+* `sudo apt install firefox-esr --fix-missing`
+
+* firefox versions
+
+  ```bash
+  ylqi007:~$ ll /usr/bin/firefox*
+  lrwxrwxrwx 1 root root 25 Oct 13 12:42 /usr/bin/firefox -> ../lib/firefox/firefox.sh*
+  lrwxrwxrwx 1 root root 29 Oct 13 08:14 /usr/bin/firefox-esr -> ../lib/firefox-esr/firefox.sh*
+  ```
+
+* 此时我的电脑上有两个版本的 firefox (firefox, i.e. normal version 81; firefox-esr, i.e. 78.4 esr version).
+
+* Set `firefox-esr` as the default `firefox` and development firefox version as `firefox-dev`.
+  此时将 firefox 添加到 dock 后，点击打开 firefox 就是 firefox-esr。
+
+  ```bash
+  sudo mv /usr/bin/firefox /usr/bin/firefox-dev     # Alias normal firefox as firefox-dev
+  sudo mv /usr/bin/firefox-esr /usr/bin/firefox     # Alias firefox esr as default firefox
+  ```
+
+
+
+## Development Environment Installation
 
 ### Install VS Code
+
 * [Visual Studio Code on Linux](https://code.visualstudio.com/docs/setup/linux)
     * Once installed, the `Snap` daemon will take care of automatically updating S Code in the background.
     ```bash
@@ -43,18 +70,11 @@ sudo apt-get update
 sudo apt-get install typora
 ```
 
-### Copy and Paste in Terminal
-* [为什么Ctrl + V不能粘贴在Bash（Linux Shell）中？](https://qastack.cn/superuser/421463/why-does-ctrl-v-not-paste-in-bash-linux-shell)
-* [Gnome-Terminal - How do I reset keyboard shortcuts?](https://askubuntu.com/a/891203)
-  ```
-  dconf reset -f /org/gnome/terminal/legacy/keybindings/
-  ```
 
-### Ubuntu 20.04 Press ctrl c to cancel all filesystem checks in progress
-* [How to skip filesystem checks during boot](https://askubuntu.com/questions/1250119/how-to-skip-filesystem-checks-during-boot)
 
-### Ubuntu Hot Corners
-* [How to Enable Hot Corners in Ubuntu 18.04, 19.04](http://ubuntuhandbook.org/index.php/2019/07/enable-hot-corners-ubuntu-18-04-19-04/)
+### Install JetBrains (including PyCharm, Idea)
+
+Install JetBrains Toolbox and then install Pycharm and Idea from Toolbox.
 
 ### Install Git
 * Install
@@ -81,33 +101,11 @@ sudo apt-get install typora
 
 * [Git push requires username and password](https://stackoverflow.com/questions/6565357/git-push-requires-username-and-password)
 
-* 
 
-### Reset Shortcuts
-* [Gnome-Terminal - How do I reset keyboard shortcuts?](https://askubuntu.com/questions/891199/gnome-terminal-how-do-i-reset-keyboard-shortcuts)
+### Gitkraken installation
 
-### snap 安装
-* [Ubuntu 中 snap 包的安装、删除，更新使用入门教程](https://m.linuxidc.com/Linux/2018-05/152385.htm)
-* [Ubuntu 推出的Snap应用架构有什么深远意义?](https://www.zhihu.com/question/47514122)
-* [How Microsoft Lost the API War](https://www.joelonsoftware.com/2004/06/13/how-microsoft-lost-the-api-war/)
-
-### Install Firefox-ESR
-* 不同用户使用不同配置文件的 Firefox 安装：[如何使用两个Firefox配置文件？](https://qastack.cn/ubuntu/660147/how-can-i-use-two-firefox-profiles)
-* [How To Install Firefox ESR In Ubuntu Or Linux Mint (PPA Or Snap) ](https://www.linuxuprising.com/2018/11/how-to-install-firefox-esr-in-ubuntu-or.html)
-* `sudo apt install firefox-esr --fix-missing`
-* firefox versions
-    ```bash
-    ylqi007:~$ ll /usr/bin/firefox*
-    lrwxrwxrwx 1 root root 25 Oct 13 12:42 /usr/bin/firefox -> ../lib/firefox/firefox.sh*
-    lrwxrwxrwx 1 root root 29 Oct 13 08:14 /usr/bin/firefox-esr -> ../lib/firefox-esr/firefox.sh*
-    ```
-* 此时我的电脑上有两个版本的 firefox (firefox, i.e. normal version 81; firefox-esr, i.e. 78.4 esr version).
-* Set `firefox-esr` as the default `firefox` and development firefox version as `firefox-dev`.
-此时将 firefox 添加到 dock 后，点击打开 firefox 就是 firefox-esr。
-  ```bash
-  sudo mv /usr/bin/firefox /usr/bin/firefox-dev     # Alias normal firefox as firefox-dev
-  sudo mv /usr/bin/firefox-esr /usr/bin/firefox     # Alias firefox esr as default firefox
-  ```
+GitKraken
+`sudo snap install gitkraken --classic`
 
 ### Install Anaconda
 * [Installing on Linux](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
@@ -117,25 +115,34 @@ sudo apt-get install typora
 * [How do I prevent Conda from activating the base environment by default?](https://stackoverflow.com/questions/54429210/how-do-i-prevent-conda-from-activating-the-base-environment-by-default)
     * `conda config --set auto_activate_base false`
 
-### Launch using Dedicated Graphics Card
-* [Add "Launch using Dedicated Graphics Card" option when using proprietary Nvidia Graphics](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/280)
-* Currently the option to right click an app and "Launch using Dedicated Graphics Card" is only available
-**when using grapics drivers**, as it reliefs of the detection of switcheroo for power management. 
+* 
 
 ### Install Mendeley
 * [How to install a deb file, by dpkg -i or by apt?](https://unix.stackexchange.com/questions/159094/how-to-install-a-deb-file-by-dpkg-i-or-by-apt)
 * Downlonad `deb` file.
 * `sudo apt install ./mendeley*.deb`
 
-### Snap - Install 
+### Todoist instllation
 * Todoist
     `sudo snap install todoist`
-* GitKraken
-    `sudo snap install gitkraken --classic`
+
 
 
 ## Ubuntu Config
+
+### Ubuntu Shell 命令行路径缩短
+
+* [Ubuntu shell 命令行路径缩短](https://blog.csdn.net/aiqianqi1796/article/details/101835940)
+* [To change it for the current terminal instance only](https://askubuntu.com/a/145626)
+  * 将 `\w` 改为 `\W`;
+  * 删除 `@\h`.
+
+### Ubuntu Hot Corners
+
+* [How to Enable Hot Corners in Ubuntu 18.04, 19.04](
+
 ### Tweak Tool Installation
+
 ```bash
 $ sudo apt install gnome-tweak-tool
 ```
@@ -153,31 +160,48 @@ $ sudo apt install gnome-tweak-tool
 
 ---
 
-## Nvidia Driver
-
-By default X.org, X server use nouveau free/libre shotware drivers for Nvidia cards.
-
-Step 1. Find out information about your GPU
-
-```bash
-sudo lshw -C display
-```
-
-![](/home/yq0033/.config/Typora/typora-user-images/image-20201105215457202.png)
-
-
-
-
-
-* [Ubuntu Linux Install Nvidia Driver (Latest Proprietary Driver)](https://www.cyberciti.biz/faq/ubuntu-linux-install-nvidia-driver-latest-proprietary-driver/)
-* [How to install the NVIDIA drivers on Ubuntu 20.04 Focal Fossa Linux](https://linuxconfig.org/how-to-install-the-nvidia-drivers-on-ubuntu-20-04-focal-fossa-linux)
-* [When installing CUDA, how to determine distro,version and architecture parameters?](https://askubuntu.com/questions/927640/when-installing-cuda-how-to-determine-distro-version-and-architecture-parameter)
-* [CUDA Toolkit 11.1 Update 1 Downloads](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1604&target_type=deblocal)
-* [CUDA安装完成后测试部分报错bash: ./nbody: No such file or directory](https://www.codeleading.com/article/77313998501/)
-* [Is it still necessary to install CUDA before using the conda tensorflow-gpu package?](https://stackoverflow.com/questions/61533291/is-it-still-necessary-to-install-cuda-before-using-the-conda-tensorflow-gpu-pack)
+* 
 
 
 ---
+
+
+## FAQ
+
+### Copy and Paste in Terminal
+
+* [为什么Ctrl + V不能粘贴在Bash（Linux Shell）中？](https://qastack.cn/superuser/421463/why-does-ctrl-v-not-paste-in-bash-linux-shell)
+
+* [Gnome-Terminal - How do I reset keyboard shortcuts?](https://askubuntu.com/a/891203)
+
+  ```
+  dconf reset -f /org/gnome/terminal/legacy/keybindings/
+  ```
+
+### Ubuntu 20.04 Press ctrl c to cancel all filesystem checks in progress
+
+* [How to skip filesystem checks during boot](https://askubuntu.com/questions/1250119/how-to-skip-filesystem-checks-during-boot)
+
+* http://ubuntuhandbook.org/index.php/2019/07/enable-hot-corners-ubuntu-18-04-19-04/)
+
+### Reset Shortcuts
+
+* [Gnome-Terminal - How do I reset keyboard shortcuts?](https://askubuntu.com/questions/891199/gnome-terminal-how-do-i-reset-keyboard-shortcuts)
+
+### 使用 `snap` 安装程序
+
+* [Ubuntu 中 snap 包的安装、删除，更新使用入门教程](https://m.linuxidc.com/Linux/2018-05/152385.htm)
+* [Ubuntu 推出的Snap应用架构有什么深远意义?](https://www.zhihu.com/question/47514122)
+* [How Microsoft Lost the API War](https://www.joelonsoftware.com/2004/06/13/how-microsoft-lost-the-api-war/)
+
+### Launch using Dedicated Graphics Card
+
+* [Add "Launch using Dedicated Graphics Card" option when using proprietary Nvidia Graphics](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/280)
+* Currently the option to right click an app and "Launch using Dedicated Graphics Card" is only available
+  **when using grapics drivers**, as it reliefs of the detection of switcheroo for power management. 
+
+
+
 ## References
 
 * [The Ubuntu lifecycle and release cadence](https://ubuntu.com/about/release-cycle)
