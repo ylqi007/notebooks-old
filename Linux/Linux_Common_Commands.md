@@ -61,13 +61,29 @@ This will create a backup file with the tilde character appended to it. To chang
 [Linux and Unix mv command tutorial with examples](https://shapeshed.com/unix-mv/)
 
 
-## 2. [`ln`](https://linuxize.com/post/how-to-create-symbolic-links-in-linux-using-the-ln-command/)
+
+## 2. rsync
+
+```bash
+rsync -av --progress sourcefolder /destinationfolder --exclude thefoldertoexclude --exclude anotherfoldertoexclude
+```
+
+* **Note that the dir `thefoldertoexclude` after `--exclude` option is relative to the `sourcefolder`, i.e., `sourcefolder/thefoldertoexclude`.**
+
+
+
+[How to use 'cp' command to exclude a specific directory?](https://stackoverflow.com/questions/4585929/how-to-use-cp-command-to-exclude-a-specific-directory)
+
+
+
+## 3. [`ln`](https://linuxize.com/post/how-to-create-symbolic-links-in-linux-using-the-ln-command/)
+
 ```bash
 ln -s [OPTIONS] FILE LINK
 ```
 
 ---
-## 3. 解压
+## 4. 解压
 
 ## tar
 

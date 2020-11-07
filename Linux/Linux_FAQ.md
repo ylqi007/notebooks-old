@@ -21,7 +21,6 @@
     * unity-control-center
     * gnome-control-center
 * [How to Fix the No Sound Issue in Ubuntu](https://www.maketecheasier.com/fix-no-sound-issue-ubuntu/)
-
 * [Setting up permissions on a script](https://bash.cyberciti.biz/guide/Setting_up_permissions_on_a_script)
 * [Fcitx Chinese Input Setup on Ubuntu for Gaming](https://leimao.github.io/blog/Ubuntu-Gaming-Chinese-Input/)
 * [Ln Command in Linux (Create Symbolic Links)](https://linuxize.com/post/how-to-create-symbolic-links-in-linux-using-the-ln-command/)
@@ -30,6 +29,8 @@
 * 'grub rescue>` error: symbol 'grub_file_filters' not found.
 * [如何使用 U 盘安装 Ubuntu 操作系统？](https://www.zhihu.com/question/20565314)
   * 启动 Startup Disk Creator
+* [How can I detect whether a symlink is broken in Bash?](https://stackoverflow.com/questions/8049132/how-can-i-detect-whether-a-symlink-is-broken-in-bash)
+* [takurx](https://gist.github.com/takurx)/**[log_status_python3_and_python2.md](https://gist.github.com/takurx/57342618e21b3c1afdf841956cc23da4)** 
 
 ### DiskSpace
 1. UEFI、GPT是“新”技术，那么就必然有较旧技术（BIOS+MBR）更先进、更NB的地方。
@@ -150,3 +151,9 @@ Explanation:
 * [Why does mounted drive show a “prohibited” sign?](https://askubuntu.com/questions/1208213/why-does-mounted-drive-show-a-prohibited-sign)
 
 
+
+
+
+```
+3.625,2.8125, 4.875,6.1875, 11.65625,10.1875
+```
