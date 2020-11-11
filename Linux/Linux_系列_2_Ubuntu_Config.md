@@ -101,11 +101,23 @@ Install JetBrains Toolbox and then install Pycharm and Idea from Toolbox.
 
 * [Git push requires username and password](https://stackoverflow.com/questions/6565357/git-push-requires-username-and-password)
 
-
 ### Gitkraken installation
+
+#### Method 1. Install by snap
 
 GitKraken
 `sudo snap install gitkraken --classic`
+
+
+
+#### Method 2. Install from official website
+
+```bash
+wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
+sudo dpkg -i gitkraken-amd64.deb
+```
+
+
 
 ### Install Anaconda
 * [Installing on Linux](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
@@ -210,3 +222,4 @@ $ sudo apt install gnome-tweak-tool
 * [Here’s How to Find Out Which Desktop Environment You are Using](https://itsfoss.com/find-desktop-environment/)
 * [Fish shell 入门教程](http://www.ruanyifeng.com/blog/2017/05/fish_shell.html)
 * [rsync 用法教程](http://www.ruanyifeng.com/blog/2020/08/rsync.html)
+* [How to Install GitKraken Git GUI](https://support.gitkraken.com/how-to-install/)

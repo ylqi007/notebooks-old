@@ -1,9 +1,0 @@
-# Deep Reinforcement Learning of Volume-guided Progressive View Inpainting for 3D Point Scene Completion from a Single Depth Image
-
-## Abstract
-> A deep reinforcement learning method of progressive view inpainting for 3D scene completion under volume guidance, achieving high-quality scene reconstruction from only a single depth image with sever occlusion.
-> This approach is end-to-end, consisting of three modules: 3D scene volume reconstruction, 2D depth map inpainting, and multi-view selection for completion.
-> 3D volume branch to obtain a volumetric scene reconstruction;
-> View inpainting step, which attempts to make up the missing information;
-> Projecting the volume under the same view of the input, concatenating them to complete the current view depth, and integrating all depth into the point cloud.
-> 
