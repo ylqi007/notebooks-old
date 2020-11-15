@@ -1,5 +1,7 @@
 # README
 
+![](https://img.shields.io/github/stars/ylqi007/notebooks)	![](https://img.shields.io/github/forks/ylqi007/notebooks)	![](https://img.shields.io/github/issues/ylqi007/notebooks)		
+
 ## 不积跬步，无以至千里; 不积小流，无以成江海。
 
 | ID  | 项目           | 子项目  |  ReadME   |
