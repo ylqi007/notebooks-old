@@ -99,7 +99,6 @@ origin  git@github.com:ylqi007/notebooks.git (push)
 
 #### Shields IO
 
-* [GitHub 项目徽章的添加和设置](https://lpd-ios.github.io/2017/05/03/GitHub-Badge-Introduction/)
-
 * [GitHub 徽标的官方网站](https://shields.io/)
-* 
+* [Badgen - Fast badge generating service](https://badgen.net/)
+* [GitHub 项目徽章的添加和设置](https://lpd-ios.github.io/2017/05/03/GitHub-Badge-Introduction/)
