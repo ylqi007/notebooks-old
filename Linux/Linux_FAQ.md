@@ -140,6 +140,11 @@ Explanation:
 * [Restarting a wifi connection without rebooting](http://www.aupcgroup.com/blog/index.php?/archives/16-Ubuntu-restart-wifi-connection-without-rebooting.html)
 
 
+---
+## No Wi-Fi Adapter Found
+
+![image-20201112155610392](/home/yq0033/.config/Typora/typora-user-images/image-20201112155610392.png)
+
 
 ---
 ## References 

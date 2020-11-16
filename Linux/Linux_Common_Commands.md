@@ -85,16 +85,24 @@ ln -s [OPTIONS] FILE LINK
 ---
 ## 4. 解压
 
-## tar
+### tar
 
 
-## rar
+### rar
 
 
-## 7z
+### 7z
 ```bash
 7z x <filename.7z>
 ```
+
+---
+## 5. lspci
+
+```bash
+lspci	# list all PCI devices
+```
+
 
 
 ## Reference:
