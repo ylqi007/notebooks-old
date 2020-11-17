@@ -138,6 +138,16 @@ sudo dpkg -i gitkraken-amd64.deb
 * Todoist
     `sudo snap install todoist`
 
+### Telegram installation
+
+```bash
+sudo add-apt-repository ppa:atareao/telegram
+sudo apt-get update
+sudo apt-get install telegram
+```
+
+[2 Ways to Install Telegram Messenger on Ubuntu: PPA & Snap Package](https://www.linuxbabe.com/desktop-linux/install-telegram-ubuntu)
+
 
 
 ## Ubuntu Config
