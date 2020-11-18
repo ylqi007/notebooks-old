@@ -95,10 +95,18 @@ origin  git@github.com:ylqi007/notebooks.git (push)
 * [Github:重命名仓库](https://gohom.win/2015/12/17/git-rename-repo/)
 * [git修改本地和远程仓库名称的解决方法](https://www.cnblogs.com/zlting/p/9620259.html)
 
-
-
-#### Shields IO
+#### 9. Shields IO
 
 * [GitHub 徽标的官方网站](https://shields.io/)
 * [Badgen - Fast badge generating service](https://badgen.net/)
 * [GitHub 项目徽章的添加和设置](https://lpd-ios.github.io/2017/05/03/GitHub-Badge-Introduction/)
+
+#### 10. "Remote: error: GH001: Large files deteced"
+
+* [apphands](https://gist.github.com/apphands)/**[GH001 fixed](https://gist.github.com/apphands/e695917bb51530be66c35d5d753357ca)**
+
+  ```bash
+  git filter-branch -f --index-filter 'git rm -r -f --ignore-unmatch <FILE_TO_REMOVE>' HEAD
+  ```
+
+* 
