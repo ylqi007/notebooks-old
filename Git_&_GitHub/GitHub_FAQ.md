@@ -109,4 +109,12 @@ origin  git@github.com:ylqi007/notebooks.git (push)
   git filter-branch -f --index-filter 'git rm -r -f --ignore-unmatch <FILE_TO_REMOVE>' HEAD
   ```
 
-* 
+
+#### 11. Configuring Git Large File Storage
+
+* [Configuring Git Large File Storage](https://docs.github.com/en/free-pro-team@latest/github/managing-large-files/configuring-git-large-file-storage)
+* [How to push large files to GitHub](https://medium.com/@AyunasCode/how-to-push-large-files-to-github-253d05cc6a09)
+* [An open source Git extension for versioning large files](https://git-lfs.github.com/)
+  1. Install `Git LFS`
+  2. Add `git lfs track`
+  3. Add a large file (like audio, etc.) to repo
