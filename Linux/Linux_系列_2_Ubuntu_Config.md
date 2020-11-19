@@ -1,6 +1,9 @@
 [TOC]
 
+
+
 ## Common Configuration
+
 ### Chinese Input
 * [Fcibutx Chinese Input Setup on Ubuntu for Gaming](https://leimao.github.io/blog/Ubuntu-Gaming-Chinese-Input/)
 * [How To Uninstall ibus On Ubuntu 16.04 LTS](https://installlion.com/ubuntu/xenial/main/i/ibus/uninstall/index.html)
@@ -15,6 +18,17 @@
     * `Trigger Input Method = Ctrl + Space`, 按下 `Ctrl + Spce` 的时候，会启动中文输入，随后可以通过 `Shift` 切换中英文输入。
     * 如果没有提前按过 `Ctrl + Space` 启动的话，单独按下 `Shift` 是没有反映的。
 * [Ubuntu安装搜狗输入法后修改默认英文输入状态的方法](https://blog.csdn.net/ameyume/article/details/87091652)
+
+
+
+### Install Tweak
+
+**Ubuntu Tweak** 是一款 Ubuntu 系统配置工具。Ubuntu Tweak 工具主要提供以下四个大功能：
+
+* 系统信息概览
+* 部分系统功能调整
+* 部分系统管理
+* 清道夫(系统文件清理)
 
 
 
@@ -118,7 +132,6 @@ sudo dpkg -i gitkraken-amd64.deb
 ```
 
 
-
 ### Install Anaconda
 * [Installing on Linux](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
 * [Anaconda vs. miniconda](https://stackoverflow.com/questions/45421163/anaconda-vs-miniconda)
@@ -127,7 +140,6 @@ sudo dpkg -i gitkraken-amd64.deb
 * [How do I prevent Conda from activating the base environment by default?](https://stackoverflow.com/questions/54429210/how-do-i-prevent-conda-from-activating-the-base-environment-by-default)
     * `conda config --set auto_activate_base false`
 
-* 
 
 ### Install Mendeley
 * [How to install a deb file, by dpkg -i or by apt?](https://unix.stackexchange.com/questions/159094/how-to-install-a-deb-file-by-dpkg-i-or-by-apt)
@@ -179,15 +191,6 @@ $ sudo apt install gnome-tweak-tool
 `gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view'`
 
 
-
----
-
-* 
-
-
----
-
-
 ## FAQ
 
 ### Copy and Paste in Terminal
@@ -233,3 +236,5 @@ $ sudo apt install gnome-tweak-tool
 * [Fish shell 入门教程](http://www.ruanyifeng.com/blog/2017/05/fish_shell.html)
 * [rsync 用法教程](http://www.ruanyifeng.com/blog/2020/08/rsync.html)
 * [How to Install GitKraken Git GUI](https://support.gitkraken.com/how-to-install/)
+* [How to install Tweak Tool on Ubuntu 20.04 LTS Focal Fossa Linux ](https://linuxconfig.org/how-to-install-tweak-tool-on-ubuntu-20-04-lts-focal-fossa-linux)
+* 

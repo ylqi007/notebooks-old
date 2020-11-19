@@ -2,7 +2,23 @@
 
 ## Installation
 
+1. Adding MySQL APT Repository
 
+2. Update repository
+
+3. Install MySQL with APT: `sudo apt install mysql-server`
+
+4. Starting and Stopping the MySQL server
+
+   ```bash
+   shell> sudo service mysql status
+   shell> sudo service mysql stop
+   shell> sudo service mysql start
+   ```
+
+   
+
+5. 
 
 ## Get Start
 
