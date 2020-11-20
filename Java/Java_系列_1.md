@@ -878,23 +878,245 @@ Spring为应用程序准备了Profile这一概念，用来表示不同的环境�
 
 
 
+---
+
 ### 使用 AOP
 
+**AOP 是 Aspect Oriented Programming，即面向切面编程。**
+
+**OOP** (Object Oriented Programming) 作为**面向对象编程的模式**，获得了巨大的成功，OOP的主要功能是数据封装、继承和多态。而**AOP**是一种新的编程方式，它和OOP不同，OOP把系统看作多个对象的交互，AOP把系统分解为不同的关注点，或者称之为**切面(Aspect)**。
+
+1. 先用 OOP 举例，比如业务组件 `BookService`，它包含几个业务方法：
+
+   * `createBook`
+
+   * `updateBook`
+
+   * `deleteBook`
+
+   对于每个业务方法而言，除了自己核心的业务逻辑，还需要安全检查、日志记录和事物处理。对于安全检查、日志、事物等代码，它们会重复出现在每个业务方法中。使用 OOP，很难将这些四散的代码模块化。
+
+   对于 `BookService` 业务模型而言，关键是自身的核心逻辑，但是整个系统还要求关注安全检查、日志、事物等功能，这些功能实际上“横跨”多个业务方法。但是为了这些功能，不得不在每个业务方法上重复编写代码。
+
+2. 一种可行的方式是使用[Proxy模式](https://www.liaoxuefeng.com/wiki/1252599548343744/1281319432618017)，将某个功能，例如，权限检查，放入Proxy中：
+
+   ```java
+   public class SecurityCheckBookService implements BookService {
+       private final BookService target;
+   
+       public SecurityCheckBookService(BookService target) {
+           this.target = target;
+       }
+   
+       public void createBook(Book book) {
+           securityCheck();
+           target.createBook(book);
+       }
+   
+       public void updateBook(Book book) {
+           securityCheck();
+           target.updateBook(book);
+       }
+   
+       public void deleteBook(Book book) {
+           securityCheck();
+           target.deleteBook(book);
+       }
+   
+       private void securityCheck() {
+           ...
+       }
+   }
+   ```
+
+   这种方式的缺点是比较麻烦，必须先抽取接口，然后，针对每个方法实现Proxy。
+
+3. 另一种方法是，既然`SecurityCheckBookService`的代码都是标准的Proxy样板代码，不如把权限检查视作一种切面（Aspect），把日志、事务也视为切面，然后，以某种自动化的方式，把切面织入到核心逻辑中，实现Proxy模式。
+
+   如果我们以AOP的视角来编写上述业务，可以依次实现：
+
+   1. 核心逻辑，即BookService；
+   2. 切面逻辑，即：
+   3. 权限检查的Aspect；
+   4. 日志的Aspect；
+   5. 事务的Aspect。
+
+   然后，以某种方式，让框架来把上述3个Aspect以Proxy的方式“织入”到`BookService`中，这样一来，就不必编写复杂而冗长的Proxy模式。
+
+4. **AOP 原理**
+
+   如何把切面织入到核心逻辑中？这正是AOP需要解决的问题。换句话说，如果客户端获得了`BookService`的引用，当调用`bookService.createBook()`时，如何对调用方法进行拦截，并在拦截前后进行安全检查、日志、事务等处理，就相当于完成了所有业务功能。
+
+   在Java平台上，对于AOP的织入，有3种方式：
+
+   1. 编译期：在编译时，由编译器把切面调用编译进字节码，这种方式需要定义新的关键字并扩展编译器，AspectJ就扩展了Java编译器，使用关键字aspect来实现织入；
+   2. 类加载器：在目标类被装载到JVM时，通过一个特殊的类加载器，对目标类的字节码重新“增强”；
+   3. 运行期：目标对象和切面都是普通Java类，通过JVM的动态代理功能或者第三方库实现运行期动态织入。
+
+   最简单的方式是第三种，Spring的AOP实现就是基于JVM的动态代理。
+
+   AOP技术看上去比较神秘，但实际上，它本质就是一个动态代理，让我们把一些常用功能如权限检查、日志、事务等，从每个业务方法中剥离出来。
+
+   需要特别指出的是，AOP对于解决特定问题，例如事务管理非常有用，这是因为分散在各处的事务代码几乎是完全相同的，并且它们需要的参数（JDBC的Connection）也是固定的。另一些特定问题，如日志，就不那么容易实现，因为日志虽然简单，但打印日志的时候，经常需要捕获局部变量，如果使用AOP实现日志，我们只能输出固定格式的日志，因此，使用AOP时，必须适合特定的场景。
+
+   
+
+
+#### 装配 AOP
+
+1. 在AOP编程中，我们经常会遇到下面的概念：
+
+   - Aspect：切面，即一个横跨多个核心逻辑的功能，或者称之为系统关注点；
+   - Joinpoint：连接点，即定义在应用程序流程的何处插入切面的执行；
+   - Pointcut：切入点，即一组连接点的集合；
+   - Advice：增强，指特定连接点上执行的动作；
+   - Introduction：引介，指为一个已有的Java对象动态地增加新的接口；
+   - Weaving：织入，指将切面整合到程序的执行流程中；
+   - Interceptor：拦截器，是一种实现增强的方式；
+   - Target Object：目标对象，即真正执行业务的核心逻辑对象；
+   - AOP Proxy：AOP代理，是客户端持有的增强后的对象引用。
+
+   其实，我们不用关心AOP创造的“术语”，只需要理解**AOP本质上只是一种代理模式的实现方式**，在Spring的容器中实现AOP特别方便。
+
+2. 使用 AspectJ
+
+   1. 首先，在 Maven 中引入 Spring 对 AOP 的支持；
+
+   2. 然后定义一个 `LoggingAspect`
+
+      ```java
+      @Aspect
+      @Component
+      public class LoggingAspect {
+          // 在执行UserService的每个方法前执行:
+          @Before("execution(public * com.itranswarp.learnjava.service.UserService.*(..))")
+          public void doAccessCheck() {
+              System.err.println("[Before] do access check...");
+          }
+      
+          // 在执行MailService的每个方法前后执行:
+          @Around("execution(public * com.itranswarp.learnjava.service.MailService.*(..))")
+          public Object doLogging(ProceedingJoinPoint pjp) throws Throwable {
+              System.err.println("[Around] start " + pjp.getSignature());
+              Object retVal = pjp.proceed();
+              System.err.println("[Around] done " + pjp.getSignature());
+              return retVal;
+          }
+      }
+      ```
+
+      * 观察`doAccessCheck()`方法，我们定义了一个`@Before`注解，后面的字符串是告诉AspectJ应该在何处执行该方法，这里写的意思是：执行`UserService`的每个`public`方法前执行`doAccessCheck()`代码。
+      * 再观察`doLogging()`方法，我们定义了一个`@Around`注解，它和`@Before`不同，`@Around`可以决定是否执行目标方法，因此，我们在`doLogging()`内部先打印日志，再调用方法，最后打印日志后返回结果。
+      * 在`LoggingAspect`类的声明处，除了用`@Component`表示它本身也是一个Bean外，我们再加上`@Aspect`注解，表示它的`@Before`标注的方法需要注入到`UserService`的每个`public`方法执行前，`@Around`标注的方法需要注入到`MailService`的每个`public`方法执行前后。
+
+   3. 紧接着，我们需要给`@Configuration`类加上一个`@EnableAspectJAutoProxy`注解
+
+      ```java
+      @Configuration
+      @ComponentScan
+      @EnableAspectJAutoProxy
+      public class AppConfig {
+          ...
+      }
+      ```
+
+      * Spring的IoC容器看到这个注解，就会自动查找带有`@Aspect`的Bean，然后根据每个方法的`@Before`、`@Around`等注解把AOP注入到特定的Bean中。
+
+   4. 虽然Spring容器内部实现AOP的逻辑比较复杂（需要使用AspectJ解析注解，并通过CGLIB实现代理类），但我们使用AOP非常简单，一共需要三步：
+
+      1. 定义执行方法，并在方法上通过AspectJ的注解告诉Spring应该在何处调用此方法；
+      2. 标记`@Component`和`@Aspect`；
+      3. 在`@Configuration`类上标注`@EnableAspectJAutoProxy`。
+
+3. 拦截器类型
+
+   顾名思义，拦截器有以下类型：
+
+   - @Before：这种拦截器先执行拦截代码，再执行目标代码。如果拦截器抛异常，那么目标代码就不执行了；
+   - @After：这种拦截器先执行目标代码，再执行拦截器代码。无论目标代码是否抛异常，拦截器代码都会执行；
+   - @AfterReturning：和@After不同的是，只有当目标代码正常返回时，才执行拦截器代码；
+   - @AfterThrowing：和@After不同的是，只有当目标代码抛出了异常时，才执行拦截器代码；
+   - @Around：能完全控制目标代码是否执行，并可以在执行前后、抛异常后执行任意拦截代码，可以说是包含了上面所有功能。
+
+4. 小结
+
+   1. 在Spring容器中使用AOP非常简单，只需要定义执行方法，并用AspectJ的注解标注应该在何处触发并执行。
+   2. Spring通过CGLIB动态创建子类等方式来实现AOP代理模式，大大简化了代码。
+
+#### 使用注解装配 AOP
+
+1. 使用AspectJ的注解，并配合一个复杂的`execution(* xxx.Xyz.*(..))`语法来定义应该如何装配AOP。在实际项目中，这种写法其实很少使用。这种写法基本能实现无差别全覆盖，即某个包下面的所有Bean的所有方法都会被这个`check()`方法拦截。
+
+2. 使用AOP时，被装配的Bean最好自己能清清楚楚地知道自己被安排了。例如，Spring提供的`@Transactional`就是一个非常好的例子。如果我们自己写的Bean希望在一个数据库事务中被调用，就标注上`@Transactional`：
+
+   ```java
+   @Component
+   public class UserService {
+       // 有事务:
+       @Transactional
+       public User createUser(String name) {
+           ...
+       }
+   
+       // 无事务:
+       public boolean isValidName(String name) {
+           ...
+       }
+   
+       // 有事务:
+       @Transactional
+       public void updateUser(User user) {
+           ...
+       }
+   }
+   ```
+
+3. 或者直接在class级别注解，表示“所有public方法都被安排了”：
+
+   ```java
+   @Component
+   @Transactional
+   public class UserService {
+       ...
+   }
+   ```
+
+   * 通过`@Transactional`，某个方法是否启用了事务就一清二楚了。因此，装配AOP的时候，使用注解是最好的方式。
+
+
+
+#### AOP 避坑指南
+
+无论是使用AspectJ语法，还是配合Annotation，使用AOP，实际上就是让Spring自动为我们创建一个Proxy，使得调用方能无感知地调用指定方法，但运行期却动态“织入”了其他逻辑，因此，AOP本质上就是一个[代理模式](https://www.liaoxuefeng.com/wiki/1252599548343744/1281319432618017)。因为Spring使用了CGLIB来实现运行期动态创建Proxy，如果我们没能深入理解其运行原理和实现机制，就极有可能遇到各种诡异的问题。
+
+- [ ] 带续
+
+
+
+
+
+
+
+---
 
 
 ### 访问数据库
 
 
 
+---
+
 ### 开发 Web 应用
 
 
+
+---
 
 ### 集成第三方组件
 
 
 
-
+---
 
 ## Reference
 
