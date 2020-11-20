@@ -1,3 +1,9 @@
+[TOC]
+
+
+
+## 1. Problem
+
 Problem: 电脑上只有一块 256G 的 SDD 硬盘，需要分区给 `/`,`/home/`,`/boot/` 等必要的目录。导致最终分给 `/home/` 的空间不够用。
 我的习惯是在 `/home/<user>/` 目录下另设一个 `work/` 目录存放工作文件。由于训练的时候，训练记录文件比ijao大，常常空间不够用。
 因此，我想另添加一块硬盘，单独挂载到 `/home/<user>/work/`。
@@ -78,3 +84,30 @@ umount /data/ext4   # 用挂载点(mountpoint)进行卸载
 * 第六栏:是否以	fsck	检验扇区
 
 `/etc/fastab` 的最后一行就是我的进行开机自动挂载的设置命令。
+
+
+
+## 2. 修改挂载点
+
+```bash
+$ df -h	# 
+$ mkdir /data
+$ umount /home
+$ mount /dev/sdb3 /data
+$ vim /etc/fstab
+/dev/sdb3 /data ext3 auto 0 0
+```
+
+
+
+
+
+
+
+## Reference
+
+* [linux修改磁盘挂载目录](https://blog.csdn.net/sunshingheavy/article/details/55253118)
+* 
+
+
+
