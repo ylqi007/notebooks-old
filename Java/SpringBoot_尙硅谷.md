@@ -1,3 +1,7 @@
+[toc]
+
+
+
 # **一、**Spring Boot 入门
 
 ## 1、Spring Boot 简介
@@ -22,7 +26,7 @@
 
 [详细参照微服务文档](https://martinfowler.com/articles/microservices.html#MicroservicesAndSoa)
 
-
+ 
 
 ## 3、环境准备
 
@@ -150,20 +154,21 @@ public class HelloController {
 
 将这个应用打成jar包，直接使用java -jar的命令进行执行；
 
-## 5、Hello World探究
+## 5. Hello World探究
 
-### 1、POM文件
+### 5.1. POM文件
 
-#### 1、父项目
+#### 5.1.1 父项目
 
 ```xml
+在 pom.xml 文件中有如下代码片段，spring-boot-starter-parent 说明这是众多 spring-boot-starter 的父类。
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>1.5.9.RELEASE</version>
 </parent>
 
-他的父项目是
+而 spring-boot-starter-parent 本身的父项目是
 <parent>
   <groupId>org.springframework.boot</groupId>
   <artifactId>spring-boot-dependencies</artifactId>
@@ -174,11 +179,11 @@ public class HelloController {
 
 ```
 
-Spring Boot的版本仲裁中心；
+* `spring-boot-dependencies` 是 Spring Boot 的版本仲裁中心； 
 
-以后我们导入依赖默认是不需要写版本；（没有在dependencies里面管理的依赖自然需要声明版本号）
+* 以后我们导入依赖默认是不需要写版本；（没有在 dependencies 里面管理的依赖自然需要声明版本号） 
 
-#### 2、启动器
+#### 5.1.2 启动器 [1.5. Starters](https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-starter)
 
 ```xml
 <dependency>
@@ -187,17 +192,21 @@ Spring Boot的版本仲裁中心；
 </dependency>
 ```
 
-**spring-boot-starter**-==web==：
+> **Starters are a set of convenient dependency descriptors that you can include in your application.**
+>
+> The starters contain a lot of the dependencies that you need to get a  project up and running quickly and with a consistent, supported set of  managed transitive dependencies.
+>
+> * ==核心描述就是上面加粗的部分: **starter 是 dependency descriptor**。==
 
-​	spring-boot-starter：spring-boot场景启动器；帮我们导入了web模块正常运行所依赖的组件；
+以 **spring-boot-starter**-==web== 为例：
+
+* **spring-boot-starter**：spring-boot 场景启动器；帮我们导入了 **web 模块**正常运行所依赖的组件；
+
+==Spring Boot将所有的功能场景都抽取出来，做成一个个的starters（启动器），只需要在项目里面引入这些starter相关场景的所有依赖都会导入进来。要用什么功能就导入什么场景的启动器==
 
 
 
-Spring Boot将所有的功能场景都抽取出来，做成一个个的starters（启动器），只需要在项目里面引入这些starter相关场景的所有依赖都会导入进来。要用什么功能就导入什么场景的启动器
-
-
-
-### 2、主程序类，主入口类
+### 5.2. 主程序类，主入口类 `@SpringBootApplication`
 
 ```java
 /**
@@ -207,24 +216,28 @@ Spring Boot将所有的功能场景都抽取出来，做成一个个的starters�
 public class HelloWorldMainApplication {
 
     public static void main(String[] args) {
-
         // Spring应用启动起来
         SpringApplication.run(HelloWorldMainApplication.class,args);
     }
 }
-
 ```
 
-@**SpringBootApplication**:    Spring Boot应用标注在某个类上说明这个类是SpringBoot的主配置类，SpringBoot就应该运行这个类的main方法来启动SpringBoot应用；
+* **`@SpringBootApplication`**:    `@SpringBootApplication` 标注在某个类上说明这个类是 SpringBoot 的**主配置类**，SpringBoot 就应该运行这个类的 main 方法来启动 SpringBoot 应用。在上面例子中，`@SpringBootApplication` 标注的类是 `HelloWorldMainApplication`，那么 Spring Boot 就通过这个类的 `main` 方法启动应用。
+
+* Class `HelloWorldMainApplicatoin` 就是一个由 `@SpringBootApplication` 标注的类，也是启动程序的入口。
 
 
+
+#### `@SpringBootApplication` 具体又是什么情况呢？
+
+`@SpringBootApplicatoin` 也有一些列注解，主要的注解有三个：`@SpringBootConfiguration`, `@EnableAutoConfiguration` and `@ComponentScan`
 
 ```java
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@SpringBootConfiguration
+@SpringBootConfiguration	// 说明这是一个 Spring Boot 的配置类
 @EnableAutoConfiguration
 @ComponentScan(excludeFilters = {
       @Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
@@ -232,47 +245,68 @@ public class HelloWorldMainApplication {
 public @interface SpringBootApplication {
 ```
 
-@**SpringBootConfiguration**:Spring Boot的配置类；
-
-​		标注在某个类上，表示这是一个Spring Boot的配置类；
-
-​		@**Configuration**:配置类上来标注这个注解；
-
-​			配置类 -----  配置文件；配置类也是容器中的一个组件；@Component
 
 
+##### 1. `@SpringBootConfiguration` 
 
-@**EnableAutoConfiguration**：开启自动配置功能；
+**`@SpringBootConfiguration`**: Spring Boot 定义的注解
 
-​		以前我们需要配置的东西，Spring Boot帮我们自动配置；@**EnableAutoConfiguration**告诉SpringBoot开启自动配置功能；这样自动配置才能生效；
+* Spring Boot 的配置类；
+* 标注在某个类上，表示这是一个 Spring Boot 配置类；
+* 它本身是由 `@Configuration` 标注的类。
+
+**`@Configuration`**: Spring 定义的注解
+
+* **配置类**上需要标注这个注解；
+
+* **配置类** ，也就是*配置文件*；配置类也是容器中的一个组件，因此标有 `@Component` 注解
+
+
+
+##### 2. `@EnableAutoConfiguration`
+
+**`@EnableAutoConfiguration`**：
+
+* 开启自动配置功能；
+* 以前我们需要配置的东西，Spring Boot 帮我们**自动配置**；
+* **`@EnableAutoConfiguration`** 告诉 Spring Boot 开启自动配置功能；这样自动配置才能生效；
 
 ```java
 @AutoConfigurationPackage
 @Import(EnableAutoConfigurationImportSelector.class)
-public @interface EnableAutoConfiguration {
+public @interface EnableAutoConfiguration {...}
 ```
 
-​      	@**AutoConfigurationPackage**：自动配置包
 
-​		@**Import**(AutoConfigurationPackages.Registrar.class)：
 
-​		Spring的底层注解@Import，给容器中导入一个组件；导入的组件由AutoConfigurationPackages.Registrar.class；
+`@EnableAutoconfiguration` 又有两个注解：
 
-==将主配置类（@SpringBootApplication标注的类）的所在包及下面所有子包里面的所有组件扫描到Spring容器；==
+* **`@AutoConfigurationPackage`**：自动配置包 
 
-​	@**Import**(EnableAutoConfigurationImportSelector.class)；
+  * `@EnableAutoConfiguration` ==将主配置类（i.e. `@SpringBootApplication` 标注的类）的所在包及下面所有子包里面的所有组件扫描到Spring容器。==
+    * 导入的组件由`AutoConfigurationPackages.Registrar.class` 指定，它指定的就是 `@SpringBootApplication` 标注类所在的目录，i.e. `com.ylqi007.autoconfig` 这个包目录
+  * 则在 ==com.ylqi007.autoconfig==.HelloWorld.java 可以成功加载，但是 ==com.ylqi007==.HelloWorld.java 就**不能**被加载。
 
-​		给容器中导入组件？
+* **`@Import(AutoConfigurationImportSelector.class)`**：
+  
+  * `@Import` 是 Spring 的底层注解，给容器中导入一个组件，也就是 `AutoConfigurationImportSelector.class` 组件；
+  * `AutoConfigurationImporterSelector.selectImports(...)`
+    * `... = getAutoConfigurationEntry(...)` ==> `getCandidateConfigurations(...)` 又会继续调用
+      * `List<String> configurations = SpringFactoriesLoader.loadFactoryNames(...);`
+      * `SpringFactoriesLoader.loadSpringFactories(...)`
+        * `Enumeration<URL> urls = classloader.getResources(FACTORIES_RESOURCE_LOCATION)`
+        * `public static final String FACTORIES_RESOURCE_LOCATION = "META-INF/spring.factories";`
+    * 目前只在四个 jar 包中看到有 `META-INF/spring.factories`
+      * `org.springframework.boot:spring-boot:2.4.0`
+      * `org.springframework.boot:spring-boot-autoconfiguration:2.4.0`
+      * `org.springframework.boot:spring-boot-test:2.4.0`
+      * `org.springframework.boot:spring-boot-test-autoconfigurations:2.4.0`
+  
+  * 而 `AutoConfigurationImportSelector` 是导入哪些组件的选择器；会给容器中导入非常多的自动配置类（xxxAutoConfiguration）；就是给容器中导入这个场景需要的所有组件，并配置好这些组件；
+  * ![](images/搜狗截图20180129224104.png)
+  * 有了自动配置类，免去了我们手动编写配置注入功能组件等的工作；
 
-​		**EnableAutoConfigurationImportSelector**：导入哪些组件的选择器；
-
-​		将所有需要导入的组件以全类名的方式返回；这些组件就会被添加到容器中；
-
-​		会给容器中导入非常多的自动配置类（xxxAutoConfiguration）；就是给容器中导入这个场景需要的所有组件，并配置好这些组件；		![自动配置类](images/搜狗截图20180129224104.png)
-
-有了自动配置类，免去了我们手动编写配置注入功能组件等的工作；
-
-​		SpringFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class,classLoader)；
+​		`SpringFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class,classLoader);`
 
 
 
@@ -281,6 +315,8 @@ public @interface EnableAutoConfiguration {
 J2EE的整体整合解决方案和自动配置都在spring-boot-autoconfigure-1.5.9.RELEASE.jar；
 
 
+
+##### 3. `@ComponentScan`
 
 ​		
 
@@ -792,11 +828,13 @@ java -jar spring-boot-02-config-02-0.0.1-SNAPSHOT.jar --server.port=8087  --serv
 
 [参考官方文档](https://docs.spring.io/spring-boot/docs/1.5.9.RELEASE/reference/htmlsingle/#boot-features-external-config)
 
+
+
 ## 8、自动配置原理
 
 配置文件到底能写什么？怎么写？自动配置原理；
 
-[配置文件能配置的属性参照](https://docs.spring.io/spring-boot/docs/1.5.9.RELEASE/reference/htmlsingle/#common-application-properties)
+[配置文件能配置的属性参照-Common-Application-properties v2.4.0](https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties)
 
 
 
@@ -806,9 +844,11 @@ java -jar spring-boot-02-config-02-0.0.1-SNAPSHOT.jar --server.port=8087  --serv
 
 **2）、@EnableAutoConfiguration 作用：**
 
- -  利用EnableAutoConfigurationImportSelector给容器中导入一些组件？
+ -  利用EnableAutoConfigurationImportSelector给容器中导入一些组件？ 在v2.4.0中是 `@Import(AutoConfigurationImportSelector.class)` 
 
-- 可以查看selectImports()方法的内容；
+- 可以查看selectImports()方法的内容，`public String[] selectImports(AnnotationMetadata annotationMetadata)`
+
+-  
 
 - List<String> configurations = getCandidateConfigurations(annotationMetadata,      attributes);获取候选的配置
 
@@ -820,7 +860,6 @@ java -jar spring-boot-02-config-02-0.0.1-SNAPSHOT.jar --server.port=8087  --serv
 
     ```
 
-    
 
 **==将 类路径下  META-INF/spring.factories 里面配置的所有EnableAutoConfiguration的值加入到了容器中；==**
 
@@ -927,7 +966,7 @@ org.springframework.boot.autoconfigure.webservices.WebServicesAutoConfiguration
 
 每一个这样的  xxxAutoConfiguration类都是容器中的一个组件，都加入到容器中；用他们来做自动配置；
 
-3）、每一个自动配置类进行自动配置功能；
+3）、==每一个自动配置类进行自动配置功能；==
 
 4）、以**HttpEncodingAutoConfiguration（Http编码自动配置）**为例解释自动配置原理；
 
@@ -1405,8 +1444,6 @@ slf4j+log4j的方式；
 
 ## 1、简介
 
-
-
 使用SpringBoot；
 
 **1）、创建SpringBoot应用，选中我们需要的模块；**
@@ -1422,19 +1459,17 @@ slf4j+log4j的方式；
 这个场景SpringBoot帮我们配置了什么？能不能修改？能修改哪些配置？能不能扩展？xxx
 
 ```
-xxxxAutoConfiguration：帮我们给容器中自动配置组件；
-xxxxProperties:配置类来封装配置文件的内容；
-
+xxxxAutoConfiguration: 帮我们给容器中自动配置组件；
+xxxxProperties: 配置类来封装配置文件的内容；
 ```
 
 
 
-## 2、SpringBoot对静态资源的映射规则；
+## 2、SpringBoot对静态资源的映射规则
 
 ```java
 @ConfigurationProperties(prefix = "spring.resources", ignoreUnknownFields = false)
-public class ResourceProperties implements ResourceLoaderAware {
-  //可以设置和静态资源有关的参数，缓存时间等
+public class ResourceProperties implements ResourceLoaderAware {    //可以设置和静态资源有关的参数，缓存时间等
 ```
 
 
@@ -1511,13 +1546,13 @@ public class ResourceProperties implements ResourceLoaderAware {
 
 ==1）、所有 /webjars/** ，都去 classpath:/META-INF/resources/webjars/ 找资源；==
 
-​	webjars：以jar包的方式引入静态资源；
-
-http://www.webjars.org/
+​	webjars：以jar包的方式引入静态资源； http://www.webjars.org/
 
 ![](images/搜狗截图20180203181751.png)
 
 localhost:8080/webjars/jquery/3.3.1/jquery.js
+
+localhost:8080/webjars/jquery/3.5.1/jquery.js
 
 ```xml
 <!--引入jquery-webjar-->在访问的时候只需要写webjars下面资源的名称即可
@@ -1599,11 +1634,11 @@ public class ThymeleafProperties {
   	//
 ```
 
-只要我们把HTML页面放在classpath:/templates/，thymeleaf就能自动渲染；
+==只要我们把HTML页面放在classpath:/templates/，thymeleaf就能自动渲染；==
 
 使用：
 
-1、导入thymeleaf的名称空间
+1、导入thymeleaf的名称空间，**导入后就可以有语法提示**。
 
 ```xml
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
@@ -1630,7 +1665,7 @@ public class ThymeleafProperties {
 
 1）、th:text；改变当前元素里面的文本内容；
 
-​	th：任意html属性；来替换原生属性的值
+​	==**th：任意html属性**；来替换原生属性的值==
 
 ![](images/2018-02-04_123955.png)
 
@@ -1653,30 +1688,30 @@ Simple expressions:（表达式语法）
                 
                 ${session.foo}
             3）、内置的一些工具对象：
-#execInfo : information about the template being processed.
-#messages : methods for obtaining externalized messages inside variables expressions, in the same way as they would be obtained using #{…} syntax.
-#uris : methods for escaping parts of URLs/URIs
-#conversions : methods for executing the configured conversion service (if any).
-#dates : methods for java.util.Date objects: formatting, component extraction, etc.
-#calendars : analogous to #dates , but for java.util.Calendar objects.
-#numbers : methods for formatting numeric objects.
-#strings : methods for String objects: contains, startsWith, prepending/appending, etc.
-#objects : methods for objects in general.
-#bools : methods for boolean evaluation.
-#arrays : methods for arrays.
-#lists : methods for lists.
-#sets : methods for sets.
-#maps : methods for maps.
-#aggregates : methods for creating aggregates on arrays or collections.
-#ids : methods for dealing with id attributes that might be repeated (for example, as a result of an iteration).
+            #execInfo : information about the template being processed.
+            #messages : methods for obtaining externalized messages inside variables expressions, in the same way as they would be obtained using #{…} syntax.
+            #uris : methods for escaping parts of URLs/URIs
+            #conversions : methods for executing the configured conversion service (if any).
+            #dates : methods for java.util.Date objects: formatting, component extraction, etc.
+            #calendars : analogous to #dates , but for java.util.Calendar objects.
+            #numbers : methods for formatting numeric objects.
+            #strings : methods for String objects: contains, startsWith, prepending/appending, etc.
+            #objects : methods for objects in general.
+            #bools : methods for boolean evaluation.
+            #arrays : methods for arrays.
+            #lists : methods for lists.
+            #sets : methods for sets.
+            #maps : methods for maps.
+            #aggregates : methods for creating aggregates on arrays or collections.
+            #ids : methods for dealing with id attributes that might be repeated (for example, as a result of an iteration).
 
     Selection Variable Expressions: *{...}：选择表达式：和${}在功能上是一样；
     	补充：配合 th:object="${session.user}：
-   <div th:object="${session.user}">
-    <p>Name: <span th:text="*{firstName}">Sebastian</span>.</p>
-    <p>Surname: <span th:text="*{lastName}">Pepper</span>.</p>
-    <p>Nationality: <span th:text="*{nationality}">Saturn</span>.</p>
-    </div>
+           <div th:object="${session.user}">
+            <p>Name: <span th:text="*{firstName}">Sebastian</span>.</p>
+            <p>Surname: <span th:text="*{lastName}">Pepper</span>.</p>
+            <p>Nationality: <span th:text="*{nationality}">Saturn</span>.</p>
+            </div>
     
     Message Expressions: #{...}：获取国际化内容
     Link URL Expressions: @{...}：定义URL；
@@ -1685,11 +1720,11 @@ Simple expressions:（表达式语法）
     		<div th:insert="~{commons :: main}">...</div>
     		
 Literals（字面量）
-      Text literals: 'one text' , 'Another one!' ,…
-      Number literals: 0 , 34 , 3.0 , 12.3 ,…
-      Boolean literals: true , false
-      Null literal: null
-      Literal tokens: one , sometext , main ,…
+    Text literals: 'one text' , 'Another one!' ,…
+    Number literals: 0 , 34 , 3.0 , 12.3 ,…
+    Boolean literals: true , false
+    Null literal: null
+    Literal tokens: one , sometext , main ,…
 Text operations:（文本操作）
     String concatenation: +
     Literal substitutions: |The name is ${name}|
@@ -1716,14 +1751,12 @@ https://docs.spring.io/spring-boot/docs/1.5.10.RELEASE/reference/htmlsingle/#boo
 
 ### 1. Spring MVC auto-configuration
 
-Spring Boot 自动配置好了SpringMVC
-
-以下是SpringBoot对SpringMVC的默认配置:**==（WebMvcAutoConfiguration）==**
+Spring Boot 自动配置好了 SpringMVC。以下是SpringBoot对SpringMVC的默认配置:**==（WebMvcAutoConfiguration）==**
 
 - Inclusion of `ContentNegotiatingViewResolver` and `BeanNameViewResolver` beans.
-  - 自动配置了ViewResolver（视图解析器：根据方法的返回值得到视图对象（View），视图对象决定如何渲染（转发？重定向？））
-  - ContentNegotiatingViewResolver：组合所有的视图解析器的；
-  - ==如何定制：我们可以自己给容器中添加一个视图解析器；自动的将其组合进来；==
+  - 自动配置了 ViewResolver（视图解析器：根据方法的返回值得到视图对象（View），视图对象决定如何渲染（转发？重定向？））
+  - `ContentNegotiatingViewResolver`：组合所有的视图解析器的；
+  - ==如何定制：我们可以自己给容器中添加一个视图解析器；ContentNegotiatingViewResolver 自动的将其组合进来；==
 
 - Support for serving static resources, including support for WebJars (see below).静态资源文件夹路径,webjars
 
