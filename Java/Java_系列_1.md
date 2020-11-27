@@ -1121,6 +1121,8 @@ Spring为应用程序准备了Profile这一概念，用来表示不同的环境�
 ## Reference
 
 * [Spring 开发](https://www.liaoxuefeng.com/wiki/1252599548343744/1266263217140032)
+* [Spring Framework Documentation](https://docs.spring.io/spring-framework/docs/current/reference/html/index.html)
+* [代理](https://www.liaoxuefeng.com/wiki/1252599548343744/1281319432618017)
 * 
 
 

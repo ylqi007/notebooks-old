@@ -1465,7 +1465,7 @@ xxxxProperties: 配置类来封装配置文件的内容；
 
 
 
-## 2、SpringBoot对静态资源的映射规则
+## 2. SpringBoot对静态资源的映射规则
 
 ```java
 @ConfigurationProperties(prefix = "spring.resources", ignoreUnknownFields = false)
@@ -1544,7 +1544,17 @@ public class ResourceProperties implements ResourceLoaderAware {    //可以设�
 
 
 
-==1）、所有 /webjars/** ，都去 classpath:/META-INF/resources/webjars/ 找资源；==
+* `addResoucesHandlers(...)` ==> 指定请求的模式
+* `addResourcesLocations(...)` ==> 指定静态资源路径
+
+### 1. `/webjars/**` 请求
+
+```java
+// WebMvcAutoConfiguration.addResourcesHandlers(ResourceHandlerRegistry registry)
+registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/")
+```
+
+==所有 `/webjars/**` 的请求，都去 classpath:/META-INF/resources/webjars/ 找资源；==
 
 ​	webjars：以jar包的方式引入静态资源； http://www.webjars.org/
 
@@ -1552,10 +1562,8 @@ public class ResourceProperties implements ResourceLoaderAware {    //可以设�
 
 localhost:8080/webjars/jquery/3.3.1/jquery.js
 
-localhost:8080/webjars/jquery/3.5.1/jquery.js
-
 ```xml
-<!--引入jquery-webjar-->在访问的时候只需要写webjars下面资源的名称即可
+		<!--引入jquery-webjar-->在访问的时候只需要写webjars下面资源的名称即可
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
@@ -1563,9 +1571,19 @@ localhost:8080/webjars/jquery/3.5.1/jquery.js
 		</dependency>
 ```
 
+* **在访问的时候只需要写webjars下面==资源的名称==即可**，比如 `localhost:8080/webjars/jquery/3.3.1/jquery.js` 中的 `jquery`
 
 
-==2）、"/**" 访问当前项目的任何资源，都去（静态资源的文件夹）找映射==
+
+### ==2. 四个静态资源文件夹==
+
+```java
+private String staticPathPattern = "/**";
+private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-INF/resources/",
+				"classpath:/resources/", "classpath:/static/", "classpath:/public/" };
+```
+
+=="/**" 访问当前项目的任何资源，都去 （静态资源的文件夹）找映射==， 比如 `localhost:8080/abc` ==>  去静态资源文件夹里面找abc
 
 ```
 "classpath:/META-INF/resources/", 
@@ -1575,63 +1593,90 @@ localhost:8080/webjars/jquery/3.5.1/jquery.js
 "/"：当前项目的根路径
 ```
 
-localhost:8080/abc ===  去静态资源文件夹里面找abc
-
-==3）、欢迎页； 静态资源文件夹下的所有index.html页面；被"/**"映射；==
-
-​	localhost:8080/   找index页面
-
-==4）、所有的 **/favicon.ico  都是在静态资源文件下找；==
+* `xxx/main/java/` 是 classpath 的根路径
+* `xxx/main/resources/` 也是 classpath 的根路径
 
 
 
-## 3、模板引擎
+### ==3. 欢迎页(index.html)==
+
+```java
+		@Bean
+		public WelcomePageHandlerMapping welcomePageHandlerMapping(ApplicationContext applicationContext,
+				FormattingConversionService mvcConversionService, ResourceUrlProvider mvcResourceUrlProvider) {
+			WelcomePageHandlerMapping welcomePageHandlerMapping = new WelcomePageHandlerMapping(
+					new TemplateAvailabilityProviders(applicationContext), applicationContext, getWelcomePage(),
+					this.mvcProperties.getStaticPathPattern());
+			welcomePageHandlerMapping.setInterceptors(getInterceptors(mvcConversionService, mvcResourceUrlProvider));
+			welcomePageHandlerMapping.setCorsConfigurations(getCorsConfigurations());
+			return welcomePageHandlerMapping;
+		}
+```
+
+* `getWelcomePage()`: finally get `return this.resourceLoader.getResource(location + "index.html");`
+* `this.mvcProperties.getStaticPathPattern()`: ==> `private String staticPathPattern = "/**";`
+* ==静态资源文件夹下的所有index.html页面；被"/**"映射；==
+
+* 例如，访问 `localhost:8080/` 就会找index页面。目前的测试结果是，`index.html` page 必须直接放在上述的四个静态资源目录下。
+
+  
+
+### 4. 所有的 **/favicon.ico  都是在静态资源文件下找；-- deprecated
+
+* It's worth mentioning that, as of Spring Boot 2.2, this configuration property is deprecated. Moreover, Spring Boot no longer provides a default favicon, as this icon can be classified as information leakage. ==> 想要设置 favicon，就需要自己实现 handler。
+* [Guide to the Favicon in Spring Boot](https://www.baeldung.com/spring-boot-favicon)
+* [Remove default favicon #17925](https://github.com/spring-projects/spring-boot/issues/17925)
+
+
+
+## 3. 模板引擎
 
 JSP、Velocity、Freemarker、Thymeleaf
 
 ![](images/template-engine.png)
 
-
-
-SpringBoot推荐的Thymeleaf；
-
-语法更简单，功能更强大；
+* 模板引擎将会把 template 解析，将找到的数据填充到 tmplate 的正确位置，然后输出。
+* **Spring Boot 推荐的 Thymeleaf；语法更简单，功能更强大；**
 
 
 
-### 1、引入thymeleaf；
+### 1. 引入thymeleaf
 
 ```xml
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-          	2.1.6
-		</dependency>
+<!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
+<dependency>
+    <groupId>org.thymeleaf</groupId>
+    <artifactId>thymeleaf</artifactId>
+    <version>3.0.11.RELEASE</version>
+</dependency>
+
 切换thymeleaf版本
 <properties>
-		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
-		<!-- 布局功能的支持程序  thymeleaf3主程序  layout2以上版本 -->
-		<!-- thymeleaf2   layout1-->
-		<thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
-  </properties>
+    <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
+    <!-- 布局功能的支持程序  thymeleaf3主程序  layout2以上版本 -->
+    <!-- thymeleaf2   layout1-->
+    <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
+</properties>
 ```
 
+* layout version: [Thymeleaf Layout Dialect](https://github.com/ultraq/thymeleaf-layout-dialect)
+* [Migrating to 2.0](https://ultraq.github.io/thymeleaf-layout-dialect/migrating-to-2.0/)
+* [Thymeleaf: Custom Layout Dialect](https://www.baeldung.com/thymeleaf-spring-layouts)
 
 
-### 2、Thymeleaf使用
+
+### 2. Thymeleaf使用
 
 ```java
+ 
 @ConfigurationProperties(prefix = "spring.thymeleaf")
 public class ThymeleafProperties {
 
-	private static final Charset DEFAULT_ENCODING = Charset.forName("UTF-8");
-
-	private static final MimeType DEFAULT_CONTENT_TYPE = MimeType.valueOf("text/html");
+	private static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
 
 	public static final String DEFAULT_PREFIX = "classpath:/templates/";
 
 	public static final String DEFAULT_SUFFIX = ".html";
-  	//
 ```
 
 ==只要我们把HTML页面放在classpath:/templates/，thymeleaf就能自动渲染；==
@@ -1661,33 +1706,41 @@ public class ThymeleafProperties {
 </html>
 ```
 
-### 3、语法规则
+* 将静态内容和动态内容分开，独自工作。
+  * 静态时，显示静态本身内容；
+  * 动态时，显示 Thymeleaf 渲染的内容。
 
-1）、th:text；改变当前元素里面的文本内容；
 
-​	==**th：任意html属性**；来替换原生属性的值==
+
+### 3. 语法规则
+
+#### 1. th:text
+
+* `th:text`: 改变当前元素里面的文本内容；
+
+* ==**th:<任意html属性>**；用**任意属性**来替换原生属性的值==
+* ==Official doc list all attributes==
 
 ![](images/2018-02-04_123955.png)
 
 
 
-2）、表达式？
+#### 2. 表达式？
 
 ```properties
 Simple expressions:（表达式语法）
     Variable Expressions: ${...}：获取变量值；OGNL；
-    		1）、获取对象的属性、调用方法
-    		2）、使用内置的基本对象：
-    			#ctx : the context object.
-    			#vars: the context variables.
-                #locale : the context locale.
-                #request : (only in Web Contexts) the HttpServletRequest object.
-                #response : (only in Web Contexts) the HttpServletResponse object.
-                #session : (only in Web Contexts) the HttpSession object.
-                #servletContext : (only in Web Contexts) the ServletContext object.
-                
-                ${session.foo}
-            3）、内置的一些工具对象：
+    	1）、获取对象的属性、调用方法
+    	2）、使用内置的基本对象：`#xxx` 是内置的基本对象, Appendix A
+            #ctx : the context object.
+            #vars: the context variables.
+            #locale : the context locale.
+            #request : (only in Web Contexts) the HttpServletRequest object.
+            #response : (only in Web Contexts) the HttpServletResponse object.
+            #session : (only in Web Contexts) the HttpSession object.
+            #servletContext : (only in Web Contexts) the ServletContext object.
+            ${session.foo}
+        3）、内置的一些工具对象：Appendix B
             #execInfo : information about the template being processed.
             #messages : methods for obtaining externalized messages inside variables expressions, in the same way as they would be obtained using #{…} syntax.
             #uris : methods for escaping parts of URLs/URIs
@@ -1705,19 +1758,20 @@ Simple expressions:（表达式语法）
             #aggregates : methods for creating aggregates on arrays or collections.
             #ids : methods for dealing with id attributes that might be repeated (for example, as a result of an iteration).
 
-    Selection Variable Expressions: *{...}：选择表达式：和${}在功能上是一样；
-    	补充：配合 th:object="${session.user}：
-           <div th:object="${session.user}">
+    Selection Variable Expressions: *{...}：选择表达式，和${}在功能上是一样；
+    	补充功能：配合 th:object="${session.user}：
+        <div th:object="${session.user}">
             <p>Name: <span th:text="*{firstName}">Sebastian</span>.</p>
             <p>Surname: <span th:text="*{lastName}">Pepper</span>.</p>
             <p>Nationality: <span th:text="*{nationality}">Saturn</span>.</p>
-            </div>
+        </div>
+        也就是用 `*` 代替了 `th:object`，即用 `*{firstName}` 代替了 `${session.user.firstName}`
     
     Message Expressions: #{...}：获取国际化内容
     Link URL Expressions: @{...}：定义URL；
-    		@{/order/process(execId=${execId},execType='FAST')}
+		@{/order/process(execId=${execId},execType='FAST')}
     Fragment Expressions: ~{...}：片段引用表达式
-    		<div th:insert="~{commons :: main}">...</div>
+    	<div th:insert="~{commons :: main}">...</div>
     		
 Literals（字面量）
     Text literals: 'one text' , 'Another one!' ,…
@@ -1744,6 +1798,12 @@ Conditional operators:条件运算（三元运算符）
 Special tokens:
     No-Operation: _ 
 ```
+
+* `Established locale country: <span th:text="${#locale.country}">US</span>.` with #
+
+* apendix 中的例子就没有 #, why?
+
+  
 
 ## 4、SpringMVC自动配置
 
@@ -4199,6 +4259,15 @@ public class HelloServiceAutoConfiguration {
 # 更多SpringBoot整合示例
 
 https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples
+
+
+
+---
+
+## Reference
+
+* [(四) SpringBoot起飞之路-Web静态资源处理](https://zhuanlan.zhihu.com/p/141145060)
+* 
 
 
 
