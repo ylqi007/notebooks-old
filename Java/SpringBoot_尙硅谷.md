@@ -154,36 +154,55 @@ public class HelloController {
 
 将这个应用打成jar包，直接使用java -jar的命令进行执行；
 
+
+
 ## 5. Hello World探究
 
 ### 5.1. POM文件
 
 #### 5.1.1 父项目
 
+[Dependency Management](https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-dependency-management), `spring-boot-dependencies` 提供并管理版本。
+
 ```xml
 在 pom.xml 文件中有如下代码片段，spring-boot-starter-parent 说明这是众多 spring-boot-starter 的父类。
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.9.RELEASE</version>
+    <version>2.4.0</version>
+    <relativePath/> <!-- lookup parent from repository -->
 </parent>
 
 而 spring-boot-starter-parent 本身的父项目是
 <parent>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-dependencies</artifactId>
-  <version>1.5.9.RELEASE</version>
-  <relativePath>../../spring-boot-dependencies</relativePath>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-dependencies</artifactId>
+    <version>2.4.0</version>
 </parent>
 他来真正管理Spring Boot应用里面的所有依赖版本；
 
+在 spring-boot-dependencies 中的 properties 中列举了所有组件的版本，实现版本管理。
 ```
 
-* `spring-boot-dependencies` 是 Spring Boot 的版本仲裁中心； 
+* **`spring-boot-dependencies`** 是 Spring Boot 的版本仲裁中心； 
 
 * 以后我们导入依赖默认是不需要写版本；（没有在 dependencies 里面管理的依赖自然需要声明版本号） 
 
+  * 如在创建 project 的时候，加入 spring-boot-starter-thymeleaf 组件，则在 **`spring-boot-dependencies` 中的 properties 中会有如下版本信息：
+
+  ```xml
+  <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+  <thymeleaf-extras-data-attribute.version>2.0.1</thymeleaf-extras-data-attribute.version>
+  <thymeleaf-extras-java8time.version>3.0.4.RELEASE</thymeleaf-extras-java8time.version>
+  <thymeleaf-extras-springsecurity.version>3.0.4.RELEASE</thymeleaf-extras-springsecurity.version>
+  <thymeleaf-layout-dialect.version>2.5.1</thymeleaf-layout-dialect.version>
+  ```
+
+  
+
 #### 5.1.2 启动器 [1.5. Starters](https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-starter)
+
+Read: Spring-Boot-Reference ==> Chap03.Using Spring Boot ==> 3.1.5 Starters
 
 ```xml
 <dependency>
@@ -191,6 +210,8 @@ public class HelloController {
     <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
 ```
+
+在上述版本中，也没有指定版本，则 Spring Boot 会自动仲裁，选择版本。
 
 > **Starters are a set of convenient dependency descriptors that you can include in your application.**
 >
@@ -200,7 +221,7 @@ public class HelloController {
 
 以 **spring-boot-starter**-==web== 为例：
 
-* **spring-boot-starter**：spring-boot 场景启动器；帮我们导入了 **web 模块**正常运行所依赖的组件；
+* **spring-boot-starter**：spring-boot 场景启动器；在 spring-boot-starter-web-2.4.0.pom 定义了一些列该 starter 的 dependencies，帮我们导入了 **web 模块**正常运行所依赖的组件；
 
 ==Spring Boot将所有的功能场景都抽取出来，做成一个个的starters（启动器），只需要在项目里面引入这些starter相关场景的所有依赖都会导入进来。要用什么功能就导入什么场景的启动器==
 
@@ -1807,28 +1828,50 @@ Special tokens:
 
 ## 4、SpringMVC自动配置
 
-https://docs.spring.io/spring-boot/docs/1.5.10.RELEASE/reference/htmlsingle/#boot-features-developing-web-applications
+[Developing Web Applications v1.5.10.RELEASE](https://docs.spring.io/spring-boot/docs/1.5.10.RELEASE/reference/htmlsingle/#boot-features-developing-web-applications)
+
+[Developing Web Applications](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-developing-web-applications) i.e. Spring Boot Reference Documentation ==> Spring Boot Features ==> Developing Web Applications
+
+[Spring Web MVC](https://docs.spring.io/spring-framework/docs/5.3.1/reference/html/web.html#mvc)
+
+
 
 ### 1. Spring MVC auto-configuration
 
-Spring Boot 自动配置好了 SpringMVC。以下是SpringBoot对SpringMVC的默认配置:**==（WebMvcAutoConfiguration）==**
+[Spring MVC Auto-configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-spring-mvc-auto-configuration)  
+[Spring Boot Reference ==> Spring Boot Features ==> 4.7 Developing Web Applications ==> Auto-configuration]()
+
+
+
+Spring Boot 自动配置好了 Spring MVC。以下是 SpringBoot 对 Spring MVC 的默认配置:
+
+```java
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnWebApplication(type = Type.SERVLET)
+@ConditionalOnClass({ Servlet.class, DispatcherServlet.class, WebMvcConfigurer.class })
+@ConditionalOnMissingBean(WebMvcConfigurationSupport.class)	
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 10)
+@AutoConfigureAfter({ DispatcherServletAutoConfiguration.class, TaskExecutionAutoConfiguration.class,
+		ValidationAutoConfiguration.class })
+public class WebMvcAutoConfiguration {...}
+```
+
+* `@ConditionalOnMissingBean(WebMvcConfigurationSupport.class)`， 只有当 `WebMvcConfigurationSupport.class` 不存在的时候，才启用 `WebMvcAutoConfiguration` 类。
+
+
+
+**==（WebMvcAutoConfiguration）==**
 
 - Inclusion of `ContentNegotiatingViewResolver` and `BeanNameViewResolver` beans.
-  - 自动配置了 ViewResolver（视图解析器：根据方法的返回值得到视图对象（View），视图对象决定如何渲染（转发？重定向？））
+  - 自动配置了 **ViewResolver**（视图解析器：根据方法的返回值得到视图对象（View），视图对象决定如何渲染（转发？重定向？））
   - `ContentNegotiatingViewResolver`：组合所有的视图解析器的；
-  - ==如何定制：我们可以自己给容器中添加一个视图解析器；ContentNegotiatingViewResolver 自动的将其组合进来；==
-
+  - ==如何定制：我们可以自己给容器中添加一个视图解析器(`ViewResolver`)；ContentNegotiatingViewResolver 自动的将我们定义的 ViewResolver 组合进来；==
 - Support for serving static resources, including support for WebJars (see below).静态资源文件夹路径,webjars
 
-- Static `index.html` support. 静态首页访问
-
-- Custom `Favicon` support (see below).  favicon.ico
-
-  
-
+  - Static `index.html` support. 静态首页访问
+  - Custom `Favicon` support (see below).  favicon.ico
 - 自动注册了 of `Converter`, `GenericConverter`, `Formatter` beans.
-
-  - Converter：转换器；  public String hello(User user)：类型转换使用Converter
+- Converter：转换器；  public String hello(User user)：类型转换使用Converter
   - `Formatter`  格式化器；  2017.12.17===Date；
 
 ```java
@@ -1843,7 +1886,7 @@ Spring Boot 自动配置好了 SpringMVC。以下是SpringBoot对SpringMVC的默
 
 - Support for `HttpMessageConverters` (see below).
 
-  - HttpMessageConverter：SpringMVC用来转换Http请求和响应的；User---Json；
+  - **HttpMessageConverter**：SpringMVC用来转换Http请求和响应的；User---Json；
 
   - `HttpMessageConverters` 是从容器中确定；获取所有的HttpMessageConverter；
 
@@ -1868,23 +1911,30 @@ If you want to keep Spring Boot MVC features, and you just want to add additiona
 
 If you want to take complete control of Spring MVC, you can add your own `@Configuration` annotated with `@EnableWebMvc`.
 
-### 2、扩展SpringMVC
+
+
+### 2. 扩展SpringMVC
+
+在此之前，可以在 xml 文件中定义需要的配置。但是 Spring Boot 跟推荐使用 Java Configuration class，也就是使用**配置类**。
 
 ```xml
-    <mvc:view-controller path="/hello" view-name="success"/>
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/hello"/>
-            <bean></bean>
-        </mvc:interceptor>
-    </mvc:interceptors>
+<mvc:view-controller path="/hello" view-name="success"/>
+<mvc:interceptors>
+    <mvc:interceptor>
+        <mvc:mapping path="/hello"/>
+        <bean></bean>
+    </mvc:interceptor>
+</mvc:interceptors>
 ```
 
-**==编写一个配置类（@Configuration），是WebMvcConfigurerAdapter类型；不能标注@EnableWebMvc==**;
+**==编写一个配置类（@Configuration），是 WebMvcConfigurerAdapter 类型；不能标注 @EnableWebMvc==**;
 
-既保留了所有的自动配置，也能用我们扩展的配置；
+* 注意：在 SpringBoot 2.4.0 中 `WebMvcConfigurerAdapter ` is deprecated，要编写的配置类需要实现 `WebMvcConfiguer` interface.
+
+==既保留了所有的自动配置，也能用我们扩展的配置；==
 
 ```java
+// Spring Boot 1.x
 //使用WebMvcConfigurerAdapter可以来扩展SpringMVC的功能
 @Configuration
 public class MyMvcConfig extends WebMvcConfigurerAdapter {
@@ -1896,16 +1946,79 @@ public class MyMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/atguigu").setViewName("success");
     }
 }
+
+// Spring Boot 2.4.0
+@Configuration
+public class MyMvcConfig implements WebMvcConfigurer {
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        // map request "/atguigu" to page "success"
+        // browser send /atguigu to page "success"
+        registry.addViewController("/atguigu").setViewName("success");
+    }
+}
 ```
 
 原理：
 
-​	1）、WebMvcAutoConfiguration是SpringMVC的自动配置类
+​	1）、**`WebMvcAutoConfiguration`** 是 Spring MVC 的自动配置类，它包含一个 inner class， **`WebMvcAutoConfigurationAdapter`**，并且实现了 `WebMvcConfiguer` interface
 
-​	2）、在做其他自动配置时会导入；@Import(**EnableWebMvcConfiguration**.class)
+​	2）、在做其他自动配置时会导入 `@Import(EnableWebMvcConfiguration.class)` （**WebMvcAutoConfigurationAdapter**  的注解）
 
 ```java
-    @Configuration
+// WebMvcConfiguration 有两个 inner class
+	// WebMvcAutoConfigurationAdapter 是 WebMvcAutoConfiguration 的一个内部类
+	// 它包含 @Import(EnableWebMvcConfiguration.class)
+	@Configuration(proxyBeanMethods = false)
+	@Import(EnableWebMvcConfiguration.class)
+	@EnableConfigurationProperties({ WebMvcProperties.class,
+			org.springframework.boot.autoconfigure.web.ResourceProperties.class, WebProperties.class })
+	@Order(0)
+	public static class WebMvcAutoConfigurationAdapter implements WebMvcConfigurer {...}
+
+	// EnableWebMvcConfiguration 本身也是 WebMvcAutoConfiguration 的一个内部类,
+	// 它有父类 DelegatingWebMvcConfiguration
+	@Configuration(proxyBeanMethods = false)
+	@EnableConfigurationProperties(WebProperties.class)
+	public static class EnableWebMvcConfiguration extends DelegatingWebMvcConfiguration implements ResourceLoaderAware {...}
+
+=========================================================================
+// 在 DelegatingWebMvcConfiguratoin 类中，
+    @Configuration(proxyBeanMethods = false)
+    public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
+
+        private final WebMvcConfigurerComposite configurers = new WebMvcConfigurerComposite();
+
+		// 自动装配，也就是参数 List<WebMvcConfigurer> 会从容器中自动获取所有的 WebMvcConfiguer,其中就包含自动配置的 WebMvcConfiguer，也包含自定义的 WebMvcConfigurer
+        @Autowired(required = false)
+        public void setConfigurers(List<WebMvcConfigurer> configurers) {
+            if (!CollectionUtils.isEmpty(configurers)) {
+                this.configurers.addWebMvcConfigurers(configurers);
+            }
+        }
+        
+        // 然后以其中一个方法为例，然后参看 addViewControllers(registry)
+        @Override
+        protected void addViewControllers(ViewControllerRegistry registry) {
+            this.configurers.addViewControllers(registry);
+        }
+    ...
+    }
+
+	// 在 addViewControllers() 中，每个 delegate(WebMvcConfiguer) 都被调用了
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		for (WebMvcConfigurer delegate : this.delegates) {
+			delegate.addViewControllers(registry);
+		}
+	}
+```
+
+​	
+
+```java
+    // Spring Boot 1.xx, 原本笔记
+	@Configuration
 	public static class EnableWebMvcConfiguration extends DelegatingWebMvcConfiguration {
       private final WebMvcConfigurerComposite configurers = new WebMvcConfigurerComposite();
 
@@ -1925,17 +2038,19 @@ public class MyMvcConfig extends WebMvcConfigurerAdapter {
 	}
 ```
 
-​	3）、容器中所有的WebMvcConfigurer都会一起起作用；
+​	3）、容器中**所有的 WebMvcConfigurer** 都会一起起作用；
 
 ​	4）、我们的配置类也会被调用；
 
-​	效果：SpringMVC的自动配置和我们的扩展配置都会起作用；
+​	效果：SpringMVC的**自动配置**和**我们的扩展配置**都会起作用；
 
-### 3、全面接管SpringMVC；
 
-SpringBoot对SpringMVC的自动配置不需要了，所有都是我们自己配置；所有的SpringMVC的自动配置都失效了
 
-**我们需要在配置类中添加@EnableWebMvc即可；**
+### 3. 全面接管SpringMVC
+
+Spring Boot 对 Spring MVC 的自动配置不需要了，所有都是我们自己配置；所有的 Spring MVC 的自动配置都失效了
+
+**我们需要在配置类中添加 `@EnableWebMvc` 即可；**
 
 ```java
 //使用WebMvcConfigurerAdapter可以来扩展SpringMVC的功能
@@ -1954,21 +2069,25 @@ public class MyMvcConfig extends WebMvcConfigurerAdapter {
 
 原理：
 
-为什么@EnableWebMvc自动配置就失效了；
+为什么` @EnableWebMvc` 自动配置就失效了；
 
 1）@EnableWebMvc的核心
 
 ```java
 @Import(DelegatingWebMvcConfiguration.class)
-public @interface EnableWebMvc {
+public @interface EnableWebMvc {...}
 ```
+
+* `EnableWebMvc` 导入了 `DelegatingWebMvcConfiguration` 类。
 
 2）、
 
 ```java
 @Configuration
-public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
+public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {...}
 ```
+
+* `DeletgatingWebMvcConfiguration` 类又继承了 `WebMvcConfigurationSupport`
 
 3）、
 
@@ -1982,12 +2101,25 @@ public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 10)
 @AutoConfigureAfter({ DispatcherServletAutoConfiguration.class,
 		ValidationAutoConfiguration.class })
-public class WebMvcAutoConfiguration {
+public class WebMvcAutoConfiguration {...}
 ```
 
-4）、@EnableWebMvc将WebMvcConfigurationSupport组件导入进来；
+4）、在我们自己的 `@Configuration` 类上添加 `@EnableWebMvc` 后，会将 `WebMvcConfigurationSupport`组件导入进来；
 
-5）、导入的WebMvcConfigurationSupport只是SpringMVC最基本的功能；
+5）、此时导入的 `WebMvcConfigurationSupport` 只是 Spring MVC 最基本的功能；
+
+6）、通过自定义的 `@Configuration` 类后，会自动导入 `WebMvcConfigurationSupport`；导入 `WebMvcConfigurationSupport` 后 `WebMvcAutoConfiguration` 就失效了。
+
+```java
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnWebApplication(type = Type.SERVLET)
+@ConditionalOnClass({ Servlet.class, DispatcherServlet.class, WebMvcConfigurer.class })
+@ConditionalOnMissingBean(WebMvcConfigurationSupport.class)	// 只在 WebMvcConfigurationSupport 不存在的时候，自动配置才会生效
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 10)
+@AutoConfigureAfter({ DispatcherServletAutoConfiguration.class, TaskExecutionAutoConfiguration.class,
+		ValidationAutoConfiguration.class })
+public class WebMvcAutoConfiguration {...}
+```
 
 
 
@@ -2355,12 +2487,14 @@ insert的公共片段在div标签中
 <div th:include="footer :: copy"></div>
 
 效果
+1. insert，将公共片段，整个插入到指定元素中，比如 div
 <div>
     <footer>
     &copy; 2011 The Good Thymes Virtual Grocery
     </footer>
 </div>
 
+2. replace，将引入声明的元素替换为公共片段
 <footer>
 &copy; 2011 The Good Thymes Virtual Grocery
 </footer>
