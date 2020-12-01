@@ -1467,9 +1467,9 @@ slf4j+log4j的方式；
 
 使用SpringBoot；
 
-**1）、创建SpringBoot应用，选中我们需要的模块；**
+**1）、创建 SpringBoot 应用，选中我们需要的模块；**
 
-**2）、SpringBoot已经默认将这些场景配置好了，只需要在配置文件中指定少量配置就可以运行起来**
+**2）、SpringBoot 已经默认将这些场景配置好了，只需要在配置文件中指定少量配置就可以运行起来**
 
 **3）、自己编写业务代码；**
 
@@ -1496,7 +1496,7 @@ public class ResourceProperties implements ResourceLoaderAware {    //可以设�
 
 
 ```java
-	WebMvcAuotConfiguration：
+// interface WebMvcAuotConfiguration: 
 		@Override
 		public void addResourceHandlers(ResourceHandlerRegistry registry) {
 			if (!this.resourceProperties.isAddMappings()) {
@@ -1571,11 +1571,11 @@ public class ResourceProperties implements ResourceLoaderAware {    //可以设�
 ### 1. `/webjars/**` 请求
 
 ```java
-// WebMvcAutoConfiguration.addResourcesHandlers(ResourceHandlerRegistry registry)
+// WebMvcAutoConfiguration ==> WebMvcAutoConfigurationAdapter ==> WebMvcConfigurer.addResourcesHandlers(ResourceHandlerRegistry registry)
 registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/")
 ```
 
-==所有 `/webjars/**` 的请求，都去 classpath:/META-INF/resources/webjars/ 找资源；==
+==所有 `/webjars/**` 的请求，都去 `classpath:/META-INF/resources/webjars/` 找资源；==
 
 ​	webjars：以jar包的方式引入静态资源； http://www.webjars.org/
 
@@ -1584,21 +1584,22 @@ registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META
 localhost:8080/webjars/jquery/3.3.1/jquery.js
 
 ```xml
-		<!--引入jquery-webjar-->在访问的时候只需要写webjars下面资源的名称即可
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>jquery</artifactId>
-			<version>3.3.1</version>
-		</dependency>
+    <!--引入jquery-webjar-->在访问的时候只需要写webjars下面资源的名称即可
+    <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>jquery</artifactId>
+        <version>3.3.1</version>
+    </dependency>
 ```
 
-* **在访问的时候只需要写webjars下面==资源的名称==即可**，比如 `localhost:8080/webjars/jquery/3.3.1/jquery.js` 中的 `jquery`
+* **在访问的时候只需要写 webjars下面==资源的名称==即可**，比如 `localhost:8080/webjars/jquery/3.3.1/jquery.js` 中的 **`jquery`** 就是所需要的资源名称。
 
 
 
 ### ==2. 四个静态资源文件夹==
 
 ```java
+// WebMvcProperties.staticPathPattern = "/**"
 private String staticPathPattern = "/**";
 private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-INF/resources/",
 				"classpath:/resources/", "classpath:/static/", "classpath:/public/" };
@@ -1606,22 +1607,39 @@ private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-
 
 =="/**" 访问当前项目的任何资源，都去 （静态资源的文件夹）找映射==， 比如 `localhost:8080/abc` ==>  去静态资源文件夹里面找abc
 
-```
-"classpath:/META-INF/resources/", 
+```java
+"classpath:/META-INF/resources/", 	// http://localhost:8080/asserts/js/Chart.min.js
 "classpath:/resources/",
 "classpath:/static/", 
 "classpath:/public/" 
-"/"：当前项目的根路径
+where "/"：当前项目的根路径
 ```
 
 * `xxx/main/java/` 是 classpath 的根路径
 * `xxx/main/resources/` 也是 classpath 的根路径
+
+```java
+xxx/main/resources/
+    |-> META-INF/resources 	(静态资源文件夹)
+    	|-> asserts/
+    |-> resources/			(静态资源文件夹)
+    	|-> asserts/
+    |-> static/				(静态资源文件夹)
+    	|-> asserts/
+    |-> public				(静态资源文件夹)
+    	|-> asserts/
+```
+
+* http://localhost:8080/asserts/img/bootstrap-solid.svg
+* http://localhost:8080/asserts/js/Chart.min.js
+* http://localhost:8080/asserts/css/signin.css
 
 
 
 ### ==3. 欢迎页(index.html)==
 
 ```java
+// WebMvcAutoConfiguration ==> EnableWebMvcConfiguration.welcomePagehandlerMapping(...)
 		@Bean
 		public WelcomePageHandlerMapping welcomePageHandlerMapping(ApplicationContext applicationContext,
 				FormattingConversionService mvcConversionService, ResourceUrlProvider mvcResourceUrlProvider) {
@@ -1638,11 +1656,11 @@ private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-
 * `this.mvcProperties.getStaticPathPattern()`: ==> `private String staticPathPattern = "/**";`
 * ==静态资源文件夹下的所有index.html页面；被"/**"映射；==
 
-* 例如，访问 `localhost:8080/` 就会找index页面。目前的测试结果是，`index.html` page 必须直接放在上述的四个静态资源目录下。
+* 例如，访问 `localhost:8080/` 就会找 `localhost:8080/index.html` 页面。目前的测试结果是，`index.html` page 必须直接放在上述的四个静态资源目录下。
 
   
 
-### 4. 所有的 **/favicon.ico  都是在静态资源文件下找；-- deprecated
+### 4、 所有的 **/favicon.ico  都是在静态资源文件下找；-- deprecated
 
 * It's worth mentioning that, as of Spring Boot 2.2, this configuration property is deprecated. Moreover, Spring Boot no longer provides a default favicon, as this icon can be classified as information leakage. ==> 想要设置 favicon，就需要自己实现 handler。
 * [Guide to the Favicon in Spring Boot](https://www.baeldung.com/spring-boot-favicon)
@@ -1700,7 +1718,7 @@ public class ThymeleafProperties {
 	public static final String DEFAULT_SUFFIX = ".html";
 ```
 
-==只要我们把HTML页面放在classpath:/templates/，thymeleaf就能自动渲染；==
+==只要我们把HTML页面放在 `classpath:/templates/`，thymeleaf就能自动渲染；==
 
 使用：
 
