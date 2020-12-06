@@ -1762,9 +1762,41 @@ public class ThymeleafProperties {
 
 ![](images/2018-02-04_123955.png)
 
+#### 2. th:href, [Standard URL Syntax](https://www.thymeleaf.org/doc/articles/standardurlsyntax.html#:~:text=Context%2Drelative%20URLs,if%20we%20deploy%20a%20myapp.)
+
+1. Absolute URLs
+
+   Absolute URLs allow you to create links to other servers. 
+
+   ```html
+   <a th:href="@{http://www.thymeleaf/documentation.html}">
+   ```
+
+   
+
+2. Context-relative URLs
+
+   The most used type of URLs are *context-relative* ones. These are URLs which are supposed to be relative to the web application root once it is installed on the server. For example, if we deploy a `myapp.war` file into a Tomcat server, our application will probably be accessible as `http://localhost:8080/myapp`, and `myapp` will be the *context name*.
+
+   **Context-relative URLs start with `/`:**
+
+   ```html
+   <a th:href="@{/order/list}">
+   ```
+
+   If our app is installed at `http://localhost:8080/myapp`, this URL will output:
+
+   ```html
+   <a href="/myapp/order/list">
+   ```
+
+3. Server-relative URLs
+4. Protocal-relative URLs
+5. ...
 
 
-#### 2. 表达式？
+
+#### 3. 表达式？
 
 ```properties
 Simple expressions:（表达式语法）
@@ -2141,30 +2173,49 @@ public class WebMvcAutoConfiguration {...}
 
 
 
-## 5、如何修改SpringBoot的默认配置
+## 5. 如何修改SpringBoot的默认配置
 
 模式：
 
-​	1）、SpringBoot在自动配置很多组件的时候，先看容器中有没有用户自己配置的（@Bean、@Component）如果有就用用户配置的，如果没有，才自动配置；如果有些组件可以有多个（ViewResolver）将用户配置的和自己默认的组合起来；
+​	1. SpringBoot在自动配置很多组件的时候，先看容器中有没有用户自己配置的（`@Bean`、`@Component`）如果有就用用户配置的，如果没有，才自动配置；如果有些组件可以有多个（ViewResolver）将用户配置的和自己默认的组合起来；
 
-​	2）、在SpringBoot中会有非常多的xxxConfigurer帮助我们进行扩展配置
+​	2. 在SpringBoot中会有非常多的 xxxConfigurer 帮助我们进行扩展配置
 
-​	3）、在SpringBoot中会有很多的xxxCustomizer帮助我们进行定制配置
+	3. 在SpringBoot中会有很多的 xxxCustomizer 帮助我们进行定制配置
 
-## 6、RestfulCRUD
 
-### 1）、默认访问首页
+
+## 6. RestfulCRUD
+
+[什么是RESTful API？](https://blog.csdn.net/hjc1984117/article/details/77334616) 
+
+REST --- REpresentational State Transfer, 表层状态转移。那下面就让我来用一句人话解释一下什么是RESTful:**URL定位资源，用HTTP动词（GET,POST,PUT,DELETE)描述操作。**
+
+   Resource：资源，即数据。
+   Representational：某种表现形式，比如用JSON，XML，JPEG等；
+   State Transfer：状态变化。通过HTTP动词实现。
+
+1. 资源。首先是弄清楚资源的概念。资源就是网络上的一个实体，一段文本，一张图片或者一首歌曲。资源总是要通过一种载体来反应它的内容。文本可以用TXT，也可以用HTML或者XML、图片可以用JPG格式或者PNG格式，JSON是现在最常用的资源表现形式。
+
+2. 统一接口。RESTful风格的数据元操CRUD（create,read,update,delete）分别对应HTTP方法：GET用来获取资源，POST用来新建资源（也可以用于更新资源），PUT用来更新资源，DELETE用来删除资源，这样就统一了数据操作的接口。
+3. URI。可以用一个URI（统一资源定位符）指向资源，即每个URI都对应一个特定的资源。要获取这个资源访问它的URI就可以，因此URI就成了每一个资源的地址或识别符。一般的，每个资源至少有一个URI与之对应，最典型的URI就是URL。
+4. 无状态。所谓无状态即所有的资源都可以URI定位，而且这个定位与其他资源无关，也不会因为其他资源的变化而变化。有状态和无状态的区别，举个例子说明一下，例如要查询员工工资的步骤为第一步：登录系统。第二步：进入查询工资的页面。第三步：搜索该员工。第四步：点击姓名查看工资。这样的操作流程就是有状态的，查询工资的每一个步骤都依赖于前一个步骤，只要前置操作不成功，后续操作就无法执行。如果输入一个URL就可以得到指定员工的工资，则这种情况就是无状态的，因为获取工资不依赖于其他资源或状态，且这种情况下，员工工资是一个资源，由一个URL与之对应可以通过HTTP中的GET方法得到资源，这就是典型的RESTful风格。
+
+[怎样用通俗的语言解释REST，以及RESTful？ - 覃超的回答 - 知乎]( https://www.zhihu.com/question/28557115/answer/48094438)
+
+
+
+### 1. 默认访问首页
 
 ```java
-
-//使用WebMvcConfigurerAdapter可以来扩展SpringMVC的功能
-//@EnableWebMvc   不要接管SpringMVC
+// 使用 WebMvcConfigurerAdapter 可以来扩展 SpringMVC 的功能
+// @EnableWebMvc 不要接管 SpringMVC
 @Configuration
 public class MyMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-       // super.addViewControllers(registry);
+        // super.addViewControllers(registry);
         //浏览器发送 /atguigu 请求来到 success
         registry.addViewController("/atguigu").setViewName("success");
     }
@@ -2185,13 +2236,17 @@ public class MyMvcConfig extends WebMvcConfigurerAdapter {
 
 ```
 
-### 2）、国际化
 
-**1）、编写国际化配置文件；**
 
-2）、使用ResourceBundleMessageSource管理国际化资源文件
+### 2. 国际化
 
-3）、在页面使用fmt:message取出国际化内容
+[Guide to Internationalization in Spring Boot](https://www.baeldung.com/spring-boot-internationalization)
+
+1. **编写国际化配置文件**
+
+2. 使用 ResourceBundleMessageSource 管理国际化资源文件
+
+3. 在页面使用fmt:message取出国际化内容
 
 
 
@@ -2342,18 +2397,18 @@ public class MyLocaleResolver implements LocaleResolver {
 
 ```
 
-### 3）、登陆
+### 3. 登陆
 
-开发期间模板引擎页面修改以后，要实时生效
+开发期间模板引擎页面修改以后，要实时生效需要两步：
 
-1）、禁用模板引擎的缓存
+1. 禁用模板引擎的缓存
 
 ```
 # 禁用缓存
 spring.thymeleaf.cache=false 
 ```
 
-2）、页面修改完成以后ctrl+f9：重新编译；
+2. 页面修改完成以后ctrl+f9：重新编译；
 
 
 
@@ -2365,7 +2420,11 @@ spring.thymeleaf.cache=false
 
 
 
-### 4）、拦截器进行登陆检查
+为了防止重复提交表单，可以设置重定向：`redirect:/main.html`
+
+
+
+### 4. 拦截器进行登陆检查
 
 拦截器
 
@@ -2452,26 +2511,26 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
 
 1）、RestfulCRUD：CRUD满足Rest风格；
 
-URI：  /资源名称/资源标识       HTTP请求方式区分对资源CRUD操作
+URI：  /资源名称/资源标识       HTTP**请求方式**区分对资源CRUD操作
 
-|      | 普通CRUD（uri来区分操作） | RestfulCRUD       |
-| ---- | ------------------------- | ----------------- |
-| 查询 | getEmp                    | emp---GET         |
-| 添加 | addEmp?xxx                | emp---POST        |
-| 修改 | updateEmp?id=xxx&xxx=xx   | emp/{id}---PUT    |
-| 删除 | deleteEmp?id=1            | emp/{id}---DELETE |
+|        | 普通CRUD（uri来区分操作） | RestfulCRUD       |
+| ------ | ------------------------- | ----------------- |
+| 添加 C | addEmp?xxx                | emp---POST        |
+| 查询 R | getEmp                    | emp---GET         |
+| 修改 U | updateEmp?id=xxx&xxx=xx   | emp/{id}---PUT    |
+| 删除 D | deleteEmp?id=1            | emp/{id}---DELETE |
 
 2）、实验的请求架构;
 
-| 实验功能                             | 请求URI | 请求方式 |
-| ------------------------------------ | ------- | -------- |
-| 查询所有员工                         | emps    | GET      |
-| 查询某个员工(来到修改页面)           | emp/1   | GET      |
-| 来到添加页面                         | emp     | GET      |
-| 添加员工                             | emp     | POST     |
-| 来到修改页面（查出员工进行信息回显） | emp/1   | GET      |
-| 修改员工                             | emp     | PUT      |
-| 删除员工                             | emp/1   | DELETE   |
+| 实验功能                               | 请求URI | 请求方式 |
+| -------------------------------------- | ------- | -------- |
+| 查询所有员工                           | emps    | GET      |
+| 查询某个员工(来到修改页面)             | emp/1   | GET      |
+| **来到**添加页面                       | emp     | GET      |
+| 添加员工                               | emp     | POST     |
+| 来到修改页面（*查出员工进行信息回显*） | emp/1   | GET      |
+| 修改员工                               | emp     | PUT      |
+| 删除员工                               | emp/1   | DELETE   |
 
 3）、员工列表：
 
@@ -2485,7 +2544,7 @@ URI：  /资源名称/资源标识       HTTP请求方式区分对资源CRUD操�
 
 2、引入公共片段
 <div th:insert="~{footer :: copy}"></div>
-~{templatename::selector}：模板名::选择器
+~{templatename::selector}：模板名::选择器。选择器可以是 class or id
 ~{templatename::fragmentname}:模板名::片段名
 
 3、默认效果：
@@ -2500,7 +2559,7 @@ insert的公共片段在div标签中
 
 **th:insert**：将公共片段整个插入到声明引入的元素中
 
-**th:replace**：将声明引入的元素替换为公共片段
+==**th:replace**：将声明引入的元素替换为公共片段==
 
 **th:include**：将被引入的片段的内容包含进这个标签中
 
@@ -2539,7 +2598,7 @@ insert的公共片段在div标签中
 引入片段的时候传入参数： 
 
 ```html
-
+<--! id="sidebar" 就是一个 selector -->
 <nav class="col-md-2 d-none d-md-block bg-light sidebar" id="sidebar">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
@@ -2558,6 +2617,8 @@ insert的公共片段在div标签中
 <!--引入侧边栏;传入参数-->
 <div th:replace="commons/bar::#sidebar(activeUri='emps')"></div>
 ```
+
+
 
 ### 6）、CRUD-员工添加
 
