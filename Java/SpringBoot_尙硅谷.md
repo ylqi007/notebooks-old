@@ -2179,9 +2179,8 @@ public class WebMvcAutoConfiguration {...}
 
 ​	1. SpringBoot在自动配置很多组件的时候，先看容器中有没有用户自己配置的（`@Bean`、`@Component`）如果有就用用户配置的，如果没有，才自动配置；如果有些组件可以有多个（ViewResolver）将用户配置的和自己默认的组合起来；
 
-​	2. 在SpringBoot中会有非常多的 xxxConfigurer 帮助我们进行扩展配置
-
-	3. 在SpringBoot中会有很多的 xxxCustomizer 帮助我们进行定制配置
+	2. 在SpringBoot中会有非常多的 xxxConfigurer 帮助我们进行扩展配置
+ 	3. 在SpringBoot中会有很多的 xxxCustomizer 帮助我们进行定制配置(参照 Servlet 配置)
 
 
 
@@ -3194,9 +3193,9 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
 
 
 
-## 8、配置嵌入式Servlet容器
+## 8. 配置嵌入式Servlet容器
 
-SpringBoot默认使用Tomcat作为嵌入式的Servlet容器；
+SpringBoot 默认使用 Tomcat 作为嵌入式的 Servlet 容器；
 
 ![](images/搜狗截图20180301142915.png)
 
@@ -3204,25 +3203,34 @@ SpringBoot默认使用Tomcat作为嵌入式的Servlet容器；
 
 问题？
 
-### 1）、如何定制和修改Servlet容器的相关配置；
+### 1. 问题1：如何定制和修改Servlet容器的相关配置
 
-1、修改和server有关的配置（ServerProperties【也是EmbeddedServletContainerCustomizer】）；
+外置的情况下，有配置文件可以修改 Tomcat 的配置，那么使用默认的嵌入式的 Tomcat 应该如何修改？配置文件 or 编码的方式都可以。
+
+1、在 application.properties 中修改和 server 有关的配置（`ServerProperties.java` 绑定和 Server 有关的配置【也是EmbeddedServletContainerCustomizer， SpringBoot 1.x】）；
 
 ```properties
+// 通过在 application.properties 文件中，修改 server.xxx 来配置 server 属性
+// 通用的 Servlet 容器设置
+server.xxx
 server.port=8081
 server.context-path=/crud
 
-server.tomcat.uri-encoding=UTF-8
-
-//通用的Servlet容器设置
-server.xxx
+// server.tomcat.xxx 是与 Tomcat 相关的配置
 //Tomcat的设置
 server.tomcat.xxx
+server.tomcat.uri-encoding=UTF-8
 ```
 
 2、编写一个**EmbeddedServletContainerCustomizer**：嵌入式的Servlet容器的定制器；来修改Servlet容器的配置
 
+[Container Configuration in Spring Boot 2](https://www.baeldung.com/embeddedservletcontainercustomizer-configurableembeddedservletcontainer-spring-boot)
+
+[Spring Boot2.0以上版本EmbeddedServletContainerCustomizer被WebServerFactoryCustomizer替代](https://blog.csdn.net/Hard__ball/article/details/81281898)
+
 ```java
+// MyMvcConfig.java
+// SpringBoot 1.x
 @Bean  //一定要将这个定制器加入到容器中
 public EmbeddedServletContainerCustomizer embeddedServletContainerCustomizer(){
     return new EmbeddedServletContainerCustomizer() {
@@ -3236,15 +3244,20 @@ public EmbeddedServletContainerCustomizer embeddedServletContainerCustomizer(){
 }
 ```
 
-### 2）、注册Servlet三大组件【Servlet、Filter、Listener】
 
-由于SpringBoot默认是以jar包的方式启动嵌入式的Servlet容器来启动SpringBoot的web应用，没有web.xml文件。
 
-注册三大组件用以下方式
+### 2. 注册Servlet三大组件【Servlet、Filter、Listener】
 
-ServletRegistrationBean
+如果是标准的 Web 应用目录结构， src/main/webapp/WEB-INF/web.xml，则可以在 web.xml 文件中注册三大组件。
+
+由于 SpringBoot 默认是以 jar 包的方式启动嵌入式的 Servlet 容器来启动 SpringBoot 的 web 应用，没有 web.xml 文件。
+
+SpringBoot 提供了注册三大组件用以下方式
+
+**ServletRegistrationBean**
 
 ```java
+// MyServletConfig.java
 //注册三大组件
 @Bean
 public ServletRegistrationBean myServlet(){
@@ -3254,9 +3267,10 @@ public ServletRegistrationBean myServlet(){
 
 ```
 
-FilterRegistrationBean
+**FilterRegistrationBean**
 
 ```java
+// MyServletConfig.java
 @Bean
 public FilterRegistrationBean myFilter(){
     FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -3266,9 +3280,10 @@ public FilterRegistrationBean myFilter(){
 }
 ```
 
-ServletListenerRegistrationBean
+**ServletListenerRegistrationBean**
 
 ```java
+// MyServletConfig.java
 @Bean
 public ServletListenerRegistrationBean myListener(){
     ServletListenerRegistrationBean<MyListener> registrationBean = new ServletListenerRegistrationBean<>(new MyListener());
@@ -3278,9 +3293,9 @@ public ServletListenerRegistrationBean myListener(){
 
 
 
-SpringBoot帮我们自动SpringMVC的时候，自动的注册SpringMVC的前端控制器；DIspatcherServlet；
+SpringBoot 帮我们自动 SpringMVC 的时候，自动的注册 SpringMVC 的前端控制器；**DIspatcherServlet**；
 
-DispatcherServletAutoConfiguration中：
+`DispatcherServletAutoConfiguration.java` 中：
 
 ```java
 @Bean(name = DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME)
@@ -3305,9 +3320,15 @@ public ServletRegistrationBean dispatcherServletRegistration(
 
 2）、SpringBoot能不能支持其他的Servlet容器；
 
-### 3）、替换为其他嵌入式Servlet容器
+
+
+### 3. 替换为其他嵌入式Servlet容器
 
 ![](images/搜狗截图20180302114401.png)
+
+![](images/ServletContainers.png)
+
+
 
 默认支持：
 
@@ -3321,7 +3342,7 @@ Tomcat（默认使用）
 </dependency>
 ```
 
-Jetty
+Jetty(长链接，比如点对点聊天)
 
 ```xml
 <!-- 引入web模块 -->
@@ -3343,7 +3364,7 @@ Jetty
 </dependency>
 ```
 
-Undertow
+Undertow(不支持 JSP)
 
 ```xml
 <!-- 引入web模块 -->
@@ -3365,13 +3386,14 @@ Undertow
 </dependency>
 ```
 
-### 4）、嵌入式Servlet容器自动配置原理；
 
 
+### 4. 嵌入式Servlet容器自动配置原理；
 
 EmbeddedServletContainerAutoConfiguration：嵌入式的Servlet容器自动配置？
 
 ```java
+// SpringBoot 1.x
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
 @ConditionalOnWebApplication
@@ -3423,6 +3445,16 @@ public class EmbeddedServletContainerAutoConfiguration {
 		}
 
 	}
+}
+
+    
+// SpringBoot 2.x
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnWebApplication
+@EnableConfigurationProperties(ServerProperties.class)
+public class EmbeddedWebServerFactoryCustomizerAutoConfiguration {
+    ...
+}
 ```
 
 1）、EmbeddedServletContainerFactory（嵌入式Servlet容器工厂）
@@ -3445,7 +3477,7 @@ public interface EmbeddedServletContainerFactory {
 
 
 
-3）、以**TomcatEmbeddedServletContainerFactory**为例
+3）、以**TomcatEmbeddedServletContainerFactory**为例 (TomcatWebServerFactoryCustomizer in SpringBoot 2.x)
 
 ```java
 @Override
@@ -3540,7 +3572,7 @@ ServerProperties也是定制器
 
 
 
-###5）、嵌入式Servlet容器启动原理；
+### 5）、嵌入式Servlet容器启动原理；
 
 什么时候创建嵌入式的Servlet容器工厂？什么时候获取嵌入式的Servlet容器并启动Tomcat；
 
