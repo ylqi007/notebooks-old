@@ -851,25 +851,34 @@ java -jar spring-boot-02-config-02-0.0.1-SNAPSHOT.jar --server.port=8087  --serv
 
 
 
-## 8、自动配置原理
+## 8. 自动配置原理
 
 配置文件到底能写什么？怎么写？自动配置原理；
 
-[配置文件能配置的属性参照-Common-Application-properties v2.4.0](https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties)
+[配置文件能配置的属性参照-Common-Application-properties v2.4.0](https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties) 
+
+Chapter 10. Appendices, Appendix A: Common Application properties
 
 
 
-### 1、**自动配置原理：**
+### 1. **自动配置原理：**
 
-1）、SpringBoot启动的时候加载主配置类，开启了自动配置功能 ==@EnableAutoConfiguration==
+1. SpringBoot启动的时候加载**主配置类**，开启了自动配置功能 **==@EnableAutoConfiguration==**
 
-**2）、@EnableAutoConfiguration 作用：**
+**2. `@EnableAutoConfiguration` 作用：**
 
- -  利用EnableAutoConfigurationImportSelector给容器中导入一些组件？ 在v2.4.0中是 `@Import(AutoConfigurationImportSelector.class)` 
+ -  利用 `EnableAutoConfigurationImportSelector` 给容器中导入一些组件？ 在v2.4.0中是 `@Import(AutoConfigurationImportSelector.class)` 
 
-- 可以查看selectImports()方法的内容，`public String[] selectImports(AnnotationMetadata annotationMetadata)`
+- 可以查看 `AutoConfigurationImportSelector.selectImports()` 方法的内容，`public String[] selectImports(AnnotationMetadata annotationMetadata)`
 
--  
+- `selectImports()` 
+
+  -  `getAutoConfigurationEntry(annotationMetadata)`
+     -  `getAttributes(annotationMetadata);`
+     -  `getCandidateConfigurations(annotationMetadata, attributes);`
+        -  `SpringFactoriesLoader.loadFactoryNames(getSpringFactoriesLoaderFactoryClass(),getBeanClassLoader());`
+           -  其中 `getSpringFactoriesLoaderFactoryClass()` will `return EnableAutoConfiguration.class;` 也就是返回允许自动配置的类。
+           -  `loadFactoryNames()` 又会继续调用 `loadSpringFactories()`，也就是加载 `"META-INF/spring.factories"`
 
 - List<String> configurations = getCandidateConfigurations(annotationMetadata,      attributes);获取候选的配置
 
@@ -877,9 +886,8 @@ java -jar spring-boot-02-config-02-0.0.1-SNAPSHOT.jar --server.port=8087  --serv
     SpringFactoriesLoader.loadFactoryNames()
     扫描所有jar包类路径下  META-INF/spring.factories
     把扫描到的这些文件的内容包装成properties对象
-    从properties中获取到EnableAutoConfiguration.class类（类名）对应的值，然后把他们添加在容器中
-
-    ```
+    从properties中获取到 EnableAutoConfiguration.class 类（类名）对应的值，然后把他们添加在容器中
+```
 
 
 **==将 类路径下  META-INF/spring.factories 里面配置的所有EnableAutoConfiguration的值加入到了容器中；==**
@@ -985,17 +993,17 @@ org.springframework.boot.autoconfigure.websocket.WebSocketMessagingAutoConfigura
 org.springframework.boot.autoconfigure.webservices.WebServicesAutoConfiguration
 ```
 
-每一个这样的  xxxAutoConfiguration类都是容器中的一个组件，都加入到容器中；用他们来做自动配置；
+每一个这样的  xxxAutoConfiguration 类都是容器中的一个组件，都加入到容器中；用他们来做自动配置；
 
-3）、==每一个自动配置类进行自动配置功能；==
+3. ==每一个自动配置类进行自动配置功能；==
 
-4）、以**HttpEncodingAutoConfiguration（Http编码自动配置）**为例解释自动配置原理；
+4. 以**`HttpEncodingAutoConfiguration`（Http编码自动配置）**为例解释自动配置原理；
 
 ```java
-@Configuration   //表示这是一个配置类，以前编写的配置文件一样，也可以给容器中添加组件
-@EnableConfigurationProperties(HttpEncodingProperties.class)  //启动指定类的ConfigurationProperties功能；将配置文件中对应的值和HttpEncodingProperties绑定起来；并把HttpEncodingProperties加入到ioc容器中
+@Configuration   		// 表示这是一个配置类，以前编写的配置文件一样，也可以给容器中添加组件
+@EnableConfigurationProperties(HttpEncodingProperties.class)	// 启动指定类的 ConfigurationProperties 功能；将配置文件中对应的值和HttpEncodingProperties绑定起来；并把HttpEncodingProperties加入到ioc容器中
 
-@ConditionalOnWebApplication //Spring底层@Conditional注解（Spring注解版），根据不同的条件，如果满足指定的条件，整个配置类里面的配置就会生效；    判断当前应用是否是web应用，如果是，当前配置类生效
+@ConditionalOnWebApplication 	//Spring底层@Conditional注解（Spring注解版），根据不同的条件，如果满足指定的条件，整个配置类里面的配置就会生效；判断当前应用是否是web应用，如果是，当前配置类生效
 
 @ConditionalOnClass(CharacterEncodingFilter.class)  //判断当前项目有没有这个类CharacterEncodingFilter；SpringMVC中进行乱码解决的过滤器；
 
@@ -1020,6 +1028,8 @@ public class HttpEncodingAutoConfiguration {
 		filter.setForceResponseEncoding(this.properties.shouldForce(Type.RESPONSE));
 		return filter;
 	}
+    
+}
 ```
 
 根据当前不同的条件判断，决定这个配置类是否生效？
@@ -1028,11 +1038,7 @@ public class HttpEncodingAutoConfiguration {
 
 
 
-
-
-
-
-5）、所有在配置文件中能配置的属性都是在xxxxProperties类中封装者‘；配置文件能配置什么就可以参照某个功能对应的这个属性类
+5. 所有在配置文件中能配置的属性都是在xxxxProperties类中封装者‘；配置文件能配置什么就可以参照某个功能对应的这个属性类
 
 ```java
 @ConfigurationProperties(prefix = "spring.http.encoding")  //从配置文件中获取指定的值和bean的属性进行绑定
@@ -1043,35 +1049,29 @@ public class HttpEncodingProperties {
 
 
 
+#### **精髓：**
 
+​	**1. SpringBoot启动会加载大量的自动配置类**
 
-**精髓：**
+​	**2. 我们看我们需要的功能有没有SpringBoot默认写好的自动配置类；**
 
-​	**1）、SpringBoot启动会加载大量的自动配置类**
+​	**3. 我们再来看这个自动配置类中到底配置了哪些组件；（只要我们要用的组件有，我们就不需要再来配置了）**
 
-​	**2）、我们看我们需要的功能有没有SpringBoot默认写好的自动配置类；**
-
-​	**3）、我们再来看这个自动配置类中到底配置了哪些组件；（只要我们要用的组件有，我们就不需要再来配置了）**
-
-​	**4）、给容器中自动配置类添加组件的时候，会从properties类中获取某些属性。我们就可以在配置文件中指定这些属性的值；**
-
-
-
-xxxxAutoConfigurartion：自动配置类；
-
-给容器中添加组件
-
-xxxxProperties:封装配置文件中相关属性；
+​	**4. 给容器中自动配置类添加组件的时候，会从properties类中获取某些属性。我们就可以在配置文件中指定这些属性的值；**
 
 
 
-### 2、细节
+`xxxxAutoConfigurartion`: 自动配置类； 给容器中添加组件
+
+`xxxxProperties`: 封装配置文件中相关属性；
 
 
 
-#### 1、@Conditional派生注解（Spring注解版原生的@Conditional作用）
+### 2. 细节
 
-作用：必须是@Conditional指定的条件成立，才给容器中添加组件，配置配里面的所有内容才生效；
+#### 1. `@Conditional`派生注解（Spring注解版原生的@Conditional作用）
+
+作用：必须是`@Conditional`指定的条件成立，才给容器中添加组件，配置配里面的所有内容才生效；
 
 | @Conditional扩展注解                | 作用（判断是否满足当前指定条件）               |
 | ------------------------------- | ------------------------------ |
@@ -1120,8 +1120,6 @@ Negative matches:（没有启动，没有匹配成功的自动配置类）
          - @ConditionalOnClass did not find required classes 'org.aspectj.lang.annotation.Aspect', 'org.aspectj.lang.reflect.Advice' (OnClassCondition)
         
 ```
-
-
 
 
 
@@ -4733,9 +4731,11 @@ https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples
 * [(四) SpringBoot起飞之路-Web静态资源处理](https://zhuanlan.zhihu.com/p/141145060)
 * [Spring MVC快速入门教程](https://www.tianmaying.com/tutorial/spring-mvc-quickstart)
 * [Spring MVC DispatcherServlet详解](https://www.tianmaying.com/tutorial/spring-mvc-DispatcherServlet)
+* [Spring Boot Change Context Path](https://www.baeldung.com/spring-boot-context-path)
+* [Spring Framework Documentation](https://docs.spring.io/spring-framework/docs/current/reference/html/)
+* [Spring Boot干货系列：（三）启动原理解析](http://tengj.top/2017/03/09/springboot3/)
+* [SpringBoot自动装配原理初探](https://juejin.cn/post/6844904009577267207)
 * 
-
-
 
 
 
