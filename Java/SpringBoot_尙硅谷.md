@@ -887,12 +887,13 @@ Chapter 10. Appendices, Appendix A: Common Application properties
     扫描所有jar包类路径下  META-INF/spring.factories
     把扫描到的这些文件的内容包装成properties对象
     从properties中获取到 EnableAutoConfiguration.class 类（类名）对应的值，然后把他们添加在容器中
+    ```
 ```
 
 
 **==将 类路径下  META-INF/spring.factories 里面配置的所有EnableAutoConfiguration的值加入到了容器中；==**
 
-```properties
+​```properties
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration,\
@@ -3839,11 +3840,11 @@ public ConfigurableApplicationContext run(String... args) {
 
 ## 1、简介
 
-**Docker**是一个开源的应用容器引擎；是一个轻量级容器技术；
+**Docker**是一个开源的应用容器引擎；是一个轻量级容器技术；不是虚拟机，比虚拟机更快。
 
 Docker支持将软件编译成一个镜像；然后在镜像中各种软件做好配置，将镜像发布出去，其他使用者可以直接使用这个镜像；
 
-运行中的这个镜像称为容器，容器启动是非常快速的。
+运行中的这个镜像称为容器，容器启动是非常快速的。(s/ms to start for docker; virtual machine may need mins to start)
 
 ![](images/搜狗截图20180303145450.png)
 
@@ -3876,6 +3877,12 @@ docker容器(Container)：镜像启动后的实例称为一个容器；容器是
 4）、对容器的启动停止就是对软件的启动停止；
 
 ## 3、安装Docker
+
+[Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+
+[How to fix docker: Got permission denied issue](https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue)
+
+
 
 #### 1）、安装linux虚拟机
 
@@ -3989,7 +3996,7 @@ docker pull mysql
 
 
 
-错误的启动
+**错误的启动**
 
 ```shell
 [root@localhost ~]# docker run --name mysql01 -d mysql
@@ -4011,7 +4018,9 @@ error: database is uninitialized and password option is not specified
   You need to specify one of MYSQL_ROOT_PASSWORD, MYSQL_ALLOW_EMPTY_PASSWORD and MYSQL_RANDOM_ROOT_PASSWORD；这个三个参数必须指定一个
 ```
 
-正确的启动
+**正确的启动**
+
+[Docker Official Images](https://docs.docker.com/docker-hub/official_repos/)
 
 ```shell
 [root@localhost ~]# docker run --name mysql01 -e MYSQL_ROOT_PASSWORD=123456 -d mysql
@@ -4021,7 +4030,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 b874c56bec49        mysql               "docker-entrypoint.sh"   4 seconds ago       Up 3 seconds        3306/tcp            mysql01
 ```
 
-做了端口映射
+**做了端口映射**
 
 ```shell
 [root@localhost ~]# docker run -p 3306:3306 --name mysql02 -e MYSQL_ROOT_PASSWORD=123456 -d mysql
@@ -4037,9 +4046,12 @@ ad10e4bc5c6a        mysql               "docker-entrypoint.sh"   4 seconds ago  
 
 ```
 docker run --name mysql03 -v /conf/mysql:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:tag
-把主机的/conf/mysql文件夹挂载到 mysqldocker容器的/etc/mysql/conf.d文件夹里面
+
+-v : 把主机的/conf/mysql文件夹挂载到 mysqldocker容器的/etc/mysql/conf.d文件夹里面
 改mysql的配置文件就只需要把mysql配置文件放在自定义的文件夹下（/conf/mysql）
 
+=========================
+不用配置文件
 docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:tag --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 指定mysql的一些配置参数
 ```
@@ -4071,11 +4083,21 @@ spring:
     password: 123456
     url: jdbc:mysql://192.168.15.22:3306/jdbc
     driver-class-name: com.mysql.jdbc.Driver
+    
+spring:
+  datasource:
+    username: root
+    password: 12345
+    url: jdbc:mysql://127.0.0.1:3307/jdbc
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
 ```
 
 效果：
 
 ​	默认是用org.apache.tomcat.jdbc.pool.DataSource作为数据源；
+
+SpringBoot 2.4.1 默认是用 com.zaxxer.hikari.HikariDataSource 作为数据源
 
 ​	数据源的相关配置都在DataSourceProperties里面；
 
