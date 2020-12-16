@@ -31,3 +31,11 @@ conda info --envs
   ```
 
   
+
+* Close default environment
+
+  ```bash
+  conda config --set auto_activate_base false
+  ```
+
+  

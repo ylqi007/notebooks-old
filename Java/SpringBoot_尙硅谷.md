@@ -2179,7 +2179,7 @@ public class WebMvcAutoConfiguration {...}
 ​	1. SpringBoot在自动配置很多组件的时候，先看容器中有没有用户自己配置的（`@Bean`、`@Component`）如果有就用用户配置的，如果没有，才自动配置；如果有些组件可以有多个（ViewResolver）将用户配置的和自己默认的组合起来；
 
 	2. 在SpringBoot中会有非常多的 xxxConfigurer 帮助我们进行扩展配置
- 	3. 在SpringBoot中会有很多的 xxxCustomizer 帮助我们进行定制配置(参照 Servlet 配置)
+	3. 在SpringBoot中会有很多的 xxxCustomizer 帮助我们进行定制配置(参照 Servlet 配置)
 
 
 
@@ -4064,14 +4064,14 @@ docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:tag --
 
 ```xml
 <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
 ```
 
 
@@ -4083,7 +4083,8 @@ spring:
     password: 123456
     url: jdbc:mysql://192.168.15.22:3306/jdbc
     driver-class-name: com.mysql.jdbc.Driver
-    
+
+# My application.yml
 spring:
   datasource:
     username: root
@@ -4125,7 +4126,7 @@ static class Generic {
 
    @Bean
    public DataSource dataSource(DataSourceProperties properties) {
-       //使用DataSourceBuilder创建数据源，利用反射创建响应type的数据源，并且绑定相关属性
+      //使用DataSourceBuilder创建数据源，利用反射创建响应type的数据源，并且绑定相关属性
       return properties.initializeDataSourceBuilder().build();
    }
 
@@ -4147,7 +4148,7 @@ schema-*.sql、data-*.sql
 默认规则：schema.sql，schema-all.sql；
 可以使用   
 	schema:
-      - classpath:department.sql
+      - classpath:department.sql   # No space between classpath and department.sql
       指定位置
 ```
 
