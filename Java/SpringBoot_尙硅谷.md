@@ -4300,7 +4300,9 @@ http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/
 
 ![](images/搜狗截图20180306105412.png)
 
-### 2）、整合SpringData JPA
+
+
+### 2）、整合SpringData JPA(Java Persistence API, Java持久化API)
 
 JPA:ORM（Object Relational Mapping）；
 
