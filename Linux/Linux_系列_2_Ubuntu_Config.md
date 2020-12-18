@@ -219,6 +219,8 @@ $ sudo apt install gnome-tweak-tool
 $ sudo mv /usr/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com ~/
 ```
 
+### [How to disable grub menu at boot time in Ubuntu 20.04?](https://askubuntu.com/questions/1239903/how-to-disable-grub-menu-at-boot-time-in-ubuntu-20-04)
+
 
 
 ## FAQ
