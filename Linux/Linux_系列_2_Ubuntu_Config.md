@@ -20,18 +20,6 @@
 * [Ubuntu安装搜狗输入法后修改默认英文输入状态的方法](https://blog.csdn.net/ameyume/article/details/87091652)
 
 
-
-### Install Tweak
-
-**Ubuntu Tweak** 是一款 Ubuntu 系统配置工具。Ubuntu Tweak 工具主要提供以下四个大功能：
-
-* 系统信息概览
-* 部分系统功能调整
-* 部分系统管理
-* 清道夫(系统文件清理)
-
-
-
 ### Install Firefox-ESR
 
 * 不同用户使用不同配置文件的 Firefox 安装：[如何使用两个Firefox配置文件？](https://qastack.cn/ubuntu/660147/how-can-i-use-two-firefox-profiles)
@@ -60,11 +48,23 @@
 
 
 
+### Install Chrome
+
+[How to Install Google Chrome Web Browser on Ubuntu 20.04](https://linuxize.com/post/how-to-install-google-chrome-web-browser-on-ubuntu-20-04/)
+
+```bash
+$ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+$ sudo apt install ./google-chrome-stable_current_amd64.deb
+```
+
+
+
 ## Development Environment Installation
 
 ### Install VS Code
 
 * [Visual Studio Code on Linux](https://code.visualstudio.com/docs/setup/linux)
+  
     * Once installed, the `Snap` daemon will take care of automatically updating S Code in the background.
     ```bash
     sudo snap install --classic code
@@ -126,6 +126,8 @@ GitKraken
 
 #### Method 2. Install from official website
 
+[Install GitKraken on Linux](https://support.gitkraken.com/how-to-install/#linux-deb-rpm-and-targz-files)
+
 ```bash
 wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
 sudo dpkg -i gitkraken-amd64.deb
@@ -142,11 +144,21 @@ sudo dpkg -i gitkraken-amd64.deb
 
 
 ### Install Mendeley
-* [How to install a deb file, by dpkg -i or by apt?](https://unix.stackexchange.com/questions/159094/how-to-install-a-deb-file-by-dpkg-i-or-by-apt)
 * Downlonad `deb` file.
 * `sudo apt install ./mendeley*.deb`
 
+### Install Foxit
+
+[How To Install Foxit Reader on Ubuntu 20.04 LTS](https://idroot.us/install-foxit-reader-ubuntu-20-04/)
+
+### Install Dropbox
+
+[Install Dropbox to get the most out of your account](https://www.dropbox.com/install-linux)
+
+[Ubuntu 20.04 Dropbox installation and desktop integration](https://linuxconfig.org/ubuntu-20-04-dropbox-installation-and-desktop-integration)
+
 ### Todoist instllation
+
 * Todoist
     `sudo snap install todoist`
 
@@ -171,15 +183,24 @@ sudo apt-get install telegram
   * 将 `\w` 改为 `\W`;
   * 删除 `@\h`.
 
-### Ubuntu Hot Corners
-
-* [How to Enable Hot Corners in Ubuntu 18.04, 19.04](
-
 ### Tweak Tool Installation
+
+**Ubuntu Tweak** 是一款 Ubuntu 系统配置工具。Ubuntu Tweak 工具主要提供以下四个大功能：
+
+* 系统信息概览
+* 部分系统功能调整
+* 部分系统管理
+* 清道夫(系统文件清理)
+
+[How to install Tweak Tool on Ubuntu 20.04 LTS Focal Fossa Linux ](https://linuxconfig.org/how-to-install-tweak-tool-on-ubuntu-20-04-lts-focal-fossa-linux)
 
 ```bash
 $ sudo apt install gnome-tweak-tool
 ```
+
+### Ubuntu Hot Corners
+
+* [How to Set up Hot Corners in Ubuntu 20.04 Gnome Shell](http://ubuntuhandbook.org/index.php/2020/07/set-up-hot-corners-ubuntu-20-04/)
 
 ### Extensions
 * Dash to dock
@@ -189,6 +210,15 @@ $ sudo apt install gnome-tweak-tool
 ### Ubuntu 18.04 Desktop – How to set ‘view items as a list’ as default
 
 `gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view'`
+
+### 锁屏dock显示问题
+
+[Dock in lock screen (Ubuntu 18.04)](https://www.reddit.com/r/Ubuntu/comments/8gd6bx/dock_in_lock_screen_ubuntu_1804/)
+
+```bash
+$ sudo mv /usr/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com ~/
+```
+
 
 
 ## FAQ
@@ -237,4 +267,4 @@ $ sudo apt install gnome-tweak-tool
 * [rsync 用法教程](http://www.ruanyifeng.com/blog/2020/08/rsync.html)
 * [How to Install GitKraken Git GUI](https://support.gitkraken.com/how-to-install/)
 * [How to install Tweak Tool on Ubuntu 20.04 LTS Focal Fossa Linux ](https://linuxconfig.org/how-to-install-tweak-tool-on-ubuntu-20-04-lts-focal-fossa-linux)
-* 
+* [How to install a deb file, by dpkg -i or by apt?](https://unix.stackexchange.com/questions/159094/how-to-install-a-deb-file-by-dpkg-i-or-by-apt)
