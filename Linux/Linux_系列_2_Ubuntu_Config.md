@@ -1,7 +1,5 @@
 [TOC]
 
-
-
 ## Common Configuration
 
 ### Chinese Input
@@ -31,7 +29,7 @@
 * firefox versions
 
   ```bash
-  ylqi007:~$ ll /usr/bin/firefox*
+  $ ll /usr/bin/firefox*
   lrwxrwxrwx 1 root root 25 Oct 13 12:42 /usr/bin/firefox -> ../lib/firefox/firefox.sh*
   lrwxrwxrwx 1 root root 29 Oct 13 08:14 /usr/bin/firefox-esr -> ../lib/firefox-esr/firefox.sh*
   ```
@@ -42,11 +40,9 @@
   此时将 firefox 添加到 dock 后，点击打开 firefox 就是 firefox-esr。
 
   ```bash
-  sudo mv /usr/bin/firefox /usr/bin/firefox-dev     # Alias normal firefox as firefox-dev
-  sudo mv /usr/bin/firefox-esr /usr/bin/firefox     # Alias firefox esr as default firefox
+  $ sudo mv /usr/bin/firefox /usr/bin/firefox-dev     # Alias normal firefox as firefox-dev
+  $ sudo mv /usr/bin/firefox-esr /usr/bin/firefox     # Alias firefox esr as default firefox
   ```
-
-
 
 ### Install Chrome
 
@@ -84,11 +80,15 @@ sudo apt-get update
 sudo apt-get install typora
 ```
 
-
-
-### Install JetBrains (including PyCharm, Idea)
+### Install JetBrains Toolbox App (including PyCharm, Idea)
 
 Install JetBrains Toolbox and then install Pycharm and Idea from Toolbox.
+
+[Toolbox App](https://www.jetbrains.com/toolbox-app/)
+
+[Install the Toolbox App](https://www.jetbrains.com/help/idea/installation-guide.html#toolbox-1-tabs-2-tab-0-procedure)
+
+[install-toolbox.sh](https://gist.github.com/greeflas/431bc50c23532eee8a7d6c1d603f3921)
 
 ### Install Git
 * Install
@@ -174,6 +174,18 @@ sudo apt-get install telegram
 
 
 
+### Install Java Source Code
+
+[Where to download Java JDK source code ?](https://mkyong.com/java/where-to-download-jdk-source-code/)
+
+
+
+### Install COCO API
+
+[How to install COCO PythonAPI in python3](https://stackoverflow.com/questions/49311195/how-to-install-coco-pythonapi-in-python3)
+
+
+
 ## Ubuntu Config
 
 ### Ubuntu Shell 命令行路径缩短
@@ -219,7 +231,14 @@ $ sudo apt install gnome-tweak-tool
 $ sudo mv /usr/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com ~/
 ```
 
-### [How to disable grub menu at boot time in Ubuntu 20.04?](https://askubuntu.com/questions/1239903/how-to-disable-grub-menu-at-boot-time-in-ubuntu-20-04)
+### Skip GRUB
+[How to disable grub menu at boot time in Ubuntu 20.04?](https://askubuntu.com/questions/1239903/how-to-disable-grub-menu-at-boot-time-in-ubuntu-20-04)
+
+[ubuntu 20.04 LTS can't Hide grub menu](https://askubuntu.com/questions/1236136/ubuntu-20-04-lts-cant-hide-grub-menu)
+
+[How to Hide Grub Boot Menu in Ubuntu 20.04 LTS](http://ubuntuhandbook.org/index.php/2020/06/hide-grub-boot-menu-ubuntu-20-04-lts/)
+
+[ubuntu20.04 跳过grub](https://blog.csdn.net/superjunenaruto/article/details/109972414)
 
 
 

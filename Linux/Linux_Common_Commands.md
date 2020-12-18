@@ -105,6 +105,19 @@ lspci	# list all PCI devices
 
 
 
+## 6. Change file and folder permissions
+
+[How to change permissions for a folder and its subfolders/files in one step?](https://stackoverflow.com/questions/3740152/how-to-change-permissions-for-a-folder-and-its-subfolders-files-in-one-step)
+
+```bash
+# To change all the directories to 755 (drwxr-xr-x)
+find /opt/lampp/htdocs -type d -exec chmod 755 {} \;
+# To change all the files to 644 (-rw-r--r--)
+find /opt/lampp/htdocs -type f -exec chmod 644 {} \;
+```
+
+
+
 ## Reference:
 1. [Linux下解压：tar、rar、7z命令简单易懂的教程（含实例）](https://blog.csdn.net/AC_huang/article/details/23279641)
 
