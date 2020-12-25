@@ -118,3 +118,17 @@ origin  git@github.com:ylqi007/notebooks.git (push)
   1. Install `Git LFS`
   2. Add `git lfs track`
   3. Add a large file (like audio, etc.) to repo
+
+#### 12. [How to delete a file in remote repository ONLY?](https://stackoverflow.com/questions/14576109/how-to-delete-a-file-in-remote-repository-only)
+
+* [Remove a file from a Git repository without deleting it from the local filesystem](https://stackoverflow.com/questions/1143796/remove-a-file-from-a-git-repository-without-deleting-it-from-the-local-filesyste)
+
+```bash
+git rm --cached <filename>
+git rm --cached -r <dir_name>
+git commit -m "Removed folder from repository"
+git push origin master
+```
+
+
+

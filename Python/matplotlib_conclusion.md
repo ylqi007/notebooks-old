@@ -38,7 +38,7 @@ fig.savefig('fig2.pdf')
 * 名词解释 in matplotlib            
 
 | ![official doc](https://matplotlib.org/1.5.1/_images/fig_map.png) |
-|:---:| 
+|:---:|
 | *Figure 1: Relation between fig and axes.* |
     1. Figure `fig = plt.figure()`: 可以解释为画布。
     2. Axes `ax = fig.add_subplot(1,1,1)`
@@ -52,7 +52,7 @@ fig.savefig('fig2.pdf')
 * 图像的各个部位名称 (Parts of a Figure) 
 
 | ![Parts of a Figure](https://matplotlib.org/_images/anatomy.png) |
-|:---:| 
+|:---:|
 | *Figure 1: Relation between fig and axes.* |
 
 ### References:

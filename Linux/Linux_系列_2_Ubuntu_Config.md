@@ -90,6 +90,27 @@ Install JetBrains Toolbox and then install Pycharm and Idea from Toolbox.
 
 [install-toolbox.sh](https://gist.github.com/greeflas/431bc50c23532eee8a7d6c1d603f3921)
 
+#### PyCharm Python Template
+
+Setting ==> Editor ==> File and Code Templates ==> Python Scripts
+
+```python
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+#================================================================
+#   Copyright (C) 2019 * Ltd. All rights reserved.
+#
+#   Editor      : ${PRODUCT_NAME}
+#   Project name: ${PROJECT_NAME}
+#   File name   : ${NAME}.py
+#   Author      : ylqi007
+#   Created date: ${YEAR}-${MONTH}-${DAY} ${TIME}
+#
+#================================================================
+```
+
+
+
 ### Install Git
 * Install
     ```bash
