@@ -140,7 +140,28 @@ Explanation:
 * [Restarting a wifi connection without rebooting](http://www.aupcgroup.com/blog/index.php?/archives/16-Ubuntu-restart-wifi-connection-without-rebooting.html)
 
 
+
+## Fix Superblock issue
+
+**总之，Superblock 损坏是有办法恢复的。因为在一个磁盘中会有多个 Superblock。**
+
+在一次拔掉移动一盘的时候，再次插入硬盘的时候就出现了无法 mount 的问题。搜查了一些解决方案，尝试了几个方案，但是依然无法解决问题。
+
+很多解决方案是针对 ext2, ext3, ext4 文件系统，经过查证后，但是我的 WD2TB 硬盘确实，所以以上方案并不能解决问题。所以首先使用 `lsblk -f` 查看文件系统。
+
+* [Ubuntu –  Fix corrupt NTFS partition without Windows](https://itectec.com/ubuntu/ubuntu-fix-corrupt-ntfs-partition-without-windows/)
+
+```bash
+lsblk -f 	# check the filesystem
+sudo ntfsfix /dev/sdc1
+```
+
+
+
+
 ---
+
+
 ## No Wi-Fi Adapter Found
 
 ![image-20201112155610392](/home/yq0033/.config/Typora/typora-user-images/image-20201112155610392.png)

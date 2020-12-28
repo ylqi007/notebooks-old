@@ -1,4 +1,7 @@
+[toc]
+
 # [Loss and Loss Functions for Training Deep Learning Neural Networks](https://machinelearningmastery.com/loss-and-loss-functions-for-training-deep-learning-neural-networks/)
+
 Neural networks are trained using stochastic gradient descent and require that you choose a loss function when designing and configuring your model.
 
 
