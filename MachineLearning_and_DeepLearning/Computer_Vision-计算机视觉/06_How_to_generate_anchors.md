@@ -1,7 +1,5 @@
 [toc]
 
-
-
 ## How to generate anchor boxes?
 
 > Object detection algorithms usually sample a large number regions in the input image or feature maps, determine whether these regions contain objects of interest, and adjust the edges of the regions so as to predict the ground-truth bounding box of the target more accurately. Different models use different region sampling method.
@@ -142,7 +140,7 @@
 >
 > $$L({p_{i}},{t_{i}})=\frac{1}{N_{cls}} \sum_{i}L(p_{i}, p^{*}_{i})+\lambda \frac{1}{N_{reg}} \sum_i p^{*}_{i} L_{reg}(t_{i}, t^{*}_{i})$$
 >
-> Here, $i$ is the index of an anchor in a mini-batch and $p_{i}$ is the predicted probability of anchor $i$ being an object. The ground-truth label $p^{*}_{i}$ is 1 if the anchor is positive, and is 0 is the anchor is negative. $t_{i}$ is a vector representing the 4 parameterized coordinates of the predicted bounding box, and $t^{*}_{i}$ is that of the ground-truth box associated with a positive anchor. 
+> Here, $i$ is the index of an anchor in a mini-batch and $p_{i}$ is the predicted probability of anchor $i$ being an object. The ground-truth label $p^{*}_{i}$ is 1 if the anchor is positive, and is 0 is the anchor is negative. ==$t_{i}$ is a vector representing the 4 parameterized coordinates of the predicted bounding box, and $t^{*}_{i}$ is that of the ground-truth box associated with a positive anchor.== 
 >
 > The classification loss $L_{cls}$ is log loss over two classes (object vs. not object). For the regression loss, we use $L_{reg}(t_{i}, t^{*}_{i}) = R(t_{i} - t^{*}_{i})$ where $R$ is the robust loss function (smooth $L_{i}$)  defined in *Fast R-CNN*.
 >
@@ -165,7 +163,124 @@
 
 
 
-### Reference
+## Fast R-CNN 中关于 Multi-task loss 的内容
+
+> A Fast R-CNN network has two sibling output layers. 
+> The first outputs a discrete probability distribution (per RoI), $p=(p_{0},...,p_{K})$, over $K+1$ categories. As usual, $p$ is computed by a softmax over the $K+1$ outputs of a fully connected layer. 
+> The second sibling layer outputs bounding-box regression offsets, $t^{k}=(t^{k}_{x},t^{k}_{y},t^{k}_{w},t^{k}_{h})$, for each of the $K$ object classes, indexed by $k$. 
+> $t^{k}$ specifies a scale-invariant translation and log-space height/width shift relative to an object proposal.
+>
+> Each training RoI is labeled with a ground-truth class $u$ and ==a ground-truth bounding-box regression target $v$.== We use a multi-task loss $L$ on each labeled RoI to jointly train for classification and bounding-box regression:
+>
+> $$L(p, u, t^{u}, v) = L_{cls}(p, u) + \lambda[u \geq 1]L_{loc}(t^{u}, v)$$
+>
+> in which $L_{cls}(p, u) = - log(p_{u})$ is log loss for true class $u$.
+>
+> The second task loss, $L_{loc}$, is defined over a tuple of true bounding-box regression targets for class $u$, $v = (v_{x},v_{y}, v_{w},v_{h})$, 
+>
+> and a predicted tuple $t^{u}=(t^{u}_{x},t^{u}_{y},t^{u}_{w},t^{u}_{h})$, again for class $u$.
+>
+> For bounding-box regression, we use the loss
+> $$
+> L_{loc}(t^{u}, v) = \sum_{i \in \{ x,y,w,h \} } smooth_{L_{1}}(t^{u}_{i} - v_{i})
+> $$
+> in which
+> $$
+> smooth_{L_{1}} = 
+> \begin{cases} 
+> 0.5x^{2}, & if \lvert x \rvert < 1 \\
+> \lvert x \rvert - 0.5, & otherwise,
+> \end{cases}
+> $$
+> is a robust $L_{1}$ loss that is less sensitive to outliers than $L_{2}$ loss used in R-CNN ans SPPnet. When the regression targets are unbounded, training with $L_{2}$ loss can require careful of learning of learning rate in order to prevent exploding gradients. The $smoothe_{L_{1}}$ eliminates this sensitivity.
+
+* 关于 $smooth_{L_{1}}$ 的定义。
+
+
+
+## YOLO 中关于 loss 的内容
+
+> ![](../images/YOLO_loss.png)
+>
+> Note that the loss function only penalizes classification error if an object is present in that grid cell (hence the conditional class probability discussed earlier). It also only penalizes bounding box coordinate error if that predictor is "responsible" for the ground truth box (i.e. has the highest IOU of any predictor in that grid cell).
+
+* Increase the loss from bounding box coordinate predictions and decrease the loss from confidence predictions for the boxes that don't contain objects. Use two parameters, $\lambda_{coord}=5$ and $\lambda_{noobj}=0.5$ to accomplish this.
+
+
+
+## YOLO9000 中关于 anchor 的内容
+
+> **Convolutional With Anchor Boxes** 
+>
+> YOLO predicts the coordinates of bounding boxes directly using fully connected layers on top of the convolutional feature extractor. Instead of predicting coordinates directly, Faster R-CNN predicts bounding boxes using hand-picked priors. Using only convolutional layers the region proposal (RNP) in Faster R-CNN predict offsets and confidences for anchor boxes. Since the prediction layer is convolutional, the RPN predicts these offsets at every location in a feature map. ==Predicting offsets instead of coordinates simplifies the problem and makes it easier for the network to learn.==
+>
+> We remove the fully connected layers from YOLO and use anchor boxes to predict bounding boxes. First we eliminate one pooling layer to make the output of the network's convolutional layers higher resolution. We also shrink the network to operate on 416 input images instead of $448 \times 448$. We do this because we want an odd number of locations in our feature map so there is a single center cell.
+
+* YOLO 中在 feature map 上采用 fully connected layers 直接 predict the coordinates of bounding boxes.
+* Faster R-CNN 并组直接 predicting coordinates directly，而是 predict bounding boxes using hand-picked priors. 也就是 predict offsets and confidences for anchor boxes.
+* Predict offsets 而不是直接 predict coordinates 会简化问题，让 training 变得简单。
+
+
+
+## YOLOv3 中关于 anchor 的内容
+
+> Following YOLO9000 our system predicts bounding boxes using dimension clusters an anchor boxes. The network predicts 4 coordinates for each bounding boxes, $t_{x}, t_{y}, t_{w}, t_{h}$. If the cell is offset from the top left corner of the image by $(c_{x}, c_{y})$ and the bounding box prior has width and height  $p_{w}, p_{h}$, then the predictions correspond to:
+> $$
+> \begin{align*}
+> b_{x} &= \sigma(t_{x}) + c_{x}	\\
+> b_{y} &= \sigma(t_{y}) + c_{y}	\\
+> b_{w} &= p_{w}e^{t_{w}}	\\
+> b_{h} &= p_{h}e^{t_{h}}
+> \end{align*}
+> $$
+> During training we use sum of squared error loss. If the ground truth for some coordinate prediction is $\hat{t}_{*}$, our gradient is the ground truth value (computed from the ground truth box) minus our prediction: $\hat{t}_{*} - t_{x}$. This ground truth value can be easily computed by inverting the equation above.
+>
+> YOLOv3 predicts an objectness score for each bounding box using logistic regression. This should be 1 if the bounding box prior overlaps a ground truth object by more than any other bounding box prior. If the bounding box prior is not the best but does overlap a ground truth object by more than some threshold we ignore the prediction, following Faster R-CNN. We use the threshold of 0.5. ==Unlike Faster R-CNN, our system only assigns one bounding box prior for each ground truth object.== If a bounding box prior is not assigned to a ground truth object it incurs no loss for coordinate or class predictions, only objectness.
+>
+> ![](../images/YOLOv3_bounding_boxes.png)
+>
+> 
+
+* 在 YOLOv3 中, assign one anchor for each ground truth box, 也就是每个 gt_box 只与一个 anchor box 匹配。这与一个 gt_box 可以与多个 anchor box 匹配是不同的。
+* loss 由三部分组成：coordinate loss, class predictions loss, and objectness loss. 如果一个 anchor box 没有与任何 gt_box 成功匹配，则该 anchor box 对 coordinate and class predictions loss 没有影响，只对 objectness loss 产生影响。
+
+
+
+## Bounding Box Encoding and Decoding in Object Detection
+
+> **Bounding Box Regression**
+>
+> Most recently object detection programs have the concept of anchor boxes, also called prior boxes, which are pre-defined fix-sized bounding boxes on image input or feature map. The bounding box regressor, instead of predicting the bounding box location on the image, predicts the offset of the ground-truth/predicted bounding box to the anchor box. For example, if the anchor box representation is [0.2, 0.5, 0.1, 0.2], and the representation of the ground-truth box corresponding to the anchor box is [0.25, 0.55, 0.08, 0.25], the prediction target, which is the offset, should be [0.05, 0.05, -0.02, 0.05]. The object detection bounding box regressor is trying to learn how to predict this offset. If you have the prediction and the corresponding anchor representation, you could easily calculate back to predicted bounding box representation. This step is also called decoding.
+>
+> **Bounding Box Representation**
+>
+> * Centroids Representation: [x, y, w, h]
+> * Corners Representation: [xmin, ymin, xmax, ymax]
+> * MinMax Representation: [xmin, ymin, xmax, ymax]
+> * There is little difference between corners represetation and minmax representation
+>
+> **Bounding Box Encoding**
+>
+> * Centroids Representation Encoding
+> * Corners Representation Encoding
+> * MinMax Representation Encoding
+> * Representation Encoding with Variance
+> * Centroids Representation Encoding With Variance
+> * Corners Representation Encoding With Variance
+> * MinMax Representation Encoding With Variance
+>
+> **Bounding Box Decoding**
+>
+> * Centroids Representation Decoding With Variance
+> * Corners Representation Decoding With Variance
+> * MinMax Representation Decoding With Variance
+
+* prediction (i.e. offsets) + anchor representation ==> predicted bounding box representation (i.e. offsets), this process is called **decoding**.
+* 
+
+
+
+## Reference
 
 1. [Implementing Anchor generator](https://keras.io/examples/vision/retinanet/#implementing-anchor-generator)
 2. [13.4. Anchor Boxes](https://d2l.ai/chapter_computer-vision/anchor.html#anchor-boxes)

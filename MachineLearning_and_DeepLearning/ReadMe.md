@@ -22,13 +22,14 @@
 |  3   |               | 代码实现卷及操作                                             |                                                              |
 |  4   |               | BN层的深入理解及代码实现　(补充先加BN还是激活函数的区别、反向传播与求导) ，另外还要着重分析下GN与BN相比的优势 |                                                              |
 |  5   |               | NMS的工作机制及代码实现(要继续补充soft NMS)                  |                                                              |
-|  6   | In processing | 如何生成 anchor boxes？以及 Anchor boxes 如何与 gt boxes 进行 encode？ | [link](./Computer_Vision-计算机视觉/06_How_to_generate_anchors.md) |
+|  6   | In processing | 如何生成 anchor boxes？以及 Anchor boxes 如何与 gt boxes 进行 encode? | [link](./Computer_Vision-计算机视觉/06_How_to_generate_anchors.md) |
 |  7   |               |                                                              |                                                              |
 |  8   |               |                                                              |                                                              |
 |  9   |               |                                                              |                                                              |
 |  10  |               |                                                              |                                                              |
 
-
+- [ ] 06, anchor boxes, Add conclusion
+- [ ] 
 
 [GYee](https://github.com/GYee)/**[CV_interviews_Q-A](https://github.com/GYee/CV_interviews_Q-A)**
 
