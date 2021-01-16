@@ -176,4 +176,10 @@
 7. [Face detection - An overview and comparison of different solutions](https://www.liip.ch/en/blog/face-detection-an-overview-and-comparison-of-different-solutions-part1)
 8. [Stephenfang51](https://github.com/Stephenfang51)/**[faster_RCNN_anchor_box](https://github.com/Stephenfang51/faster_RCNN_anchor_box)**  , Faster R-CNN 生成 anchor box 的思路
 9. Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks
+10. [Bounding Box Encoding and Decoding in Object Detection](https://leimao.github.io/blog/Bounding-Box-Encoding-Decoding/)
+11. [Object Detections中Anchors的那些事](https://zhuanlan.zhihu.com/p/42314266)
+12. [RetinaNet的Anchor生成策略](https://yinguobing.com/anchor-boxes-of-retinanet/)
+13. [一文读懂Faster RCNN](https://zhuanlan.zhihu.com/p/31426458)
+14. [K-means聚类生成Anchor box](https://zhuanlan.zhihu.com/p/109968578)
+15. 
 
