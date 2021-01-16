@@ -112,7 +112,7 @@
 >
 > There have been two popular ways for multi-scale predictions. The first way is based on image/feature pyramids. The images are resized at multiple scales, and feature maps are computed for each scale. The second way is to use sliding windows of multiple scales (and/or aspect ratios) on the feature maps. The second way is usually adopted jointly with the first way.
 >
-> ![](/home/ylqi007/work/notebooks/MachineLearning_and_DeepLearning/images/Handle_rescales.png)
+> ![](../images/Handle_rescales.png)
 >
 > As a comparison, our anchor-based method is built on ***a pyramid of anchors***, which is more cost-efficient. ==Our method classifies and regresses bounding boxes with reference to anchor boxes of multiple scales and aspect ratios.==
 
