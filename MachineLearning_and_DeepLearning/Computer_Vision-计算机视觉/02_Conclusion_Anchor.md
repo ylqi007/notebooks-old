@@ -42,7 +42,7 @@
 
 ### Faster R-CNN 中关于 Anchor 的内容
 
-> At each sliding-window location, we simultaneously predict multiple region proposals, where the number of maximum possible proposals for each location is denoted as $k$. So the *reg* layer has $4k$ outputs encoding the coordinates of $k$ boxes, and the *cls* layer outputs $2k$ scores that estimate probability of object or not object for each proposal. The $k$ proposals are parameterized *relative* to $k$ reference boxes, which we call **anchor**. An anchor is centered as the sliding window in question, and is associated with a scale and aspect ration.
+> ==At each sliding-window location, we simultaneously predict multiple region proposals, where the number of maximum possible proposals for each location is denoted as $k$.== So the *reg* layer has $4k$ outputs encoding the coordinates of $k$ boxes, and the *cls* layer outputs $2k$ scores that estimate probability of object or not object for each proposal. The $k$ proposals are parameterized *relative* to $k$ reference boxes, which we call **anchor**. An anchor is centered as the sliding window in question, and is associated with a scale and aspect ration.
 
 * At each sliding-window location, the model 同时 predict $k$ region proposals; 
 * **每个 proposal** 对应4个 *loc* 坐标，所以 reg layer 输出 $4k$ outputs for this location, 后续计算 loc regression loss 的时候会用到这里的输出;
@@ -52,9 +52,14 @@
 
 
 
-> **Translation-Invariant Anchors？**
+> **Translation-Invariant Anchors**
+>
+> An important property of our approach is that is is ***translation invariant***, both in terms of the anchors and the functions that compute proposals relative to the anchors.
+>
+> The translation-invariant property also reduces the model size. MultiBox has a $(4+1)\times800$ dimensional fully-connected output layer, whereas our model has a $(4+2)\times9$ dimensional convolutional output layer in the case of $k=9$ anchors.
 
-- [ ] TODO
+* 在每个 feature map 上的所有 position 上，default 的 anchors 都是一样的；在同一个 feature map 上的 anchors，都是经过相同的 function 处理，比如都是相同的 conv layers。
+* 由于在每个 anchor 上采用的是 conv layers，所以 parameter size 要比 fully connected layer 小很多。
 
 
 
@@ -73,14 +78,15 @@
 
 
 
-> **Encode anchor with gt_box**
+> **Loss Function (Encode anchor with gt_box)**
 >
-> We assign a positive label to two kinds of anchors: (i) the anchor/anchors with the highest Intersection-over-Union (IoU) overlap with a ground-truth box, or (ii) an anchor that has an IoU overlap higher than 0.7 with any ground-truth box. ==Note that a single ground-truth box may assign positive labels to multiple anchors.== Usually the second condition is sufficient to determine the positive samples; but we still adopt the first condition for the reason that in some rare cases the second condition may find no positive sample. We assign a negative label to a non-positive anchor if its IoU ratio is lower than 0.3 for all ground-truth boxes. Anchors that neither positive nor negative do not contribute to the training objective.
+> For training RPNs, we assign a binary class label (of being an object or not) to each anchor. ==We assign a positive label to two kinds of anchors: (i) the anchor/anchors with the highest Intersection-over-Union (IoU) overlap with a ground-truth box, or (ii) an anchor that has an IoU overlap higher than 0.7 with any ground-truth box. Note that a single ground-truth box may assign positive labels to multiple anchors.== Usually the second condition is sufficient to determine the positive samples; but we still adopt the first condition for the reason that in some rare cases the second condition may find no positive sample. We assign a negative label to ==a non-positive anchor== if its IoU ratio is lower than 0.3 for all ground-truth boxes. Anchors that neither positive nor negative do not contribute to the training objective.
 
 * Anchors assigned positive labels:
   * Have the highest IoU with a ground-truth box.
   * Have an IoU overlap higher than 0.7 with any ground-truth box.
   * A single ground-truth box may assign positive labels to multiple anchors.
+  * (i) 与任何 gt box 的 IoU 有大于 0.7 的 anchor boxes，都设置为 positive label；(ii) 有些 anchor boxes 与 gt boxes 最大的 IoU 不超过设定的阈值(0.5)，但是也将其设置为 positive。
 * Anchors assigned negative labels:
   * If its IoU is lower than 0.3 for all ground-truth boxes, i.e. the max IoU is lower than 0.3.
 * Anchors that neither positive nor negative do not contribute to the training objective. 也就是 ignored anchors 对训练目标没有贡献。
@@ -100,20 +106,21 @@
 > The two terms are normalized by $N_{cls}$ and $N_{reg}$ and weighted by a balancing parameter $\lambda$. By default we set $\lambda = 10$, and thus both $cls$ and $reg$ terms are roughly equally weighted. We also note that the normalization as above is not required and could be simplified.
 >
 > For bounding box regression, we adopt the parameterizations of the 4 coordinates following R-CNN:
+> $$
+> t_{x} = (x - x_{a}) / w_{a},t_{y} = (y - y_{a}) / h_{a},t_{w}=log(w/w_{a}), t_{h}=log(h/h_{a})	\\
+> t^{*}_{x} = (x^{*} - x_{x}) / w_{a}, t^{*}_{y} = (y^{*} - y_{a}) / h_{a},t^{*}_{w}=log(w^{*}/w_{a}), t^{*}_{h}=log(h^{*}/h_{a})
+> $$
+> where $x, y, w$ and $h$ denote the **predicted box's** center coordinates and its width and height. 
+> where $x^{*}, y^{*}, w^{*}$ and $h^{*}$ denote the **ground trubh box's** center coordinates and its width height.
 >
-> $t_{x} = (x - x_{a}) / w_{a}, t_{y} = (y - y_{a}) / h_{a}$
->
-> $t_{w}=log(w/w_{a}), t_{h}=log(h/h_{a})$
->
-> $t^{*}_{x} = (x^{*} - x_{x}) / w_{a}, t^{*}_{y} = (y^{*} - y_{a}) / h_{a}$
->
-> $t^{*}_{w}=log(w^{*}/w_{a}), t^{*}_{h}=log(h^{*}/h_{a})$
->
-> where $x, y, w$ and $h$ denote the box's center coordinates and its width and height. Variable $x, x_{a}$ and $x^{*}$ are for the predicted box, anchor box, and ground-truth box respectively (likewise for $y, w, h$).
+> Variable $x, x_{a}$ and $x^{*}$ are for the predicted box, anchor box, and ground-truth box respectively (likewise for $y, w, h$).
 
 * $L_{cls}$ is log loss; $L_{reg}$ uses the robust loss function (like smooth $L_{1}$).
 * ==在 $L_{reg}(t_{i}, t^{*}_{i})$ 中，$t_{i}$ 是distance between predicted box and anchor box; $t^{*}_{i}$ 是 distance betwwen gt_box and anchor box.==
 * 在计算 box regression loss 的时候，$t_{x}$ and $t^{*}_{x}$ 都是经过与 anchor box 编码过的，其中中心点坐标 $(x, y)$ 是经过平移、伸缩变换的，大小 $(w, y)$ 是经过 $log$ 处理的。==[原因？为什么这么做？]==
+* $t_{x}, t_{y}, t_{w}, t_{h}$ 都是 predicted info 与 anchor box 的 parameterized info; 
+  $t^{*}_{x}, t^{*}_{y}, t^{*}_{w}, t^{*}_{h}$ 搜是 ground truth info 与 anchor box 的 parameterized info;
+  最后计算 regression loss 的时候就是计算 $t_{x}, t_{y}, t_{w}, t_{h}$ 与 $t^{*}_{x}, t^{*}_{y}, t^{*}_{w}, t^{*}_{h}$ 之间的差异。
 
 
 
@@ -131,13 +138,43 @@
 
 > **Convolutional With Anchor Boxes** 
 >
-> YOLO predicts the coordinates of bounding boxes directly using fully connected layers on top of the convolutional feature extractor. Instead of predicting coordinates directly, Faster R-CNN predicts bounding boxes using hand-picked priors. Using only convolutional layers the region proposal (RNP) in Faster R-CNN predict offsets and confidences for anchor boxes. Since the prediction layer is convolutional, the RPN predicts these offsets at every location in a feature map. ==Predicting offsets instead of coordinates simplifies the problem and makes it easier for the network to learn.==
+> YOLO predicts the coordinates of bounding boxes directly using ==fully connected layers== on top of the convolutional feature extractor. Instead of predicting coordinates directly, Faster R-CNN predicts bounding boxes using hand-picked priors. Using only convolutional layers the region proposal (RNP) in Faster R-CNN predict offsets and confidences for anchor boxes. Since the prediction layer is convolutional, the RPN predicts these offsets at every location in a feature map. ==Predicting offsets instead of coordinates simplifies the problem and makes it easier for the network to learn.==
 >
 > We remove the fully connected layers from YOLO and use anchor boxes to predict bounding boxes. First we eliminate one pooling layer to make the output of the network's convolutional layers higher resolution. We also shrink the network to operate on 416 input images instead of $448 \times 448$. We do this because we want an odd number of locations in our feature map so there is a single center cell.
+>
+> When we move to anchor boxes we also decouple the class prediction mechanism from the spatical location and instead ==predict class and objectness for every anchor box==. Following YOLO, the objectness prediction still predicts the IOU of the ground truth and the proposed box and the class predictions predict the conditional probability of that class given that there is an object.
 
 * YOLO 中在 feature map 上采用 fully connected layers 直接 predict the coordinates of bounding boxes.
 * Faster R-CNN 并组直接 predicting coordinates directly，而是 predict bounding boxes using hand-picked priors. 也就是 predict offsets and confidences for anchor boxes.
 * Predict offsets 而不是直接 predict coordinates 会简化问题，让 training 变得简单。
+* 在 YOLOv2 中也开始对每个 anchor boxes 进行 predict；但是依然是在 objectness 的基础上在预测 conditional probability。
+
+
+
+> **Direct location prediction.**
+>
+> When using anchor boxes with YOLO we encounter a second issue: model instability, especially during early iterations. Most of the instability comes from predicting the $(x, y)$ locations for the box. ==In region proposal networks== the network predicts values $t_{x}$ and $t_{y}$ and the center $(x, y)$ center coordinates are calculated as:
+> $$
+> x = (t_{x} * w_{a}) - x_{a}	\\
+> y = (t_{y} * w_{a}) - y_{a}
+> $$
+> This fomulation is unconstrained so any anchor box can end up at any point in the image, regardless of what location predicted the box. With random initialization the model takes a long time to stabilize to predicting sensible offsets.
+>
+> Instead of predicting offsets we follow the approach of YOLO and ==predict location coordinates relative to the location of the grid cell.== This bounds the ground truth to fall between 0 and 1.
+>
+> The network predicts 5 bounding boxes at each cell in the output feature map. The network predicts 5 coordinates for each bounding box, $t_{x}, t_{y}, t_{h}, t_{w}$, and $t_{o}$. If the cell is offset from the top left corner of the image by $(c_{x}, c_{y})$ and the bounding box prior has width and height $p_{w}, p_{h}$, then the predictions correspond to:
+> $$
+> \begin{align*}
+> b_{x} &= \sigma(t_{x}) + c_{x}	\\
+> b_{y} &= \sigma(t_{y}) + c_{y}	\\
+> b_{w} &= p_{w}e^{t_{w}}	\\
+> b_{h} &= p_{h}e^{t_{h}}	\\
+> Pr(object)*IOU(b, object) &= \sigma(t_{o})
+> \end{align*}
+> $$
+> Since we constrain the location prediction the parametrization is eaiser to learn, making the network more stable. Using dimension clusters along with directly predicting the bounding box center location improves YOLO by almost $5\%$ over the version with anchor boxes.
+
+* Predict 输出 $t_{x}, t_{y}, t_{h}, t_{w}$, and $t_{o}$, decode 之后是 $b_{x}, b_{y}, b_{h}, b_{w}$。
 
 
 
@@ -336,6 +373,19 @@
 
 
 > In fact, if anchor boxes are not tuned correctly, your neural network will never even know that certain small, large or irregular objects exist and will never have a chance to detect them.
+
+
+
+## Conclusion
+
+Anchor 首先在 Faster R-CNN (2016) 中提出，在之前的 R-CNN 和 Fast R-CNN 中还没提及到。在 Faster R-CNN 中提出 Anchor 之后，就需要额外的 sub-network 生成 proposals。每个 feature map 上有众多的 cells，以每个 cell 为中心会有设定多个 predifined size 和 ratio 的 anchors，然后将 anchor boxes 与 gt boxes 进行匹配 (也就是 encode)。
+
+但是 anchor boxes 如何与 gt boxes 之间如何进行 encode，又有些不同：
+
+1. 如在 Faster R-CNN 中，一个 gt boxes 可以被 assign 到多个 anchor boxes；对于 IoU 小于 0.3 的 anchor 设置为 nagative label；既不是 positive 又不是 negative 的则设置为 ignore。
+2. 
+
+
 
 
 
