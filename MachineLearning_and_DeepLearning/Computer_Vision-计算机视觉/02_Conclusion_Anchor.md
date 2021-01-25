@@ -287,6 +287,8 @@
 ## Code
 ### How to generate anchor boxes?
 
+#### Fast AI？
+
 > Object detection algorithms usually sample a large number regions in the input image or feature maps, determine whether these regions contain objects of interest, and adjust the edges of the regions so as to predict the ground-truth bounding box of the target more accurately. Different models use different region sampling method.
 >
 > 物体识别算法通常会在 image or feature map 上采样一些 regions，判断这些 regions 是否包含我们感兴趣的目标，然后调整 regions‘ edges，让预测 bounding box 更加准确。
@@ -376,6 +378,203 @@
 
 
 
+#### [ssd_anchors_all_layers](https://github.com/balancap/SSD-Tensorflow/blob/e0e3104d3a2cc5d830fad041d4e56ebcf84caac3/nets/ssd_vgg_300.py#L361)
+
+```python
+# link, https://github.com/balancap/SSD-Tensorflow/blob/e0e3104d3a2cc5d830fad041d4e56ebcf84caac3/nets/ssd_vgg_300.py#L306
+def ssd_anchor_one_layer(img_shape,
+                         feat_shape,
+                         sizes,
+                         ratios,
+                         step,
+                         offset=0.5,
+                         dtype=np.float32):
+    """Computer SSD default anchor boxes for one feature layer.
+    Determine the relative position grid of the centers, and the relative
+    width and height.
+    Arguments:
+      feat_shape: Feature shape, used for computing relative position grids;
+      size: Absolute reference sizes;
+      ratios: Ratios to use on these features;
+      img_shape: Image shape, used for computing height, width relatively to the
+        former;
+      offset: Grid offset.
+    Return:
+      y, x, h, w: Relative x and y grids, and height and width.
+    """
+    # Compute the position grid: simple way.
+    # y, x = np.mgrid[0:feat_shape[0], 0:feat_shape[1]]
+    # y = (y.astype(dtype) + offset) / feat_shape[0]
+    # x = (x.astype(dtype) + offset) / feat_shape[1]
+    # Weird SSD-Caffe computation using steps values...
+    y, x = np.mgrid[0:feat_shape[0], 0:feat_shape[1]]
+    y = (y.astype(dtype) + offset) * step / img_shape[0]
+    x = (x.astype(dtype) + offset) * step / img_shape[1]
+
+    # Expand dims to support easy broadcasting.
+    y = np.expand_dims(y, axis=-1)
+    x = np.expand_dims(x, axis=-1)
+
+    # Compute relative height and width.
+    # Tries to follow the original implementation of SSD for the order.
+    num_anchors = len(sizes) + len(ratios)
+    h = np.zeros((num_anchors, ), dtype=dtype)
+    w = np.zeros((num_anchors, ), dtype=dtype)
+    # Add first anchor boxes with ratio=1.
+    h[0] = sizes[0] / img_shape[0]
+    w[0] = sizes[0] / img_shape[1]
+    di = 1
+    if len(sizes) > 1:
+        h[1] = math.sqrt(sizes[0] * sizes[1]) / img_shape[0]
+        w[1] = math.sqrt(sizes[0] * sizes[1]) / img_shape[1]
+        di += 1
+    for i, r in enumerate(ratios):
+        h[i+di] = sizes[0] / img_shape[0] / math.sqrt(r)
+        w[i+di] = sizes[0] / img_shape[1] * math.sqrt(r)
+    return y, x, h, w
+```
+
+
+
+#### [YOLOv3, decode](https://github.com/YunYang1994/tensorflow-yolov3/blob/f9fb4baa16bd7422e4a3733b72268789032bf3f7/core/yolov3.py#L97)
+
+```python
+def decode(self, conv_output, anchors, stride):
+        """
+        return tensor of shape [batch_size, output_size, output_size, anchor_per_scale, 5 + num_classes]
+               contains (x, y, w, h, score, probability)
+        """
+
+        conv_shape       = tf.shape(conv_output)
+        batch_size       = conv_shape[0]
+        output_size      = conv_shape[1]
+        anchor_per_scale = len(anchors)
+
+        conv_output = tf.reshape(conv_output, (batch_size, output_size, output_size, anchor_per_scale, 5 + self.num_class))
+
+        conv_raw_dxdy = conv_output[:, :, :, :, 0:2]
+        conv_raw_dwdh = conv_output[:, :, :, :, 2:4]
+        conv_raw_conf = conv_output[:, :, :, :, 4:5]
+        conv_raw_prob = conv_output[:, :, :, :, 5: ]
+
+        y = tf.tile(tf.range(output_size, dtype=tf.int32)[:, tf.newaxis], [1, output_size])
+        x = tf.tile(tf.range(output_size, dtype=tf.int32)[tf.newaxis, :], [output_size, 1])
+
+        xy_grid = tf.concat([x[:, :, tf.newaxis], y[:, :, tf.newaxis]], axis=-1)
+        xy_grid = tf.tile(xy_grid[tf.newaxis, :, :, tf.newaxis, :], [batch_size, 1, 1, anchor_per_scale, 1])
+        xy_grid = tf.cast(xy_grid, tf.float32)
+
+        pred_xy = (tf.sigmoid(conv_raw_dxdy) + xy_grid) * stride
+        pred_wh = (tf.exp(conv_raw_dwdh) * anchors) * stride
+        pred_xywh = tf.concat([pred_xy, pred_wh], axis=-1)
+
+        pred_conf = tf.sigmoid(conv_raw_conf)
+        pred_prob = tf.sigmoid(conv_raw_prob)
+
+        return tf.concat([pred_xywh, pred_conf, pred_prob], axis=-1)
+```
+
+
+
+#### [Retina, AnchorBox](https://keras.io/examples/vision/retinanet/#implementing-anchor-generator)
+
+```python
+class AnchorBox:
+    """Generates anchor boxes.
+
+    This class has operations to generate anchor boxes for feature maps at
+    strides `[8, 16, 32, 64, 128]`. Where each anchor each box is of the
+    format `[x, y, width, height]`.
+
+    Attributes:
+      aspect_ratios: A list of float values representing the aspect ratios of
+        the anchor boxes at each location on the feature map
+      scales: A list of float values representing the scale of the anchor boxes
+        at each location on the feature map.
+      num_anchors: The number of anchor boxes at each location on feature map
+      areas: A list of float values representing the areas of the anchor
+        boxes for each feature map in the feature pyramid.
+      strides: A list of float value representing the strides for each feature
+        map in the feature pyramid.
+    """
+
+    def __init__(self):
+        self.aspect_ratios = [0.5, 1.0, 2.0]
+        self.scales = [2 ** x for x in [0, 1 / 3, 2 / 3]]
+
+        self._num_anchors = len(self.aspect_ratios) * len(self.scales)
+        self._strides = [2 ** i for i in range(3, 8)]
+        self._areas = [x ** 2 for x in [32.0, 64.0, 128.0, 256.0, 512.0]]
+        self._anchor_dims = self._compute_dims()
+
+    def _compute_dims(self):
+        """Computes anchor box dimensions for all ratios and scales at all levels
+        of the feature pyramid.
+        """
+        anchor_dims_all = []
+        for area in self._areas:
+            anchor_dims = []
+            for ratio in self.aspect_ratios:
+                anchor_height = tf.math.sqrt(area / ratio)
+                anchor_width = area / anchor_height
+                dims = tf.reshape(
+                    tf.stack([anchor_width, anchor_height], axis=-1), [1, 1, 2]
+                )
+                for scale in self.scales:
+                    anchor_dims.append(scale * dims)
+            anchor_dims_all.append(tf.stack(anchor_dims, axis=-2))
+        return anchor_dims_all
+
+    def _get_anchors(self, feature_height, feature_width, level):
+        """Generates anchor boxes for a given feature map size and level
+
+        Arguments:
+          feature_height: An integer representing the height of the feature map.
+          feature_width: An integer representing the width of the feature map.
+          level: An integer representing the level of the feature map in the
+            feature pyramid.
+
+        Returns:
+          anchor boxes with the shape
+          `(feature_height * feature_width * num_anchors, 4)`
+        """
+        rx = tf.range(feature_width, dtype=tf.float32) + 0.5
+        ry = tf.range(feature_height, dtype=tf.float32) + 0.5
+        centers = tf.stack(tf.meshgrid(rx, ry), axis=-1) * self._strides[level - 3]
+        centers = tf.expand_dims(centers, axis=-2)
+        centers = tf.tile(centers, [1, 1, self._num_anchors, 1])
+        dims = tf.tile(
+            self._anchor_dims[level - 3], [feature_height, feature_width, 1, 1]
+        )
+        anchors = tf.concat([centers, dims], axis=-1)
+        return tf.reshape(
+            anchors, [feature_height * feature_width * self._num_anchors, 4]
+        )
+
+    def get_anchors(self, image_height, image_width):
+        """Generates anchor boxes for all the feature maps of the feature pyramid.
+
+        Arguments:
+          image_height: Height of the input image.
+          image_width: Width of the input image.
+
+        Returns:
+          anchor boxes for all the feature maps, stacked as a single tensor
+            with shape `(total_anchors, 4)`
+        """
+        anchors = [
+            self._get_anchors(
+                tf.math.ceil(image_height / 2 ** i),
+                tf.math.ceil(image_width / 2 ** i),
+                i,
+            )
+            for i in range(3, 8)
+        ]
+        return tf.concat(anchors, axis=0)
+```
+
+
+
 ## Conclusion
 
 Anchor 首先在 Faster R-CNN (2016) 中提出，在之前的 R-CNN 和 Fast R-CNN 中还没提及到。在 Faster R-CNN 中提出 Anchor 之后，就需要额外的 sub-network 生成 proposals。每个 feature map 上有众多的 cells，以每个 cell 为中心会有设定多个 predifined size 和 ratio 的 anchors，然后将 anchor boxes 与 gt boxes 进行匹配 (也就是 encode)。
@@ -383,9 +582,13 @@ Anchor 首先在 Faster R-CNN (2016) 中提出，在之前的 R-CNN 和 Fast R-C
 但是 anchor boxes 如何与 gt boxes 之间如何进行 encode，又有些不同：
 
 1. 如在 Faster R-CNN 中，一个 gt boxes 可以被 assign 到多个 anchor boxes；对于 IoU 小于 0.3 的 anchor 设置为 nagative label；既不是 positive 又不是 negative 的则设置为 ignore。
-2. 
+   将 positive anchor box 与相应的 gt box encode 之后，生成 target boxes，这也就是 model 输出的 predicted box 要接近的目标。
+2. 在 SSD 中，match gt box to anchor box with the best jaccard overlap (IoU). 然后 match anchor box to any gt box with jaccard overlap (IoU) higher than 0.5. 
+   也就是满足两个条件即可：a) assign GT box to Anchor box which has the highes IoU with this GT box; b). assign Anchor to any GT when their IoU is higher than 0.5。
 
 
+
+* The Intersection-Over-Union (IoU), also known as Jaccard Index, is one of the most commonly used metrics in sematic segmentation.
 
 
 
@@ -405,6 +608,8 @@ Anchor 首先在 Faster R-CNN (2016) 中提出，在之前的 R-CNN 和 Fast R-C
 12. [RetinaNet的Anchor生成策略](https://yinguobing.com/anchor-boxes-of-retinanet/)
 13. [一文读懂Faster RCNN](https://zhuanlan.zhihu.com/p/31426458)
 14. [K-means聚类生成Anchor box](https://zhuanlan.zhihu.com/p/109968578)
+15. [Metrics to Evaluate your Semantic Segmentation Model](https://towardsdatascience.com/metrics-to-evaluate-your-semantic-segmentation-model-6bcb99639aa2)
+16. 
 
 
 
