@@ -116,7 +116,13 @@ find /opt/lampp/htdocs -type d -exec chmod 755 {} \;
 find /opt/lampp/htdocs -type f -exec chmod 644 {} \;
 ```
 
+* `chmod 644 {} \;` specifies the command that will be executed by `find` for each file. 这条命令 (`chmod 644 {} \;`) 会在 `find` 的每个结果上执行。
 
+  * `{}` is replaced by the file path; 
+  * The semicolon (`;`) denotes the end of the command (escaped, otherwise it would be interpreted by the shell instead of `find`). 
+  * `{} \;` passes the output of `find` into the `chmod` command.
+
+  
 
 ## Reference:
 1. [Linux下解压：tar、rar、7z命令简单易懂的教程（含实例）](https://blog.csdn.net/AC_huang/article/details/23279641)
