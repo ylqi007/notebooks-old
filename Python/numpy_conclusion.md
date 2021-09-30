@@ -33,14 +33,17 @@ NumPy 中的数组称为 N-dimensions array 或者 ndarray，即 NumPy 的数组
     * **Dot Product** `dot()`，线性代数中的矩阵乘法，i.e. `(m,n)x(n,l) => (m,l)`
     * Aggregation (聚合): 既可以对所有值进行聚合，也可以在指定维度上。
 * Transposing and Reshaping (置换和变形)
+    
     * `ndarray.reshape()`
 * NumPy: Slice & Index
+    
     * 我们也可以通过冒号分隔切片参数 `start:stop:step` 来进行切片操作
 * 冒号 `:` 的解释
     * 如果只放置一个参数，如 `[2]`，将返回与该索引相对应的单个元素;
     * 如果为 `[2:]`，表示**从该索引开始以后的所有项**都将被提取。
     * 如果使用了两个参数，如 `[2:7]`，那么则提取两个索引(不包括停止索引)之间的项。
 * 省略号 `...` 的解释
+    
     * 切片还可以包括省略号 `...`，来使选择元组的长度与数组的维度相同。 如果在行位置使用省略号，它将返回包含行中元素的 ndarray。
 * 可以借助切片 `:` 或 `...` 与**索引数组**组合:
     * 对于维数超过 3 的多维数组，还可以通过 `...` 来简化操作 
@@ -53,7 +56,7 @@ NumPy 中的数组称为 N-dimensions array 或者 ndarray，即 NumPy 的数组
     print(b)
     print(c)
     print(d)
-  
+    
     arr = np.arange(24).reshape((2, 3, 4))
     print(arr[1, ...])               # 等价于 arr[1, :, :]
     print(arr[..., 1])               # 等价于 arr[:, :, 1]
@@ -69,7 +72,8 @@ NumPy 中的数组称为 N-dimensions array 或者 ndarray，即 NumPy 的数组
     * 切片和索引都是访问多维数组中元素的方法，这是两者的共同点，不同之处有:
         1. 切片得到的是原多维数组的一个 视图(view) ，修改切片中的内容会导致原多维数组的内容也发生变化；
         2. 切片得到在多维数组中连续(或按特定步长连续)排列的值，而索引可以得到任意位置的值，自由度更大一些。   
-             
+           
+      
       不考虑第一点的话，切片的操作是可以用索引操作来实现的，不过这没有必要就是了。 
 
 References:
@@ -125,7 +129,7 @@ If on the other hand, a different view of the same memory content is provided, w
     id(a) == id(b) # return False
     b[0][0] = 10
     a[0][0] = 0
-    ``` 
+    ```
     * **Slice of an array creates a view.** `b = a[:]`, `b = c[:, 1:3]` or `b = c[:, [0,2]]`
     ```python
     a = np.arange(20).reshape(4,5)
@@ -159,6 +163,7 @@ If on the other hand, a different view of the same memory content is provided, w
     b[0][1] = -1
     ```
 4. `np.copy()` 深拷贝
+    
     * `numpy.copy()` 和 `numpy.ndarray().copy()` 有点差别，在于参数 `order`。
 
 References:
@@ -219,8 +224,24 @@ b = np.mgrid[-4:4:5j]
 Reference:
 * [Python的 numpy中 meshgrid 和 mgrid 的区别和使用](https://www.cnblogs.com/shenxiaolin/p/8854197.html)        
 * [Ref1](https://www.cnblogs.com/wanghui-garcia/p/10763103.html)  
- 
----
+
+
+
+### `np.array` vs `np.asarray`
+
+* [What is the difference between Numpy's array() and asarray() functions?](https://stackoverflow.com/questions/14415741/what-is-the-difference-between-numpys-array-and-asarray-functions)
+
+* [Array Creation](https://docs.scipy.org/doc/numpy/user/basics.creation.html#arrays-creation)
+
+* 
+
+  
+
+
+
+
+
+* 
 * [numpy.histogram](https://numpy.org/doc/stable/reference/generated/numpy.histogram.html)
 * [NumPy - Histogram Using Matplotlib](https://www.tutorialspoint.com/numpy/numpy_histogram_using_matplotlib.htm)
 * []()
